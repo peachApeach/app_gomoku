@@ -1,6 +1,6 @@
 # Project Name
 
-![Python version](https://img.shields.io/badge/Python-3.9%2B-blue) 
+![Python version](https://img.shields.io/badge/Python-3.9%2B-blue)
 <!-- ![License](https://img.shields.io/badge/License-MIT-green) -->
 
 ## Description
@@ -18,8 +18,8 @@ Ensure you have Python 3.9 or newer installed. You can download the latest versi
 1. **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/DevJ2K/template_webapp.git
-    cd template_webapp/backend/project_name
+    git clone https://github.com/DevJ2K/app_gomoku.git
+    cd app_gomoku/backend/gomoku
     ```
 
 2. **(Optional) Create a Virtual Environment:**

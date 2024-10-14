@@ -1,4 +1,4 @@
-# Template WebApp
+# Gomoku
 
 <img src="/gitimages/miniature.png" alt="Project Overview" width="100%">
 
@@ -45,7 +45,7 @@ docker-compose -f docker-compose.yml up -d
 
 **Navigate to the Project Folder**
 
-You can access the project folder by using [this link](https://github.com/DevJ2K/template_webapp/tree/main/backend/project_name).
+You can access the project folder by using [this link](https://github.com/DevJ2K/app_gomoku/tree/main/backend/gomoku).
 
 <!-- ## Todo-list
 - [ ] Update current and project README.md.
