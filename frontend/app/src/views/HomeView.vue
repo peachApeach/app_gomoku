@@ -51,7 +51,7 @@ const makeRequests = async () => {
   if (input) {
     text = input.value;
   }
-  const url = "http://127.0.0.1:4000/test";
+  const url = "http://127.0.0.1:8000/test";
 
   try {
         const response = await fetch(url, {

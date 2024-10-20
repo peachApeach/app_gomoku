@@ -38,14 +38,14 @@
 			<div class=" container flex items-center justify-between md:justify-center">
 				<div class="flex w-1/3 justify-start">
 					<div @click="routerTo('/')" class=" flex cursor-pointer flex-row items-center gap-4">
-						<div class=" size-16 overflow-hidden rounded-full border-2 bg-blue-50">
-							<img src="../../assets/images/j2klogo.png" alt="" class=" size-full object-cover">
+						<div class=" size-16 overflow-hidden">
+							<img src="../../assets/images/GomokuLogo.png" alt="" class=" size-full object-cover">
 						</div>
-						<h1 id="devj2kText" class="text-outline text-2xl font-black text-transparent">DevJ2K</h1>
+						<h1 id="gomokuText" class="text-outline text-2xl font-black">GomokuGame</h1>
 					</div>
 				</div>
 				<ul
-					class=" text-high-contrast-text dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-center gap-8 text-lg font-semibold max-md:hidden">
+					class="dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-center gap-8 text-lg font-semibold max-md:hidden">
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
 							class="cursor-pointer transition-all group-hover:text-black dark:group-hover:text-white">
