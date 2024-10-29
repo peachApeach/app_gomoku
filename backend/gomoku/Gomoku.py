@@ -6,13 +6,13 @@
 # Gomoku will be played on a 19x19 Goban, without limit to the number of stones.
 # Swap2 opening
 # https://en.wikipedia.org/wiki/Gomoku#Variants
-import pprint
-import string
+
+from Colors import *
 
 class Gomoku:
 	def __init__(self):
-		self.__board_width = 2
-		self.__board_height = 9
+		self.__board_width = 14
+		self.__board_height = 14
 		self.board = [["*" for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)
 
@@ -20,9 +20,14 @@ class Gomoku:
 		content = ""
 		for line in self.board:
 			for char in line:
-				content += f"{char} "
-			content += "\n"
-		# pprint.pprint(self.board)
+				if char == 'B':
+					content += f"{BLACKHB} {RESET} "
+				elif char == 'W':
+					content += f"{WHITEHB} {RESET} "
+				else:
+					content += f"{YELLOWB} {RESET} "
+
+			content += "\n\n"
 		return content
 
 	def get_player_turn(self) -> str:
@@ -36,9 +41,14 @@ class Gomoku:
 					white_stone += 1
 		return 'B' if black_stone == white_stone else 'W'
 
+	def place_stone(self, coordinate: tuple[int]):
+		self.board[coordinate[0]][coordinate[1]] = self.get_player_turn()
+		pass
+
 if __name__ == "__main__":
 	gomoku = Gomoku()
-
+	gomoku.place_stone((3, 2))
 	print(gomoku)
 	print(gomoku.get_player_turn())
+
 
