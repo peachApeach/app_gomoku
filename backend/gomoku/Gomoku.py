@@ -21,11 +21,11 @@ class Gomoku:
 		for line in self.board:
 			for char in line:
 				if char == 'B':
-					content += f"{BLACKHB} {RESET} "
+					content += f"{REDHB}  {RESET} "
 				elif char == 'W':
-					content += f"{WHITEHB} {RESET} "
+					content += f"{CYANHB}  {RESET} "
 				else:
-					content += f"{YELLOWB} {RESET} "
+					content += f"{BLACKHB}  {RESET} "
 
 			content += "\n\n"
 		return content
@@ -48,6 +48,10 @@ class Gomoku:
 if __name__ == "__main__":
 	gomoku = Gomoku()
 	gomoku.place_stone((3, 2))
+	gomoku.place_stone((3, 3))
+	gomoku.place_stone((3, 4))
+	gomoku.place_stone((3, 5))
+	gomoku.place_stone((3, 6))
 	print(gomoku)
 	print(gomoku.get_player_turn())
 
