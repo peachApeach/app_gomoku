@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from gomoku_evaluation import *
 from Gomoku import Gomoku
 
-def test_winner_found():
+def test_terminate_state():
 	# HORIZONTAL
 	gomoku = Gomoku()
 	t = 3
@@ -29,6 +29,7 @@ def test_winner_found():
 		gomoku.place_stone(f"I{i}", "W")
 
 	assert winner_found(gomoku.board) == True
+	assert terminate_state(gomoku.board) == True
 
 	# DIAGONAL
 	gomoku = Gomoku()
@@ -41,3 +42,11 @@ def test_winner_found():
 		gomoku.place_stone(f"I{i}", "W")
 
 	assert winner_found(gomoku.board) == True
+	assert terminate_state(gomoku.board) == True
+
+	gomoku = Gomoku(board_size=(4, 4))
+	for i in range(len(gomoku.board)):
+		for j in range(len(gomoku.board[i])):
+			gomoku.board[i][j] = 'B'
+	assert winner_found(gomoku.board) == False
+	assert terminate_state(gomoku.board) == True
