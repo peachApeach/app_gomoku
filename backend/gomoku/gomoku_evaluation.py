@@ -68,13 +68,21 @@ if __name__ == "__main__":
 	# 	gomoku.place_stone(f"I{i}", "W")
 
 	# DIAGONAL
-	gomoku.place_stone(f"C5", "B")
-	gomoku.place_stone(f"D6", "B")
-	gomoku.place_stone(f"E7", "B")
-	gomoku.place_stone(f"F8", "B")
-	gomoku.place_stone(f"G9", "B")
-	for i in range(6, 10):
-		gomoku.place_stone(f"I{i}", "W")
+	# gomoku.place_stone(f"C5", "B")
+	# gomoku.place_stone(f"D6", "B")
+	# gomoku.place_stone(f"E7", "B")
+	# gomoku.place_stone(f"F8", "B")
+	# gomoku.place_stone(f"G9", "B")
+	# for i in range(6, 10):
+	# 	gomoku.place_stone(f"I{i}", "W")
 
-	print(gomoku)
-	print(winner_found(gomoku.board))
+	# TIE
+	# for i in range(len(gomoku.board)):
+	# 	for j in range(len(gomoku.board[i])):
+	# 		gomoku.board[i][j] = 'B'
+
+
+
+	# print(gomoku)
+	# print(terminate_state(gomoku.board))
+	pass
