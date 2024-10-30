@@ -10,6 +10,7 @@
 from Colors import *
 import string
 from gomoku_utils import convert_coordinate
+from gomoku_evaluation import *
 
 class GomokuError(Exception):
 	pass
@@ -56,8 +57,9 @@ class Gomoku:
 					white_stone += 1
 		return 'B' if black_stone == white_stone else 'W'
 
+	# def terminate_state(self, board)
 
-	def place_stone(self, coordinate: str):
+	def place_stone(self, coordinate: str, stone: str = None):
 		x, y = convert_coordinate(coordinate)
 		if x is None or y is None:
 			# raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
@@ -69,24 +71,36 @@ class Gomoku:
 			print("Coordinates out of range")
 			return
 		if self.board[y][x] == ' ':
-			self.board[y][x] = self.get_player_turn()
+			self.board[y][x] = self.get_player_turn() if stone == None else stone
 		else:
 			# raise PlacementError("This slot is already use. Please choose an other.")
 			print("This slot is already use. Please choose an other.")
 			return
 		# print(f"x:{x}, y:{y}")
 
+	def play(self):
+		# while terminate_state(self.board) == False:
+		# 	continue ;
+		pass
+
 
 if __name__ == "__main__":
 	gomoku = Gomoku()
-	gomoku.place_stone("")
-	gomoku.place_stone("D:3")
-	gomoku.place_stone("D:3")
-	gomoku.place_stone("D:4")
-	gomoku.place_stone("D:5")
-	gomoku.place_stone("D:6")
-	gomoku.place_stone("D:7")
-	gomoku.place_stone("Z:0")
+	t = 3
+	for i in range(10):
+		if i % 2 == 0:
+			gomoku.place_stone(f"C:{t}")
+			t += 1
+		else:
+			gomoku.place_stone(f"I:{i + 1}")
+	# print()
+	# gomoku.place_stone("D:3")
+	# gomoku.place_stone("D:3")
+	# gomoku.place_stone("D:4")
+	# gomoku.place_stone("D:5")
+	# gomoku.place_stone("D:6")
+	# gomoku.place_stone("D:7")
+	# gomoku.place_stone("Z:0")
 	# gomoku.place_stone((3, 2))
 	# gomoku.place_stone((3, 3))
 	# gomoku.place_stone((3, 4))
