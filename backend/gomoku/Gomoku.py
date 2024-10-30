@@ -19,9 +19,11 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self):
-		self.__board_width = 14
-		self.__board_height = 14
+	def __init__(self, board_size: tuple[int] = (14, 14), IA: bool = True, IA_suggestion: bool = False):
+		self.IA = IA
+		self.IA_suggestion = IA_suggestion
+		self.__board_width = board_size[0]
+		self.__board_height = board_size[1]
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)
 
@@ -79,28 +81,33 @@ class Gomoku:
 		# print(f"x:{x}, y:{y}")
 
 	def play(self):
-		# while terminate_state(self.board) == False:
-		# 	continue ;
+		while terminate_state(self.board) == False:
+			if self.get_player_turn() == "B": # Black turn, so player turn
+				pass
+			elif self.get_player_turn() == "W": # IA or 2 players turn
+				pass
+			else:
+				raise GomokuError("Player turn error")
 		pass
 
 
 if __name__ == "__main__":
 	gomoku = Gomoku()
-	t = 3
-	for i in range(10):
-		if i % 2 == 0:
-			gomoku.place_stone(f"C:{t}")
-			t += 1
-		else:
-			gomoku.place_stone(f"I:{i + 1}")
+	# t = 3
+	# for i in range(10):
+	# 	if i % 2 == 0:
+	# 		gomoku.place_stone(f"C:{t}")
+	# 		t += 1
+	# 	else:
+	# 		gomoku.place_stone(f"I:{i + 1}")
 	# print()
-	# gomoku.place_stone("D:3")
-	# gomoku.place_stone("D:3")
-	# gomoku.place_stone("D:4")
-	# gomoku.place_stone("D:5")
-	# gomoku.place_stone("D:6")
-	# gomoku.place_stone("D:7")
-	# gomoku.place_stone("Z:0")
+	# gomoku.place_stone("D3")
+	# gomoku.place_stone("D3")
+	# gomoku.place_stone("D4")
+	# gomoku.place_stone("D5")
+	# gomoku.place_stone("D6")
+	# gomoku.place_stone("D7")
+	# gomoku.place_stone("Z0")
 	# gomoku.place_stone((3, 2))
 	# gomoku.place_stone((3, 3))
 	# gomoku.place_stone((3, 4))
