@@ -9,8 +9,14 @@
 
 from Colors import *
 import string
+import os
 from gomoku_utils import convert_coordinate
 from gomoku_evaluation import *
+from my_utils import print_error
+
+
+def print_state():
+	pass
 
 class GomokuError(Exception):
 	pass
@@ -39,9 +45,9 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{REDHB}  {RESET} "
+					content += f"{BLUEB}  {RESET} "
 				elif char == 'W':
-					content += f"{CYANHB}  {RESET} "
+					content += f"{WHITEHB}  {RESET} "
 				else:
 					content += f"{BLACKHB}  {RESET} "
 
@@ -64,35 +70,82 @@ class Gomoku:
 	def place_stone(self, coordinate: str, stone: str = None):
 		x, y = convert_coordinate(coordinate)
 		if x is None or y is None:
-			# raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
+			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 			print("Invalid placement format.")
-			return
+			return False
 
 		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
-			# raise PlacementError("Your coordinates is out of the board.")
+			raise PlacementError("Your coordinates is out of the board.")
 			print("Coordinates out of range")
 			return
 		if self.board[y][x] == ' ':
 			self.board[y][x] = self.get_player_turn() if stone == None else stone
-		else:
-			# raise PlacementError("This slot is already use. Please choose an other.")
-			print("This slot is already use. Please choose an other.")
 			return
+			# return True
+		else:
+			raise PlacementError("This slot is already use. Please choose an other.")
+			print("This slot is already use. Please choose an other.")
+			return False
 		# print(f"x:{x}, y:{y}")
 
+	def display_board(self, message: str = None, is_err: str = False):
+		os.system("clear")
+		if (message != None):
+			print()
+			if is_err:
+				print(f"{BHRED} ==== ERROR : {message} ===={RESET}")
+			else:
+				print(f"{BHWHITE} ==== STATE : {message} ===={RESET}")
+		print(self)
+
 	def play(self):
+		is_err = False
+		message = None
 		while terminate_state(self.board) == False:
+			is_err = False
+			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
+			self.display_board(message=message, is_err=is_err)
 			if self.get_player_turn() == "B": # Black turn, so player turn
-				pass
+				while True:
+					user_placement = input(f"{'black' if self.get_player_turn() == 'B' else 'white'} Turn -> ")
+					try:
+						self.place_stone(user_placement)
+						break
+					except Exception as e:
+						message = str(e)
+						is_err = True
+						self.display_board(message=message, is_err=is_err)
+						# print_error(e)
+
 			elif self.get_player_turn() == "W": # IA or 2 players turn
-				pass
+				if self.IA == True:
+					# Handle IA
+					pass
+				else:
+					while True:
+						user_placement = input(f"{'black' if self.get_player_turn() == 'B' else 'white'} Turn -> ")
+						try:
+							self.place_stone(user_placement)
+							break
+						except Exception as e:
+							message = str(e)
+							is_err = True
+							self.display_board(message=message, is_err=is_err)
 			else:
 				raise GomokuError("Player turn error")
-		pass
+
+		has_winner, who_win = winner_found(self.board)
+		is_err = False
+		if has_winner:
+			message = f"{'White' if self.get_player_turn() == 'B' else 'Black'} has won the game !"
+		else:
+			message = "No one has won. It's a perfect tie !"
+		self.display_board(message=message, is_err=is_err)
 
 
 if __name__ == "__main__":
-	gomoku = Gomoku()
+	gomoku = Gomoku(IA=False, board_size=(6, 6))
+	gomoku.play()
 	# t = 3
 	# for i in range(10):
 	# 	if i % 2 == 0:
@@ -113,7 +166,7 @@ if __name__ == "__main__":
 	# gomoku.place_stone((3, 4))
 	# gomoku.place_stone((3, 5))
 	# gomoku.place_stone((3, 6))
-	print(gomoku)
+	# print(gomoku)
 	# print(gomoku.get_player_turn())
 
 

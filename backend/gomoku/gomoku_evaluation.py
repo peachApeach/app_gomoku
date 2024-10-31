@@ -1,11 +1,12 @@
 
 def win_from_pos(board: list[list[str]], i, j) -> bool:
+	number_to_win = 3
 	stone = board[i][j]
 	if stone == ' ':
 		return False
 	# HORIZONTAL
 	try:
-		for k in range(5):
+		for k in range(number_to_win):
 			if stone != board[i][j + k]:
 				raise Exception
 		return True
@@ -14,7 +15,7 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 
 	# VERTICAL
 	try:
-		for k in range(5):
+		for k in range(number_to_win):
 			if stone != board[i + k][j]:
 				raise Exception
 		return True
@@ -22,7 +23,7 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 		pass
 	# DIAGONALE
 	try:
-		for k in range(5):
+		for k in range(number_to_win):
 			if stone != board[i + k][j + k]:
 				raise Exception
 		return True
