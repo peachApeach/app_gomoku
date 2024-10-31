@@ -30,8 +30,11 @@ class Gomoku:
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
+		self.black_capture = 0
+		self.white_capture = 0
+		self.player_turn = 'B'
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
-		# print(self.board)
+		# print(self.board)"x", "o", " ", "x"
 
 	def __str__(self) -> str:
 		content = "  "
@@ -54,39 +57,47 @@ class Gomoku:
 			content += "\n\n"
 		return content
 
-	def get_player_turn(self) -> str:
-		black_stone = 0
-		white_stone = 0
-		for i in range(self.__board_height):
-			for j in range(self.__board_width):
-				if self.board[i][j] == 'B':
-					black_stone += 1
-				elif self.board[i][j] == 'W':
-					white_stone += 1
-		return 'B' if black_stone == white_stone else 'W'
+	def switch_player_turn(self):
+		self.player_turn = 'B' if self.player_turn == 'W' else 'W'
 
-	# def terminate_state(self, board)
+	def get_player_turn(self) -> str:
+		return self.player_turn
+		# black_stone = 0
+		# white_stone = 0
+		# for i in range(self.__board_height):
+		# 	for j in range(self.__board_width):
+		# 		if self.board[i][j] == 'B':
+		# 			black_stone += 1
+		# 		elif self.board[i][j] == 'W':
+		# 			white_stone += 1
+		# return 'B' if black_stone == white_stone else 'W'
 
 	def place_stone(self, coordinate: str, stone: str = None):
 		x, y = convert_coordinate(coordinate)
 		if x is None or y is None:
 			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
-			print("Invalid placement format.")
-			return False
 
 		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
 			raise PlacementError("Your coordinates is out of the board.")
-			print("Coordinates out of range")
-			return
+
 		if self.board[y][x] == ' ':
 			self.board[y][x] = self.get_player_turn() if stone == None else stone
-			return
-			# return True
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
-			print("This slot is already use. Please choose an other.")
-			return False
-		# print(f"x:{x}, y:{y}")
+
+	def remove_pairs(self):
+		value = remove_pair_capture(self.board)
+		if value:
+			if value['stone_attack'] == 'B':
+				self.black_capture += 1
+			else:
+				self.white_capture += 1
+			cd1 = value['coordinate_to_remove'][0]
+			cd2 = value['coordinate_to_remove'][1]
+			self.board[cd1[0]][cd1[1]] = ' '
+			self.board[cd2[0]][cd2[1]] = ' '
+			return True
+		return False
 
 	def display_board(self, message: str = None, is_err: str = False):
 		os.system("clear")
@@ -97,19 +108,25 @@ class Gomoku:
 			else:
 				print(f"{BHWHITE} ==== STATE : {message} ===={RESET}")
 		print(self)
+		print(f"{BLACKB}{BHWHITE}BLACK HAS CAPTURED {self.black_capture} WHITE PAIRS.{RESET}")
+		print(f"{WHITEHB}{BHBLACK}WHITE HAS CAPTURED {self.white_capture} BLACK PAIRS.{RESET}")
+		print()
 
 	def play(self):
 		is_err = False
 		message = None
-		while terminate_state(self.board) == False:
+		while terminate_state(self.board, self.black_capture, self.white_capture) == False:
+			if self.remove_pairs() == True:
+				continue
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
 			self.display_board(message=message, is_err=is_err)
 			if self.get_player_turn() == "B": # Black turn, so player turn
 				while True:
-					user_placement = input(f"{'black' if self.get_player_turn() == 'B' else 'white'} Turn -> ")
+					user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 					try:
 						self.place_stone(user_placement)
+						self.switch_player_turn()
 						break
 					except Exception as e:
 						message = str(e)
@@ -123,9 +140,10 @@ class Gomoku:
 					pass
 				else:
 					while True:
-						user_placement = input(f"{'black' if self.get_player_turn() == 'B' else 'white'} Turn -> ")
+						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 						try:
 							self.place_stone(user_placement)
+							self.switch_player_turn()
 							break
 						except Exception as e:
 							message = str(e)
@@ -144,7 +162,7 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	gomoku = Gomoku(IA=False, board_size=(6, 6))
+	gomoku = Gomoku(IA=False)
 	gomoku.play()
 	# t = 3
 	# for i in range(10):
