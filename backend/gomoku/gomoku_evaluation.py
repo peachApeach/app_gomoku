@@ -30,7 +30,7 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 		pass
 	return False
 
-def winner_found(board: list[list[str]]) -> bool:
+def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if win_from_pos(board, i, j) == True:
