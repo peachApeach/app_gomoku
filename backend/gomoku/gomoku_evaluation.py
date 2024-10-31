@@ -31,41 +31,63 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 		pass
 	return False
 
+def get_all_positions_pairs(board, i, j):
+	# board = [
+	# 	[" ", "C", " ", " ", " ", " ", " ", " "],
+	# 	["W", " ", " ", "W", " ", " ", "W", " "],
+	# 	[" ", "A", " ", "E", " ", "C", " ", " "],
+	# 	[" ", " ", "A", "E", "C", " ", " ", " "],
+	# 	["W", "I", "I", "W", "F", "F", "W", " "],
+	# 	[" ", " ", "H", "G", "D", " ", " ", " "],
+	# 	[" ", "H", " ", "G", " ", "D", " ", " "],
+	# 	["W", " ", " ", "W", " ", " ", "W", " "],
+	# 	[" ", " ", " ", " ", " ", " ", " ", " "],
+	# ]
+	all_positions = []
+	try: # F
+		all_positions.append("".join([board[i][j + k] for k in range(4)]))
+	except:
+		pass
+	try: # I
+		all_positions.append("".join([board[i][j - k] for k in range(4)]))
+	except:
+		pass
+	try: # G
+		all_positions.append("".join([board[i + k][j] for k in range(4)]))
+	except:
+		pass
+	try: # E
+		all_positions.append("".join([board[i - k][j] for k in range(4)]))
+	except:
+		pass
+	try: # A
+		all_positions.append("".join([board[i - k][j - k] for k in range(4)]))
+	except:
+		pass
+	try: # D
+		all_positions.append("".join([board[i + k][j + k] for k in range(4)]))
+	except:
+		pass
+	try: # C
+		all_positions.append("".join([board[i - k][j + k] for k in range(4)]))
+	except:
+		pass
+	try: # H
+		all_positions.append("".join([board[i + k][j - k] for k in range(4)]))
+	except:
+		pass
+	return all_positions
+
+
+
+
 def pair_can_be_capture(board: list[list[str]], i, j) -> list[tuple[int]] | None:
 	stone = board[i][j]
 	if stone == ' ':
 		return None
-	# HORIZONTAL
-	try:
-		if	stone == board[i][j + 3] and\
-			board[i][j + 1] == board[i][j + 2] and\
-			board[i][j + 2] != board[i][j + 3] and\
-			board[i][j + 1] != ' ':
-			return [(i, j + 1), (i, j + 2)]
-		raise Exception
-	except:
-		pass
-
-	# VERTICAL
-	try:
-		if	stone == board[i + 3][j] and\
-			board[i + 1][j] == board[i + 2][j] and\
-			board[i + 2][j] != board[i + 3][j] and\
-			board[i + 1][j] != ' ':
-			return [(i + 1, j), (i + 2, j)]
-		raise Exception
-	except:
-		pass
-	# DIAGONALE
-	try:
-		if	stone == board[i + 3][j + 3] and\
-			board[i + 1][j + 1] == board[i + 2][j + 2] and\
-			board[i + 2][j + 2] != board[i + 3][j + 3] and\
-			board[i + 1][j + 1] != ' ':
-			return [(i + 1, j + 1), (i + 2, j + 2)]
-		raise Exception
-	except:
-		pass
+	all_positions = get_all_positions_pairs(board, i, j)
+	if "WBBW" in all_positions or "BWWB" in all_positions:
+		return [(i, j + 1), (i, j + 2)]
 	return None
 
 def remove_pair_capture(board: list[list[str]]) -> dict | None:

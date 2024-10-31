@@ -82,6 +82,25 @@ class Gomoku:
 
 		if self.board[y][x] == ' ':
 			self.board[y][x] = self.get_player_turn() if stone == None else stone
+			value = pair_can_be_capture(self.board, y, x)
+			if stone == None:
+				print(self)
+				print(f"[{y}][{x}] : {value}")
+				exit(2)
+			if value:
+				if value['stone_attack'] == 'B':
+					self.black_capture += 1
+				else:
+					self.white_capture += 1
+				cd1 = value[0]
+				cd2 = value[1]
+				self.board[cd1[0]][cd1[1]] = ' '
+				self.board[cd2[0]][cd2[1]] = ' '
+				if stone == None:
+					print(value)
+					print(self)
+					exit(1)
+
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 
@@ -116,8 +135,8 @@ class Gomoku:
 		is_err = False
 		message = None
 		while terminate_state(self.board, self.black_capture, self.white_capture) == False:
-			if self.remove_pairs() == True:
-				continue
+			# if self.remove_pairs() == True:
+			# 	continue
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
 			self.display_board(message=message, is_err=is_err)
@@ -155,7 +174,7 @@ class Gomoku:
 		has_winner, who_win = winner_found(self.board)
 		is_err = False
 		if has_winner:
-			message = f"{'White' if self.get_player_turn() == 'B' else 'Black'} has won the game !"
+			message = f"{'White' if who_win == 'W' else 'Black'} has won the game !"
 		else:
 			message = "No one has won. It's a perfect tie !"
 		self.display_board(message=message, is_err=is_err)
@@ -163,6 +182,10 @@ class Gomoku:
 
 if __name__ == "__main__":
 	gomoku = Gomoku(IA=False)
+	gomoku.place_stone("b2", "B")
+	gomoku.place_stone("b3", "W")
+	gomoku.place_stone("b4", "W")
+	gomoku.place_stone("c4", "B")
 	gomoku.play()
 	# t = 3
 	# for i in range(10):
