@@ -20,36 +20,45 @@ board = [
 
 def get_all_positions_pairs(board, i, j):
 	all_positions = []
+	possibility = ["WBBW", "BWWB"]
 	try: # F
-		all_positions.append("".join([board[i][j + k] for k in range(4)]))
+		if "".join([board[i][j + k] for k in range(4)]) in possibility:
+			return [(i, j + 1), (i, j + 2)]
 	except:
 		pass
 	try: # I
-		all_positions.append("".join([board[i][j - k] for k in range(4)]))
+		if "".join([board[i][j - k] for k in range(4)]) in possibility:
+			return [(i, j - 1), (i, j - 2)]
 	except:
 		pass
 	try: # G
-		all_positions.append("".join([board[i + k][j] for k in range(4)]))
+		if "".join([board[i + k][j] for k in range(4)]) in possibility:
+			return [(i + 1, j), (i + 2, j)]
 	except:
 		pass
 	try: # E
-		all_positions.append("".join([board[i - k][j] for k in range(4)]))
+		if "".join([board[i - k][j] for k in range(4)]) in possibility:
+			return [(i - 1, j), (i - 2, j)]
 	except:
 		pass
 	try: # A
-		all_positions.append("".join([board[i - k][j - k] for k in range(4)]))
+		if "".join([board[i - k][j - k] for k in range(4)]) in possibility:
+			return [(i - 1, j - 1), (i - 2, j - 2)]
 	except:
 		pass
 	try: # D
-		all_positions.append("".join([board[i + k][j + k] for k in range(4)]))
+		if "".join([board[i + k][j + k] for k in range(4)]) in possibility:
+			return [(i + 1, j + 1), (i + 1, j + 2)]
 	except:
 		pass
 	try: # C
-		all_positions.append("".join([board[i - k][j + k] for k in range(4)]))
+		if "".join([board[i - k][j + k] for k in range(4)]) in possibility:
+			return [(i - 1, j + 1), (i - 1, j + 2)]
 	except:
 		pass
 	try: # H
-		all_positions.append("".join([board[i + k][j - k] for k in range(4)]))
+		if "".join([board[i + k][j - k] for k in range(4)]) in possibility:
+			return [(i + 1, j - 1), (i + 2, j - 2)]
 	except:
 		pass
 	return all_positions
