@@ -34,11 +34,11 @@ def winner_found(board: list[list[str]]) -> bool:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if win_from_pos(board, i, j) == True:
-				return True
-	return False
+				return (True, board[i][j])
+	return (False, None)
 
 def terminate_state(board: list[list[str]]) -> bool:
-	if winner_found(board) == True:
+	if winner_found(board)[0] == True:
 		return True
 	for i in range(len(board)):
 		for j in range(len(board[i])):

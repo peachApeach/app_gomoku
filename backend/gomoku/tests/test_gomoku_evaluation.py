@@ -16,7 +16,7 @@ def test_terminate_state():
 		else:
 			gomoku.place_stone(f"I{i + 1}")
 
-	assert winner_found(gomoku.board) == True
+	assert winner_found(gomoku.board)[0] == True
 
 	# VERTICAL
 	gomoku = Gomoku()
@@ -28,7 +28,7 @@ def test_terminate_state():
 	for i in range(6, 10):
 		gomoku.place_stone(f"I{i}", "W")
 
-	assert winner_found(gomoku.board) == True
+	assert winner_found(gomoku.board)[0] == True
 	assert terminate_state(gomoku.board) == True
 
 	# DIAGONAL
@@ -41,12 +41,12 @@ def test_terminate_state():
 	for i in range(6, 10):
 		gomoku.place_stone(f"I{i}", "W")
 
-	assert winner_found(gomoku.board) == True
+	assert winner_found(gomoku.board)[0] == True
 	assert terminate_state(gomoku.board) == True
 
 	gomoku = Gomoku(board_size=(4, 4))
 	for i in range(len(gomoku.board)):
 		for j in range(len(gomoku.board[i])):
 			gomoku.board[i][j] = 'B'
-	assert winner_found(gomoku.board) == False
+	assert winner_found(gomoku.board)[0] == False
 	assert terminate_state(gomoku.board) == True

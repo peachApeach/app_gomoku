@@ -4,15 +4,18 @@ import re
 def convert_coordinate(coordinate: str) -> tuple[int] | None:
 
 	# regex = r"([A-Z]:\d+)|(\d+:[A-Z])"
-	regex = r"(?:(?:(?P<y>[A-Z])(?P<x>\d+))|(?:(?P<x_alt>\d+)(?P<y_alt>[A-Z])))$"
-	match_coordinate = re.search(regex, coordinate)
+	regex = r"(?:(?:(?P<y>[a-zA-Z])(?P<x>\d+))|(?:(?P<x_alt>\d+)(?P<y_alt>[a-zA-Z])))$"
+	match_coordinate = re.match(regex, coordinate)
 	if match_coordinate:
 		# print(match_coordinate)
 		# print(match_coordinate.group("x"))
 		# print(match_coordinate.group("y"))
 		x = match_coordinate.group("x") or match_coordinate.group("x_alt")
 		y = match_coordinate.group("y") or match_coordinate.group("y_alt")
-		y = string.ascii_uppercase.find(y)
+		if y.islower():
+			y = string.ascii_lowercase.find(y)
+		else:
+			y = string.ascii_uppercase.find(y)
 		# print(f"x:{x}, y:{y}")
 		return (int(x) - 1, int(y))
 	else:
