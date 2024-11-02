@@ -32,62 +32,91 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 	return False
 
 def get_all_positions_pairs(board, i, j):
-	# board = [
-	# 	[" ", "C", " ", " ", " ", " ", " ", " "],
-	# 	["W", " ", " ", "W", " ", " ", "W", " "],
-	# 	[" ", "A", " ", "E", " ", "C", " ", " "],
-	# 	[" ", " ", "A", "E", "C", " ", " ", " "],
-	# 	["W", "I", "I", "W", "F", "F", "W", " "],
-	# 	[" ", " ", "H", "G", "D", " ", " ", " "],
-	# 	[" ", "H", " ", "G", " ", "D", " ", " "],
-	# 	["W", " ", " ", "W", " ", " ", "W", " "],
-	# 	[" ", " ", " ", " ", " ", " ", " ", " "],
-	# ]
-	all_positions = []
+	possibility = ("WBBW", "BWWB")
 	try: # F
-		all_positions.append("".join([board[i][j + k] for k in range(4)]))
+		if "".join([board[i][j + k] for k in range(4)]) in possibility:
+			return [(i, j + 1), (i, j + 2)]
 	except:
 		pass
 	try: # I
-		all_positions.append("".join([board[i][j - k] for k in range(4)]))
+		if "".join([board[i][j - k] for k in range(4)]) in possibility:
+			return [(i, j - 1), (i, j - 2)]
 	except:
 		pass
 	try: # G
-		all_positions.append("".join([board[i + k][j] for k in range(4)]))
+		if "".join([board[i + k][j] for k in range(4)]) in possibility:
+			return [(i + 1, j), (i + 2, j)]
 	except:
 		pass
 	try: # E
-		all_positions.append("".join([board[i - k][j] for k in range(4)]))
+		if "".join([board[i - k][j] for k in range(4)]) in possibility:
+			return [(i - 1, j), (i - 2, j)]
 	except:
 		pass
 	try: # A
-		all_positions.append("".join([board[i - k][j - k] for k in range(4)]))
+		if "".join([board[i - k][j - k] for k in range(4)]) in possibility:
+			return [(i - 1, j - 1), (i - 2, j - 2)]
 	except:
 		pass
 	try: # D
-		all_positions.append("".join([board[i + k][j + k] for k in range(4)]))
+		if "".join([board[i + k][j + k] for k in range(4)]) in possibility:
+			return [(i + 1, j + 1), (i + 1, j + 2)]
 	except:
 		pass
 	try: # C
-		all_positions.append("".join([board[i - k][j + k] for k in range(4)]))
+		if "".join([board[i - k][j + k] for k in range(4)]) in possibility:
+			return [(i - 1, j + 1), (i - 1, j + 2)]
 	except:
 		pass
 	try: # H
-		all_positions.append("".join([board[i + k][j - k] for k in range(4)]))
+		if "".join([board[i + k][j - k] for k in range(4)]) in possibility:
+			return [(i + 1, j - 1), (i + 2, j - 2)]
 	except:
 		pass
-	return all_positions
-
-
-
+	return None
 
 def pair_can_be_capture(board: list[list[str]], i, j) -> list[tuple[int]] | None:
-	stone = board[i][j]
-	if stone == ' ':
-		return None
-	all_positions = get_all_positions_pairs(board, i, j)
-	if "WBBW" in all_positions or "BWWB" in all_positions:
-		return [(i, j + 1), (i, j + 2)]
+	possibility = ("WBBW", "BWWB")
+	try: # F
+		if "".join([board[i][j + k] for k in range(4)]) in possibility:
+			return [(i, j + 1), (i, j + 2)]
+	except:
+		pass
+	try: # I
+		if "".join([board[i][j - k] for k in range(4)]) in possibility:
+			return [(i, j - 1), (i, j - 2)]
+	except:
+		pass
+	try: # G
+		if "".join([board[i + k][j] for k in range(4)]) in possibility:
+			return [(i + 1, j), (i + 2, j)]
+	except:
+		pass
+	try: # E
+		if "".join([board[i - k][j] for k in range(4)]) in possibility:
+			return [(i - 1, j), (i - 2, j)]
+	except:
+		pass
+	try: # A
+		if "".join([board[i - k][j - k] for k in range(4)]) in possibility:
+			return [(i - 1, j - 1), (i - 2, j - 2)]
+	except:
+		pass
+	try: # D
+		if "".join([board[i + k][j + k] for k in range(4)]) in possibility:
+			return [(i + 1, j + 1), (i + 1, j + 2)]
+	except:
+		pass
+	try: # C
+		if "".join([board[i - k][j + k] for k in range(4)]) in possibility:
+			return [(i - 1, j + 1), (i - 1, j + 2)]
+	except:
+		pass
+	try: # H
+		if "".join([board[i + k][j - k] for k in range(4)]) in possibility:
+			return [(i + 1, j - 1), (i + 2, j - 2)]
+	except:
+		pass
 	return None
 
 def remove_pair_capture(board: list[list[str]]) -> dict | None:

@@ -83,12 +83,8 @@ class Gomoku:
 		if self.board[y][x] == ' ':
 			self.board[y][x] = self.get_player_turn() if stone == None else stone
 			value = pair_can_be_capture(self.board, y, x)
-			if stone == None:
-				print(self)
-				print(f"[{y}][{x}] : {value}")
-				exit(2)
 			if value:
-				if value['stone_attack'] == 'B':
+				if self.board[y][x] == 'B':
 					self.black_capture += 1
 				else:
 					self.white_capture += 1
@@ -96,11 +92,6 @@ class Gomoku:
 				cd2 = value[1]
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
-				if stone == None:
-					print(value)
-					print(self)
-					exit(1)
-
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 

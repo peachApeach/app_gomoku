@@ -9,8 +9,8 @@ import pprint
 board = [
 	[" ", "C", " ", " ", " ", " ", " ", " "],
 	["W", " ", " ", "W", " ", " ", "W", " "],
-	[" ", "A", " ", "E", " ", "C", " ", " "],
-	[" ", " ", "A", "E", "C", " ", " ", " "],
+	[" ", "A", " ", "E", " ", "B", " ", " "],
+	[" ", " ", "A", "E", "B", " ", " ", " "],
 	["W", "I", "I", "W", "F", "F", "W", " "],
 	[" ", " ", "H", "G", "D", " ", " ", " "],
 	[" ", "H", " ", "G", " ", "D", " ", " "],
@@ -19,8 +19,7 @@ board = [
 ]
 
 def get_all_positions_pairs(board, i, j):
-	all_positions = []
-	possibility = ["WBBW", "BWWB"]
+	possibility = ("WBBW", "BWWB")
 	try: # F
 		if "".join([board[i][j + k] for k in range(4)]) in possibility:
 			return [(i, j + 1), (i, j + 2)]
@@ -61,7 +60,7 @@ def get_all_positions_pairs(board, i, j):
 			return [(i + 1, j - 1), (i + 2, j - 2)]
 	except:
 		pass
-	return all_positions
+	return None
 
 pprint.pprint(board) # 4,3
 
