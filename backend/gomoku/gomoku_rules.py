@@ -142,17 +142,67 @@ def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[tuple[int]]
 # 	[" ", " ", " ", " ", " ", " ", " ", " "],
 # ]
 
-def detect_free_three():
+def is_free_three(board: list[list[str]], i, j, stone):
+	count = 0
+	possibility = ("  BBB ", " B BB ", " BB B ", " BBB  ")
+	try: # F
+		print(f"{i}:{j}" ,"{" ,"".join([board[i][j + k] for k in range(0, 6)]), "}")
+		if "".join([board[i][j + k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # I
+		if "".join([board[i][j - k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # G
+		if "".join([board[i + k][j] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # E
+		if "".join([board[i - k][j] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # A
+		if "".join([board[i - k][j - k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # D
+		if "".join([board[i + k][j + k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # C
+		if "".join([board[i - k][j + k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	try: # H
+		if "".join([board[i + k][j - k] for k in range(0, 6)]) in possibility:
+			count += 1
+	except:
+		pass
+	return count
+
+def count_free_three(board: list[list[str]], stone: str):
 	"""
 	Les free_three possibles :
-	'BBB  '
-	' B BB'
-	' BB B'
-	' BBB '
-	' BBB '
-	' B BB'
+	'  BBB ' => ' BBBB '
+	' B BB ' => ' BBBB '
+	' BB B ' => ' BBBB '
+	' BBB  ' => ' BBBB '
 	"""
-	possibility = ("BBB  ", "")
+	count = 0
+	for i in range(len(board)):
+		for j in range(len(board[i])):
+			if board[i][j] == " ":
+				count += is_free_three(board, i, j, stone)
+	print(count)
+	return count
 
 def is_creating_double_three(board: list[list[str]], i, j, stone) -> bool:
 	# possibility = ("BBB ", "BB B", "B BB", "WWW ", "WW W", "W WW")
@@ -299,11 +349,12 @@ def test_creating_double_three():
 	from Gomoku import Gomoku
 	gomoku = Gomoku()
 	gomoku.place_stone(f"C5", "B")
-	gomoku.place_stone(f"D6", "B")
+	# gomoku.place_stone(f"D6", "B")
 	gomoku.place_stone(f"F9", "B")
 	gomoku.place_stone(f"F10", "B")
-	print(is_creating_double_three(gomoku.board, 5, 7, "B"))
-	# gomoku.place_stone(f"F8", "B")
+	# print(is_creating_double_three(gomoku.board, 5, 7, "B"))
+	gomoku.place_stone(f"F8", "B")
+	print(count_free_three(gomoku.board, "B"))
 	# print(is_creating_double_three(gomoku.board, 5, 7, "B"))
 	print(gomoku)
 	# print(remove_pair_capture(gomoku.board))
