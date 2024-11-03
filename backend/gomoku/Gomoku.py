@@ -11,7 +11,7 @@ from Colors import *
 import string
 import os
 from gomoku_utils import convert_coordinate
-from gomoku_evaluation import *
+from gomoku_rules import *
 from my_utils import print_error
 
 
@@ -81,9 +81,10 @@ class Gomoku:
 			raise PlacementError("Your coordinates is out of the board.")
 
 		if self.board[y][x] == ' ':
-			self.board[y][x] = self.get_player_turn() if stone == None else stone
-			value = pair_can_be_capture(self.board, y, x)
+			to_place = self.get_player_turn() if stone == None else stone
+			value = pair_can_be_capture(self.board, y, x, to_place)
 			if value:
+				self.board[y][x] = to_place
 				if self.board[y][x] == 'B':
 					self.black_capture += 1
 				else:
@@ -92,6 +93,14 @@ class Gomoku:
 				cd2 = value[1]
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
+			else:
+				if stone == None:
+					raise Exception
+				print(is_creating_double_three(self.board, y, x, to_place))
+				if is_creating_double_three(self.board, y, x, to_place):
+					raise PlacementError("This coordinates will create a double-three, it's forbidden.")
+				self.board[y][x] = to_place
+				# Check if that create a double three...
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 
@@ -174,9 +183,17 @@ class Gomoku:
 if __name__ == "__main__":
 	gomoku = Gomoku(IA=False)
 	gomoku.place_stone("b2", "B")
-	gomoku.place_stone("b3", "W")
-	gomoku.place_stone("b4", "W")
-	gomoku.place_stone("c4", "B")
+	gomoku.place_stone("m4", "W")
+	gomoku.place_stone("c3", "B")
+	gomoku.place_stone("h3", "W")
+	gomoku.place_stone("E6", "B")
+	gomoku.place_stone("h8", "W")
+	gomoku.place_stone("E7", "B")
+
+
+	gomoku.place_stone("E2", "B")
+	gomoku.place_stone("E3", "W")
+	gomoku.place_stone("E4", "W")
 	gomoku.play()
 	# t = 3
 	# for i in range(10):

@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from gomoku_evaluation import *
+from gomoku_rules import *
 from Gomoku import Gomoku
 
 def test_terminate_state():

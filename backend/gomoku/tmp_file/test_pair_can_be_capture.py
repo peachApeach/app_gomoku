@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from gomoku_evaluation import pair_can_be_capture
+from gomoku_rules import pair_can_be_capture
 import pprint
 
 board = [
