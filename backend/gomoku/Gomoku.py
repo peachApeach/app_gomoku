@@ -25,14 +25,14 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (14, 14), IA: bool = True, IA_suggestion: bool = False):
+	def __init__(self, board_size: tuple[int] = (14, 14), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B'):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
 		self.black_capture = 0
 		self.white_capture = 0
-		self.player_turn = 'B'
+		self.player_turn = who_start
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)"x", "o", " ", "x"
 
@@ -94,11 +94,11 @@ class Gomoku:
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
 			else:
-				if stone == None:
-					raise Exception
-				print(is_creating_double_three(self.board, y, x, to_place))
-				if is_creating_double_three(self.board, y, x, to_place):
-					raise PlacementError("This coordinates will create a double-three, it's forbidden.")
+				# if stone == None:
+				# 	raise Exception
+				# print(is_creating_double_three(self.board, y, x, to_place))
+				# if is_creating_double_three(self.board, y, x, to_place):
+				# 	raise PlacementError("This coordinates will create a double-three, it's forbidden.")
 				self.board[y][x] = to_place
 				# Check if that create a double three...
 		else:
@@ -182,10 +182,10 @@ class Gomoku:
 
 if __name__ == "__main__":
 	gomoku = Gomoku(IA=False)
-	gomoku.place_stone("b2", "B")
-	gomoku.place_stone("m4", "W")
-	gomoku.place_stone("c3", "B")
-	gomoku.place_stone("h3", "W")
+	# gomoku.place_stone("b2", "B")
+	# gomoku.place_stone("m4", "W")
+	# gomoku.place_stone("c3", "B")
+	# gomoku.place_stone("h3", "W")
 	gomoku.place_stone("E6", "B")
 	gomoku.place_stone("h8", "W")
 	gomoku.place_stone("E7", "B")
@@ -193,7 +193,8 @@ if __name__ == "__main__":
 
 	gomoku.place_stone("E2", "B")
 	gomoku.place_stone("E3", "W")
-	gomoku.place_stone("E4", "W")
+	gomoku.place_stone("E10", "W")
+	# gomoku.place_stone("E4", "W")
 	gomoku.play()
 	# t = 3
 	# for i in range(10):
