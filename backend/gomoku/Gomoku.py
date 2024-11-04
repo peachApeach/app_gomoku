@@ -32,6 +32,8 @@ class Gomoku:
 		self.__board_height = board_size[1]
 		self.black_capture = 0
 		self.white_capture = 0
+		self.free_three_black = 0
+		self.free_three_white = 0
 		self.player_turn = who_start
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)"x", "o", " ", "x"
@@ -94,12 +96,28 @@ class Gomoku:
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
 			else:
+				print(self.free_three_black)
+				self.board[y][x] = to_place
+				nb_free_three = count_free_three(self.board, to_place)
+				# if stone == None:
+				# 	os.system('clear')
+				# 	print(nb_free_three)
+				# 	print(self)
+				# 	exit(2)
+				if to_place == 'B':
+					if nb_free_three - self.free_three_black >= 2:
+						self.board[y][x] = ' '
+						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+				else:
+					if nb_free_three - self.free_three_white >= 2:
+						self.board[y][x] = ' '
+
+
 				# if stone == None:
 				# 	raise Exception
 				# print(is_creating_double_three(self.board, y, x, to_place))
 				# if is_creating_double_three(self.board, y, x, to_place):
 				# 	raise PlacementError("This coordinates will create a double-three, it's forbidden.")
-				self.board[y][x] = to_place
 				# Check if that create a double three...
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
@@ -182,17 +200,17 @@ class Gomoku:
 
 if __name__ == "__main__":
 	gomoku = Gomoku(IA=False)
-	# gomoku.place_stone("b2", "B")
-	# gomoku.place_stone("m4", "W")
-	# gomoku.place_stone("c3", "B")
-	# gomoku.place_stone("h3", "W")
+	gomoku.place_stone("b2", "B")
+	gomoku.place_stone("m4", "W")
+	gomoku.place_stone("c3", "B")
+	gomoku.place_stone("h3", "W")
 	gomoku.place_stone("E6", "B")
 	gomoku.place_stone("h8", "W")
 	gomoku.place_stone("E7", "B")
 
 
 	gomoku.place_stone("E2", "B")
-	gomoku.place_stone("E3", "W")
+	# gomoku.place_stone("E3", "W")
 	gomoku.place_stone("E10", "W")
 	# gomoku.place_stone("E4", "W")
 	gomoku.play()

@@ -133,8 +133,8 @@ def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[tuple[int]]
 # board = [
 # 	[" ", "C", " ", " ", " ", " ", " ", " "],
 # 	["W", " ", " ", "W", " ", " ", "W", " "],
-# 	[" ", "A", " ", "E", " ", "B", " ", " "],
-# 	[" ", " ", "A", "E", "B", " ", " ", " "],
+# 	[" ", "A", " ", "E", " ", "C", " ", " "],
+# 	[" ", " ", "A", "E", "C", " ", " ", " "],
 # 	["W", "I", "I", "W", "F", "F", "W", " "],
 # 	[" ", " ", "H", "G", "D", " ", " ", " "],
 # 	[" ", "H", " ", "G", " ", "D", " ", " "],
@@ -143,52 +143,6 @@ def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[tuple[int]]
 # ]
 
 def is_free_three(board: list[list[str]], i, j, stone):
-	count = 0
-	possibility = ("  BBB ", " B BB ", " BB B ", " BBB  ")
-	try: # F
-		print(f"{i}:{j}" ,"{" ,"".join([board[i][j + k] for k in range(0, 6)]), "}")
-		if "".join([board[i][j + k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # I
-		if "".join([board[i][j - k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # G
-		if "".join([board[i + k][j] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # E
-		if "".join([board[i - k][j] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # A
-		if "".join([board[i - k][j - k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # D
-		if "".join([board[i + k][j + k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # C
-		if "".join([board[i - k][j + k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	try: # H
-		if "".join([board[i + k][j - k] for k in range(0, 6)]) in possibility:
-			count += 1
-	except:
-		pass
-	return count
-
-def count_free_three(board: list[list[str]], stone: str):
 	"""
 	Les free_three possibles :
 	'  BBB ' => ' BBBB '
@@ -197,77 +151,52 @@ def count_free_three(board: list[list[str]], stone: str):
 	' BBB  ' => ' BBBB '
 	"""
 	count = 0
+	if stone == 'B':
+		possibility = ("  BBB ", " BBB  ", " B BB ", " BB B ")
+		large_double_three = "  BBB  "
+	elif stone == 'W':
+		possibility = ("  WWW ", " WWW  ", " W WW ", " WW W ")
+		large_double_three = "  WWW  "
+	else:
+		return count
+	try: # F
+		print(f"{i}:{j}" ,"{" ,"".join([board[i][j + k] for k in range(0, 6)]), "}")
+		if "".join([board[i][j + k] for k in range(0, 6)]) in possibility:
+			count += 1
+		if "".join([board[i][j + k] for k in range(0, 7)]) == large_double_three:
+			count -= 1
+	except:
+		pass
+	try: # G
+		if "".join([board[i + k][j] for k in range(0, 6)]) in possibility:
+			count += 1
+		if "".join([board[i + k][j] for k in range(0, 7)]) == large_double_three:
+			count -= 1
+	except:
+		pass
+	try: # D
+		if "".join([board[i + k][j + k] for k in range(0, 6)]) in possibility:
+			count += 1
+		if "".join([board[i + k][j + k] for k in range(0, 7)]) == large_double_three:
+			count -= 1
+	except:
+		pass
+	try: # H
+		if "".join([board[i + k][j - k] for k in range(0, 6)]) in possibility:
+			count += 1
+		if "".join([board[i + k][j - k] for k in range(0, 7)]) == large_double_three:
+			count -= 1
+	except:
+		pass
+	return count
+
+def count_free_three(board: list[list[str]], stone: str):
+	count = 0
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if board[i][j] == " ":
 				count += is_free_three(board, i, j, stone)
-	print(count)
 	return count
-
-def is_creating_double_three(board: list[list[str]], i, j, stone) -> bool:
-	# possibility = ("BBB ", "BB B", "B BB", "WWW ", "WW W", "W WW")
-	possibility = (" BBB " " BBB ", " BB ")
-	possibility = (f"{stone}{stone}{stone} ", f"{stone}{stone} {stone}", f"{stone} {stone}{stone}")
-	number_double_three = 0
-	print(f" {stone}" + "".join([board[i][j + k] for k in range(1, 4)]), end="]")
-	try: # F
-		if f" {stone}" + "".join([board[i][j + k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i][j + k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # I
-		if f" {stone}" + "".join([board[i][j - k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i][j - k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # G
-		if f" {stone}" + "".join([board[i + k][j] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i + k][j] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # E
-		if f" {stone}" + "".join([board[i - k][j] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i - k][j] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # A
-		if f" {stone}" + "".join([board[i - k][j - k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i - k][j - k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # D
-		if f" {stone}" + "".join([board[i + k][j + k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i + k][j + k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # C
-		if f" {stone}" + "".join([board[i - k][j + k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i - k][j + k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	try: # H
-		if stone + "".join([board[i + k][j - k] for k in range(1, 4)]) in possibility:
-			number_double_three += 1
-		elif f"  {stone}" + "".join([board[i + k][j - k] for k in range(2, 4)]) in possibility:
-			number_double_three += 1
-	except:
-		pass
-	print(number_double_three)
-	return number_double_three >= 2
 
 def remove_pair_capture(board: list[list[str]]) -> dict | None:
 	for i in range(len(board)):
@@ -349,10 +278,18 @@ def test_creating_double_three():
 	from Gomoku import Gomoku
 	gomoku = Gomoku()
 	gomoku.place_stone(f"C5", "B")
-	# gomoku.place_stone(f"D6", "B")
+	gomoku.place_stone(f"D6", "B")
 	gomoku.place_stone(f"F9", "B")
 	gomoku.place_stone(f"F10", "B")
 	# print(is_creating_double_three(gomoku.board, 5, 7, "B"))
+
+	gomoku.place_stone(f"G9", "B")
+	gomoku.place_stone(f"H10", "B")
+	# gomoku.place_stone(f"I11", "B")
+
+
+	# gomoku.place_stone(f"F8", "B")
+	print(count_free_three(gomoku.board, "B"))
 	gomoku.place_stone(f"F8", "B")
 	print(count_free_three(gomoku.board, "B"))
 	# print(is_creating_double_three(gomoku.board, 5, 7, "B"))
