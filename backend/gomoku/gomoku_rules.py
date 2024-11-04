@@ -160,7 +160,7 @@ def is_free_three(board: list[list[str]], i, j, stone):
 	else:
 		return count
 	try: # F
-		print(f"{i}:{j}" ,"{" ,"".join([board[i][j + k] for k in range(0, 6)]), "}")
+		# print(f"{i}:{j}" ,"{" ,"".join([board[i][j + k] for k in range(0, 6)]), "}")
 		if "".join([board[i][j + k] for k in range(0, 6)]) in possibility:
 			count += 1
 		if "".join([board[i][j + k] for k in range(0, 7)]) == large_double_three:
@@ -229,7 +229,7 @@ def terminate_state(board: list[list[str]], black_capture: int = 0, white_captur
 
 
 
-def test0():
+def main0():
 	from Gomoku import Gomoku
 	gomoku = Gomoku()
 	# HORIZONTAL
@@ -264,7 +264,7 @@ def test0():
 		for j in range(len(gomoku.board[i])):
 			gomoku.board[i][j] = 'B'
 
-def test1():
+def main1():
 	from Gomoku import Gomoku
 	gomoku = Gomoku()
 	gomoku.place_stone(f"C5", "B")
@@ -274,7 +274,7 @@ def test1():
 	gomoku.place_stone(f"F5", "B")
 	print(remove_pair_capture(gomoku.board))
 
-def test_creating_double_three():
+def main_creating_double_three():
 	from Gomoku import Gomoku
 	gomoku = Gomoku()
 	gomoku.place_stone(f"C5", "B")
@@ -298,7 +298,7 @@ def test_creating_double_three():
 
 if __name__ == "__main__":
 	# print(switch_opponent("WBBW  B"))
-	test_creating_double_three()
+	main_creating_double_three()
 	# stri = "BB B "
 	# print(stri.count("B"))
 	# print(stri.count(" "))

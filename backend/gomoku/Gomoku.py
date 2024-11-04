@@ -96,7 +96,7 @@ class Gomoku:
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
 			else:
-				print(self.free_three_black)
+				# print(self.free_three_black)
 				self.board[y][x] = to_place
 				nb_free_three = count_free_three(self.board, to_place)
 				# if stone == None:
@@ -108,9 +108,14 @@ class Gomoku:
 					if nb_free_three - self.free_three_black >= 2:
 						self.board[y][x] = ' '
 						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+					else:
+						self.free_three_black = nb_free_three
 				else:
 					if nb_free_three - self.free_three_white >= 2:
 						self.board[y][x] = ' '
+						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+					else:
+						self.free_three_white = nb_free_three
 
 
 				# if stone == None:
