@@ -11,6 +11,7 @@ from Colors import *
 import string
 import os
 from gomoku_utils import convert_coordinate
+from gomoku_state import *
 from gomoku_rules import *
 from my_utils import print_error
 

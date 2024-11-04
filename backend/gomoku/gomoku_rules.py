@@ -1,36 +1,3 @@
-
-def win_from_pos(board: list[list[str]], i, j) -> bool:
-	number_to_win = 5
-	stone = board[i][j]
-	if stone == ' ':
-		return False
-	# HORIZONTAL
-	try:
-		for k in range(number_to_win):
-			if stone != board[i][j + k]:
-				raise Exception
-		return True
-	except:
-		pass
-
-	# VERTICAL
-	try:
-		for k in range(number_to_win):
-			if stone != board[i + k][j]:
-				raise Exception
-		return True
-	except:
-		pass
-	# DIAGONALE
-	try:
-		for k in range(number_to_win):
-			if stone != board[i + k][j + k]:
-				raise Exception
-		return True
-	except:
-		pass
-	return False
-
 def get_all_positions_pairs(board, i, j):
 	possibility = ("WBBW", "BWWB")
 	try: # F
@@ -205,28 +172,6 @@ def remove_pair_capture(board: list[list[str]]) -> dict | None:
 			if value:
 				return {'stone_attack': board[i][j], 'coordinate_to_remove': value}
 	return None
-
-def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:
-	for i in range(len(board)):
-		for j in range(len(board[i])):
-			if win_from_pos(board, i, j) == True:
-				return (True, board[i][j])
-	return (False, None)
-
-def terminate_state(board: list[list[str]], black_capture: int = 0, white_capture: int = 0) -> bool:
-	print(black_capture)
-	print(white_capture)
-	if black_capture >= 5 or white_capture >= 5:
-		print("HERE")
-		return True
-	if winner_found(board)[0] == True:
-		return True
-	for i in range(len(board)):
-		for j in range(len(board[i])):
-			if board[i][j] == ' ':
-				return False
-	return True # Tie
-
 
 
 def main0():
