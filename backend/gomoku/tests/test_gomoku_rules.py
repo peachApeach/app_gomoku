@@ -3,7 +3,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from gomoku_rules import *
-from Gomoku import Gomoku
+from Gomoku import *
+import pytest
 
 def test_terminate_state():
 	# HORIZONTAL
@@ -71,5 +72,18 @@ def test_count_free_three():
 	print(gomoku)
 
 
+def test_create_double_free_three():
+	os.system('clear')
+	gomoku = Gomoku()
+	gomoku.place_stone("C5", "B")
+	gomoku.place_stone("D6", "B")
+	gomoku.place_stone("F9", "B")
+	gomoku.place_stone("F10", "B")
+	with pytest.raises(PlacementError):
+		gomoku.place_stone("F8", "B")
+	# print(gomoku)
+
+
+
 if __name__ == "__main__":
-	test_count_free_three()
+	test_create_double_free_three()
