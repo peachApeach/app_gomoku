@@ -50,3 +50,26 @@ def test_terminate_state():
 			gomoku.board[i][j] = 'B'
 	assert winner_found(gomoku.board)[0] == False
 	assert terminate_state(gomoku.board) == True
+
+
+def test_count_free_three():
+	os.system('clear')
+	gomoku = Gomoku()
+	gomoku.place_stone("C5", "B")
+	gomoku.place_stone("D6", "B")
+	gomoku.place_stone("F8", "B")
+	assert count_free_three(gomoku.board, 'B') == 1
+	gomoku.place_stone("F9", "B")
+	print(gomoku.free_three_black)
+	gomoku.place_stone("F10", "B")
+	print(gomoku.free_three_black)
+	assert count_free_three(gomoku.board, 'B') == 2
+	gomoku.place_stone("H6", "B")
+	gomoku.place_stone("I5", "B")
+	assert count_free_three(gomoku.board, 'B') == 3
+
+	print(gomoku)
+
+
+if __name__ == "__main__":
+	test_count_free_three()
