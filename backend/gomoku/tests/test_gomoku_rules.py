@@ -6,9 +6,13 @@ from gomoku_rules import *
 from Gomoku import *
 import pytest
 
-def test_terminate_state():
+@pytest.fixture
+def gomoku():
+	return Gomoku()
+
+
+def test_terminate_state(gomoku):
 	# HORIZONTAL
-	gomoku = Gomoku()
 	t = 3
 	for i in range(9):
 		if i % 2 == 0:
@@ -27,7 +31,7 @@ def test_terminate_state():
 	gomoku.place_stone(f"F5", "B")
 	gomoku.place_stone(f"G5", "B")
 	for i in range(6, 10):
-		gomoku.place_stone(f"I{i}", "W")
+		gomoku.place_stone(f"I{i}", "W", force=True)
 
 	assert winner_found(gomoku.board)[0] == True
 	assert terminate_state(gomoku.board) == True
@@ -40,7 +44,7 @@ def test_terminate_state():
 	gomoku.place_stone(f"F8", "B")
 	gomoku.place_stone(f"G9", "B")
 	for i in range(6, 10):
-		gomoku.place_stone(f"I{i}", "W")
+		gomoku.place_stone(f"I{i}", "W", force=True)
 
 	assert winner_found(gomoku.board)[0] == True
 	assert terminate_state(gomoku.board) == True
@@ -53,9 +57,8 @@ def test_terminate_state():
 	assert terminate_state(gomoku.board) == True
 
 
-def test_count_free_three():
-	os.system('clear')
-	gomoku = Gomoku()
+def test_count_free_three(gomoku):
+	# gomoku = Gomoku()
 	gomoku.place_stone("C5", "B")
 	gomoku.place_stone("D6", "B")
 	gomoku.place_stone("F8", "B")
@@ -72,9 +75,7 @@ def test_count_free_three():
 	print(gomoku)
 
 
-def test_create_double_free_three():
-	os.system('clear')
-	gomoku = Gomoku()
+def test_create_double_free_three(gomoku):
 	gomoku.place_stone("C5", "B")
 	gomoku.place_stone("D6", "B")
 	gomoku.place_stone("F9", "B")
@@ -83,7 +84,45 @@ def test_create_double_free_three():
 		gomoku.place_stone("F8", "B")
 	# print(gomoku)
 
+def test_breaking_line_warning(gomoku):
+	gomoku.place_stone("B2", "W")
+	gomoku.place_stone("C3", "W")
+	gomoku.place_stone("D5", "W")
+	gomoku.place_stone("E5", "W")
+	gomoku.place_stone("F6", "W")
 
+	gomoku.place_stone("D3", "B")
+	gomoku.place_stone("H3", "B")
+	gomoku.place_stone("I4", "B")
+	gomoku.place_stone("I5", "B")
+	gomoku.place_stone("H10", "B")
+
+
+	gomoku.place_stone("D4", "W")
+	with pytest.raises(PlacementError):
+		gomoku.place_stone("L11", "B")
+	print(gomoku)
+
+def test_breaking_line(gomoku):
+	gomoku.place_stone("B2", "W")
+	gomoku.place_stone("C3", "W")
+	gomoku.place_stone("D5", "W")
+	gomoku.place_stone("E5", "W")
+	gomoku.place_stone("F6", "W")
+
+	gomoku.place_stone("D3", "B")
+	gomoku.place_stone("H3", "B")
+	gomoku.place_stone("I4", "B")
+	gomoku.place_stone("I5", "B")
+	gomoku.place_stone("H10", "B")
+
+
+	gomoku.place_stone("D4", "W")
+	gomoku.place_stone("D6", "B")
+	# with pytest.raises(PlacementError):
+	# 	gomoku.place_stone("L11", "B")
+	print(gomoku)
 
 if __name__ == "__main__":
-	test_create_double_free_three()
+	os.system('clear')
+	test_breaking_line(Gomoku())

@@ -75,13 +75,17 @@ class Gomoku:
 		# 			white_stone += 1
 		# return 'B' if black_stone == white_stone else 'W'
 
-	def place_stone(self, coordinate: str, stone: str = None):
+	def place_stone(self, coordinate: str, stone: str = None, force: bool = False):
 		x, y = convert_coordinate(coordinate)
 		if x is None or y is None:
 			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
 		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
 			raise PlacementError("Your coordinates is out of the board.")
+
+		if force:
+			self.board[y][x] = self.get_player_turn() if stone == None else stone
+			return
 
 		if self.board[y][x] == ' ' or stone == ' ':
 			to_place = self.get_player_turn() if stone == None else stone
@@ -99,12 +103,21 @@ class Gomoku:
 			else:
 				# print(self.free_three_black)
 				self.board[y][x] = to_place
+
+				situation = critical_situation(self.board)
+				if situation[0] == True:
+					if situation[1] != to_place:
+						print(to_place)
+						self.board[y][x] = ' '
+						raise PlacementError("You are in a critical situation. Please fix this !")
+
 				nb_free_three = count_free_three(self.board, to_place)
-				# if stone == None:
-				# 	os.system('clear')
-				# 	print(nb_free_three)
-				# 	print(self)
-				# 	exit(2)
+
+
+
+
+
+
 				if to_place == 'B':
 					if nb_free_three - self.free_three_black >= 2:
 						self.board[y][x] = ' '
@@ -117,14 +130,6 @@ class Gomoku:
 						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
 					else:
 						self.free_three_white = nb_free_three
-
-
-				# if stone == None:
-				# 	raise Exception
-				# print(is_creating_double_three(self.board, y, x, to_place))
-				# if is_creating_double_three(self.board, y, x, to_place):
-				# 	raise PlacementError("This coordinates will create a double-three, it's forbidden.")
-				# Check if that create a double three...
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 
@@ -169,18 +174,12 @@ class Gomoku:
 					user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 					try:
 						self.place_stone(user_placement)
-						situation = critical_situation(self.board)
-						if situation[0] == True:
-							if situation[1] == self.get_player_turn():
-								self.place_stone(user_placement, ' ')
-								raise PlacementError("You are in a critical situation.")
 						self.switch_player_turn()
 						break
 					except Exception as e:
 						message = str(e)
 						is_err = True
 						self.display_board(message=message, is_err=is_err)
-						# print_error(e)
 
 			elif self.get_player_turn() == "W": # IA or 2 players turn
 				if self.IA == True:
@@ -191,11 +190,6 @@ class Gomoku:
 						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 						try:
 							self.place_stone(user_placement)
-							situation = critical_situation(self.board)
-							if situation[0] == True:
-								if situation[1] == self.get_player_turn():
-									self.place_stone(user_placement, ' ')
-									raise PlacementError("You are in a critical situation.")
 							self.switch_player_turn()
 							break
 						except Exception as e:
@@ -215,12 +209,11 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	gomoku = Gomoku(IA=False)
+	gomoku = Gomoku(IA=False, who_start="W")
 
 
 	gomoku.place_stone("B2", "B")
 	gomoku.place_stone("C3", "B")
-	# gomoku.place_stone("D4", "B")
 	gomoku.place_stone("D5", "B")
 	gomoku.place_stone("E5", "B")
 	gomoku.place_stone("F6", "B")
@@ -231,6 +224,11 @@ if __name__ == "__main__":
 	gomoku.place_stone("I5", "W")
 	gomoku.place_stone("H10", "W")
 
+
+	gomoku.place_stone("D4", "B")
+
+	gomoku.place_stone("L11", "W")
+
 	# gomoku.place_stone("b2", "B")
 	# gomoku.place_stone("m4", "W")
 	# gomoku.place_stone("c3", "B")
@@ -238,11 +236,12 @@ if __name__ == "__main__":
 	# gomoku.place_stone("E6", "B")
 	# gomoku.place_stone("h8", "W")
 	# gomoku.place_stone("E7", "B")
+	print(gomoku)
 
 
 	# gomoku.place_stone("E2", "B")
 	# gomoku.place_stone("E10", "W")
-	gomoku.play()
+	# gomoku.play()
 	# t = 3
 	# for i in range(10):
 	# 	if i % 2 == 0:

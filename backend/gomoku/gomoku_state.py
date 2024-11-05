@@ -76,7 +76,7 @@ def critical_situation(board: list[list[str]]) -> bool:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if five_alignments_found(board, i, j) == True:
-				return (True, "B" if board[i][j] == "W" else "W")
+				return (True, board[i][j])
 	return (False, None)
 
 
