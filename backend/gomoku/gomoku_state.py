@@ -1,3 +1,4 @@
+from GomokuSettings import GomokuSettings
 
 def win_from_pos(board: list[list[str]], i, j) -> bool:
 	number_to_win = 5
@@ -141,12 +142,17 @@ def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:
 
 	return (False, None)
 
-def terminate_state(board: list[list[str]], black_capture: int = 0, white_capture: int = 0) -> bool:
-	if black_capture >= 5 or white_capture >= 5:
-		print("HERE")
+def terminate_state(board: list[list[str]], black_capture: int = 0, white_capture: int = 0, gomoku_settings: GomokuSettings = GomokuSettings()) -> bool:
+	# print(gomoku_settings)
+	if gomoku_settings.allowed_win_by_capture == True and (black_capture >= 5 or white_capture >= 5):
 		return True
-	if winner_found(board)[0] == True:
-		return True
+	if gomoku_settings.allowed_capture == True:
+		if winner_found(board)[0] == True:
+			return True
+	else:
+		if critical_situation(board)[0] == True:
+			return True
+
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if board[i][j] == ' ':

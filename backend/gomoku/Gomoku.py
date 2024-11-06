@@ -14,6 +14,7 @@ from gomoku_utils import convert_coordinate
 from gomoku_state import *
 from gomoku_rules import *
 from my_utils import print_error
+from GomokuSettings import GomokuSettings
 
 
 def print_state():
@@ -26,7 +27,7 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (14, 14), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B'):
+	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B', settings: GomokuSettings = GomokuSettings()):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
@@ -36,6 +37,7 @@ class Gomoku:
 		self.free_three_black = 0
 		self.free_three_white = 0
 		self.player_turn = who_start
+		self.settings = settings
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)"x", "o", " ", "x"
 
@@ -89,7 +91,10 @@ class Gomoku:
 
 		if self.board[y][x] == ' ' or stone == ' ':
 			to_place = self.get_player_turn() if stone == None else stone
-			value = pair_can_be_capture(self.board, y, x, to_place)
+			if self.settings.allowed_capture == True:
+				value = pair_can_be_capture(self.board, y, x, to_place)
+			else:
+				value = None
 			if value:
 				self.board[y][x] = to_place
 				if self.board[y][x] == 'B':
@@ -104,32 +109,28 @@ class Gomoku:
 				# print(self.free_three_black)
 				self.board[y][x] = to_place
 
-				situation = critical_situation(self.board)
-				if situation[0] == True:
-					if situation[1] != to_place:
-						print(to_place)
-						self.board[y][x] = ' '
-						raise PlacementError("You are in a critical situation. Please fix this !")
+				if self.settings.allowed_capture:
+					situation = critical_situation(self.board)
+					if situation[0] == True:
+						if situation[1] != to_place:
+							print(to_place)
+							self.board[y][x] = ' '
+							raise PlacementError("You are in a critical situation. Please fix this !")
 
-				nb_free_three = count_free_three(self.board, to_place)
-
-
-
-
-
-
-				if to_place == 'B':
-					if nb_free_three - self.free_three_black >= 2:
-						self.board[y][x] = ' '
-						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+				if self.settings.allowed_double_three == False:
+					nb_free_three = count_free_three(self.board, to_place)
+					if to_place == 'B':
+						if nb_free_three - self.free_three_black >= 2:
+							self.board[y][x] = ' '
+							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+						else:
+							self.free_three_black = nb_free_three
 					else:
-						self.free_three_black = nb_free_three
-				else:
-					if nb_free_three - self.free_three_white >= 2:
-						self.board[y][x] = ' '
-						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-					else:
-						self.free_three_white = nb_free_three
+						if nb_free_three - self.free_three_white >= 2:
+							self.board[y][x] = ' '
+							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+						else:
+							self.free_three_white = nb_free_three
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 
@@ -163,7 +164,7 @@ class Gomoku:
 	def play(self):
 		is_err = False
 		message = None
-		while terminate_state(self.board, self.black_capture, self.white_capture) == False:
+		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
 			# if self.remove_pairs() == True:
 			# 	continue
 			is_err = False
@@ -199,7 +200,10 @@ class Gomoku:
 			else:
 				raise GomokuError("Player turn error")
 
-		has_winner, who_win = winner_found(self.board)
+		if self.settings.allowed_capture:
+			has_winner, who_win = winner_found(self.board)
+		else:
+			has_winner, who_win = critical_situation(self.board)
 		is_err = False
 		if has_winner:
 			message = f"{'White' if who_win == 'W' else 'Black'} has won the game !"
@@ -209,7 +213,8 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	gomoku = Gomoku(IA=False, who_start="W")
+	settings = GomokuSettings(allowed_capture=False)
+	gomoku = Gomoku(IA=False, who_start="W", settings=settings)
 
 
 	gomoku.place_stone("B2", "B")
@@ -227,7 +232,7 @@ if __name__ == "__main__":
 
 	gomoku.place_stone("D4", "B")
 
-	gomoku.place_stone("L11", "W")
+	# gomoku.place_stone("L11", "W")
 
 	# gomoku.place_stone("b2", "B")
 	# gomoku.place_stone("m4", "W")
@@ -235,13 +240,13 @@ if __name__ == "__main__":
 	# gomoku.place_stone("h3", "W")
 	# gomoku.place_stone("E6", "B")
 	# gomoku.place_stone("h8", "W")
-	# gomoku.place_stone("E7", "B")
-	print(gomoku)
+	# gomoku.place_stone("E7", "B")Zz
+	# print(gomoku)
 
 
 	# gomoku.place_stone("E2", "B")
 	# gomoku.place_stone("E10", "W")
-	# gomoku.play()
+	gomoku.play()
 	# t = 3
 	# for i in range(10):
 	# 	if i % 2 == 0:
