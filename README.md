@@ -4,7 +4,7 @@
 
 ## Overview
 
-Welcome to my development template for running a Python project as a web application. This template combines a Python backend with a Vue.js frontend, providing a solid foundation to kickstart your projects.
+Gomoku is a strategy board game traditionally played on a Go board with stones of two different colors.
 
 ## Try the Project - WebApp
 
