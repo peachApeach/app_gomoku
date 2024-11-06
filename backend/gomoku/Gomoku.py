@@ -184,8 +184,6 @@ class Gomoku:
 		message = None
 		self.handle_opening(opening)
 		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
-			# if self.remove_pairs() == True:
-			# 	continue
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
 			self.display_board(message=message, is_err=is_err)
