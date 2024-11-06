@@ -29,6 +29,7 @@ def get_actions(gomoku: LittleGomoku) -> list[str]:
 	Ca renvoie toutes les actions qui ne raise aucune erreur.
 	Donc on recupere toutes les cases vides, on les converti en ALPHA:NUM
 	Puis on teste de les ajouter et retirer.
+	Ne pas tester les cases en dehors d'un rayon de +2/3 du carré former par les pions pour eviter de tester les bords inutiles.
 	"""
 	pass
 
