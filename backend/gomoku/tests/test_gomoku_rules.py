@@ -82,7 +82,7 @@ def test_create_double_free_three(gomoku):
 	gomoku.place_stone("F10", "B")
 	with pytest.raises(PlacementError):
 		gomoku.place_stone("F8", "B")
-	# print(gomoku)
+	print(gomoku)
 
 def test_breaking_line_warning(gomoku):
 	gomoku.place_stone("B2", "W")
@@ -125,4 +125,16 @@ def test_breaking_line(gomoku):
 
 if __name__ == "__main__":
 	os.system('clear')
-	test_breaking_line(Gomoku())
+	# test_breaking_line(Gomoku())
+	# test_create_double_free_three(Gomoku())
+
+# if __name__ == "__main__":
+# 	go = Gomoku()
+# 	go.place_stone("B5")
+# 	go.place_stone("B6")
+# 	go.place_stone("C5")
+# 	go.place_stone("D6")
+
+# 	# go.place_stone("B4")
+
+# 	print(go)

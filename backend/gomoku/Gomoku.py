@@ -161,9 +161,28 @@ class Gomoku:
 		print(f"{WHITEHB}{BHBLACK}WHITE HAS CAPTURED {self.white_capture} BLACK PAIRS.{RESET}")
 		print()
 
-	def play(self):
+
+	def opening_standard(self):
+		pass
+	def opening_pro(self):
+		pass
+	def opening_swap(self):
+		pass
+	def opening_swap2(self):
+		pass
+
+	def handle_opening(self, opening: str):
+		if opening == "pro":
+			self.opening_pro()
+		elif opening == "swap":
+			self.opening_swap()
+		elif opening == "swap2":
+			self.opening_swap2()
+
+	def play(self, opening: str = "standard"):
 		is_err = False
 		message = None
+		self.handle_opening(opening)
 		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
 			# if self.remove_pairs() == True:
 			# 	continue
@@ -213,7 +232,7 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	settings = GomokuSettings(allowed_capture=False)
+	settings = GomokuSettings(allowed_capture=True)
 	gomoku = Gomoku(IA=False, who_start="W", settings=settings)
 
 
@@ -240,7 +259,7 @@ if __name__ == "__main__":
 	# gomoku.place_stone("h3", "W")
 	# gomoku.place_stone("E6", "B")
 	# gomoku.place_stone("h8", "W")
-	# gomoku.place_stone("E7", "B")Zz
+	# gomoku.place_stone("E7", "B")
 	# print(gomoku)
 
 
