@@ -40,14 +40,17 @@ def minimax(
 	alpha: float = float("-inf"),
 	beta: float = float("+inf"),
 	DEPTH: int = 0,
-	MAX_DEPTH: int = 3
+	MAX_DEPTH: int = 1
 ):
-
-	print("=====================")
-	print(f"===== DEPTH : {DEPTH} =====")
-	print("=====================")
-	if terminate_state(board) or DEPTH == MAX_DEPTH:
-		return game_state(gomoku), None
+	# MAX_DEPTH : 1 : 352ms
+	# MAX_DEPTH : 2 : 17539ms
+	# print("=====================")
+	# print(f"===== DEPTH : {DEPTH} =====")
+	# print("=====================")
+	if DEPTH == MAX_DEPTH:
+		return 0, None
+	# if terminate_state(board) or DEPTH == MAX_DEPTH:
+	# 	return game_state(gomoku), None
 
 	if gomoku.player_turn == gomoku.maximizing_player:
 		value = float('-inf')
@@ -114,7 +117,8 @@ if __name__ == "__main__":
 
 
 	start_classic = time.perf_counter_ns()
-	print(littleGomoku.get_actions())
+	# print(littleGomoku.get_actions())
+	print(minimax(littleGomoku))
 	duration_classic = time.perf_counter_ns() - start_classic
 	from gomoku_rules import is_creating_free_three, is_free_three
 	# print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
