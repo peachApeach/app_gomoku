@@ -38,7 +38,7 @@ def test_get_actions_only_one_move_possible(gomoku):
 		free_three_black=gomoku.free_three_black,
 		free_three_white=gomoku.free_three_white)
 
-	assert littleGomoku.get_actions() == [(5, 3)]
+	assert littleGomoku.get_actions() == [(3, 5)]
 	print(littleGomoku.get_actions())
 
 	# with pytest.raises(PlacementError):

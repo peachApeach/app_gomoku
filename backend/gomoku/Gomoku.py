@@ -65,6 +65,11 @@ class Gomoku:
 			content += "\n\n"
 		return content
 
+	def get_board_width(self):
+		return self.__board_width
+	def get_board_height(self):
+		return self.__board_height
+
 	def switch_player_turn(self):
 		self.player_turn = 'B' if self.player_turn == 'W' else 'W'
 
@@ -116,7 +121,6 @@ class Gomoku:
 					situation = critical_situation(self.board)
 					if situation[0] == True:
 						if situation[1] != to_place:
-							print(to_place)
 							self.board[y][x] = ' '
 							raise PlacementError("You are in a critical situation. Please fix this !")
 

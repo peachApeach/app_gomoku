@@ -102,9 +102,12 @@ if __name__ == "__main__":
 		black_capture=gomoku.black_capture,
 		white_capture=gomoku.white_capture,
 		free_three_black=gomoku.free_three_black,
-		free_three_white=gomoku.free_three_white)
+		free_three_white=gomoku.free_three_white,
+		board_width=gomoku.get_board_width(),
+		board_height=gomoku.get_board_height())
 
 	print(gomoku)
+	# gomoku.board[3][1] = "W"
 	print(littleGomoku.player_turn)
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
@@ -113,6 +116,11 @@ if __name__ == "__main__":
 	start_classic = time.perf_counter_ns()
 	print(littleGomoku.get_actions())
 	duration_classic = time.perf_counter_ns() - start_classic
+	from gomoku_rules import is_creating_free_three, is_free_three
+	print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
+	# littleGomoku.board[7][5] = "W"
+	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
+	print(littleGomoku)
 	print(f"Action duration {duration_classic // 1000000}ms.")
 
 

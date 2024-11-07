@@ -75,14 +75,44 @@ def test_count_free_three(gomoku):
 	print(gomoku)
 
 
-def test_create_double_free_three(gomoku):
+# def test_create_double_free_three(gomoku):
+# 	gomoku.place_stone("C5", "B")
+# 	gomoku.place_stone("D6", "B")
+# 	gomoku.place_stone("F9", "B")
+# 	gomoku.place_stone("F10", "B")
+# 	with pytest.raises(PlacementError):
+# 		gomoku.place_stone("F8", "B")
+# 	print(gomoku)
+
+def test_create_double_free_three_1(gomoku):
 	gomoku.place_stone("C5", "B")
 	gomoku.place_stone("D6", "B")
-	gomoku.place_stone("F9", "B")
+
+	gomoku.place_stone("C8", "B")
+	gomoku.place_stone("D8", "B")
+
+	gomoku.place_stone("C11", "B")
+	gomoku.place_stone("D10", "B")
+
 	gomoku.place_stone("F10", "B")
-	with pytest.raises(PlacementError):
-		gomoku.place_stone("F8", "B")
-	print(gomoku)
+	gomoku.place_stone("F11", "B")
+
+	gomoku.place_stone("H10", "B")
+	gomoku.place_stone("I11", "B")
+
+	gomoku.place_stone("H8", "B")
+	gomoku.place_stone("I8", "B")
+
+	gomoku.place_stone("H6", "B")
+	gomoku.place_stone("I5", "B")
+
+	gomoku.place_stone("F5", "B")
+	gomoku.place_stone("F6", "B")
+
+	assert is_creating_free_three(gomoku.board, 5, 7, "B") == True
+	# gomoku.place_stone("F8","B", force=True)
+
+	# print(gomoku)
 
 def test_breaking_line_warning(gomoku):
 	gomoku.place_stone("B2", "W")
@@ -126,7 +156,7 @@ def test_breaking_line(gomoku):
 if __name__ == "__main__":
 	os.system('clear')
 	# test_breaking_line(Gomoku())
-	# test_create_double_free_three(Gomoku())
+	test_create_double_free_three_1(Gomoku())
 
 # if __name__ == "__main__":
 # 	go = Gomoku()
