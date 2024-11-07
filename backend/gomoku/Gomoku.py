@@ -37,6 +37,9 @@ class Gomoku:
 		self.free_three_black = 0
 		self.free_three_white = 0
 		self.player_turn = who_start
+		self.maximizing_player = who_start
+		self.minimizing_player = 'W' if who_start == 'B' else 'B'
+
 		self.settings = settings
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 		# print(self.board)"x", "o", " ", "x"
