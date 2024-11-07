@@ -52,7 +52,7 @@ def minimax(
 	if gomoku.player_turn == gomoku.maximizing_player:
 		value = float('-inf')
 		best_action = None
-		for action in get_actions(gomoku):
+		for action in gomoku.get_actions():
 			state, r_action = minimax(gomoku.simulate_action(action), alpha, beta, DEPTH + 1)
 
 			if state > value:
@@ -67,7 +67,7 @@ def minimax(
 	elif gomoku.player_turn == gomoku.minimizing_player:
 		value = float('+inf')
 		best_action = None
-		for action in get_actions(gomoku):
+		for action in gomoku.get_actions():
 			state, r_action = minimax(gomoku.simulate_action(action), alpha, beta, DEPTH + 1)
 
 			if state < value:

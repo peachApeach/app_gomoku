@@ -3,6 +3,7 @@ from gomoku_rules import *
 from gomoku_state import *
 from Gomoku import *
 from Colors import *
+import copy
 
 class LittleGomoku:
 
@@ -43,6 +44,11 @@ class LittleGomoku:
 		return content
 
 
+	def switch_player_turn(self):
+		self.player_turn = 'B' if self.player_turn == 'W' else 'W'
+
+
+
 	def is_valid_placement(self, i: int, j: int, stone: str = None) -> bool:
 		if i is None or j is None:
 			return False
@@ -68,7 +74,7 @@ class LittleGomoku:
 			return False
 		return True
 
-	def place_stone(self, x: int, y: int, stone: str = None):
+	def place_stone(self, i: int, j: int, stone: str = None):
 		# if x is None or y is None:
 		# 	raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
@@ -76,21 +82,21 @@ class LittleGomoku:
 		# 	raise PlacementError("Your coordinates is out of the board.")
 
 		if stone == " ":
-			self.board[y][x] = " "
+			self.board[i][j] = " "
 			return
 		# if force:
-		# 	self.board[y][x] = self.get_player_turn() if stone == None else stone
+		# 	self.board[i][j] = self.get_player_turn() if stone == None else stone
 		# 	return
 
-		if self.board[y][x] == ' ' or stone == ' ':
+		if self.board[i][j] == ' ' or stone == ' ':
 			to_place = self.player_turn if stone == None else stone
 			if self.settings.allowed_capture == True:
-				value = pair_can_be_capture(self.board, y, x, to_place)
+				value = pair_can_be_capture(self.board, i, j, to_place)
 			else:
 				value = None
 			if value:
-				self.board[y][x] = to_place
-				if self.board[y][x] == 'B':
+				self.board[i][j] = to_place
+				if self.board[i][j] == 'B':
 					self.black_capture += 1
 				else:
 					self.white_capture += 1
@@ -100,27 +106,27 @@ class LittleGomoku:
 				self.board[cd2[0]][cd2[1]] = ' '
 			else:
 				# print(self.free_three_black)
-				self.board[y][x] = to_place
+				self.board[i][j] = to_place
 
 				if self.settings.allowed_capture:
 					situation = critical_situation(self.board)
 					if situation[0] == True:
 						if situation[1] != to_place:
 							# print(to_place)
-							self.board[y][x] = ' '
+							self.board[i][j] = ' '
 							raise PlacementError("You are in a critical situation. Please fix this !")
 
 				if self.settings.allowed_double_three == False:
 					nb_free_three = count_free_three(self.board, to_place)
 					if to_place == 'B':
 						if nb_free_three - self.free_three_black >= 2:
-							self.board[y][x] = ' '
+							self.board[i][j] = ' '
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
 						else:
 							self.free_three_black = nb_free_three
 					else:
 						if nb_free_three - self.free_three_white >= 2:
-							self.board[y][x] = ' '
+							self.board[i][j] = ' '
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
 						else:
 							self.free_three_white = nb_free_three
@@ -153,11 +159,33 @@ class LittleGomoku:
 
 		return empty_slot
 
-	def simulate_action(self, action: str) -> "LittleGomoku":
-		pass
+	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
+		new_little_gomoku = copy.deepcopy(self)
+		new_little_gomoku.place_stone(action[0], action[1])
+		new_little_gomoku.switch_player_turn()
+		print("COPY :")
+		print(new_little_gomoku)
+		print("ORIGINAL :")
+		print(self)
+		return new_little_gomoku
 
 
 	pass
 
 if __name__ == "__main__":
+	gomoku = Gomoku()
+	littleGomoku = LittleGomoku(
+		board=gomoku.board,
+		player_turn=gomoku.player_turn,
+		gomoku_settings=gomoku.settings,
+		max_player=gomoku.maximizing_player,
+		min_player=gomoku.minimizing_player,
+		black_capture=gomoku.black_capture,
+		white_capture=gomoku.white_capture,
+		free_three_black=gomoku.free_three_black,
+		free_three_white=gomoku.free_three_white,
+		board_width=gomoku.get_board_width(),
+		board_height=gomoku.get_board_height())
+	n_little_gomoku = littleGomoku.simulate_action((3, 6))
+	# n_little_gomoku.simulate_action((3, 5))
 	pass
