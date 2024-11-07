@@ -16,10 +16,6 @@ from gomoku_rules import *
 from my_utils import print_error
 from GomokuSettings import GomokuSettings
 
-
-def print_state():
-	pass
-
 class GomokuError(Exception):
 	pass
 

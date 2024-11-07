@@ -206,7 +206,6 @@ def count_free_three(board: list[list[str]], stone: str):
 		for j in range(len(board[i])):
 			if board[i][j] == " ":
 				count += is_free_three_no_doublons(board, i, j, stone)
-	print(count)
 	return count
 
 def is_creating_free_three(board: list[list[str]], i_stone: int, j_stone: int, stone: str):

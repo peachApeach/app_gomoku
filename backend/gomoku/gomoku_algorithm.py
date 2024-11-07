@@ -117,7 +117,7 @@ if __name__ == "__main__":
 	print(littleGomoku.get_actions())
 	duration_classic = time.perf_counter_ns() - start_classic
 	from gomoku_rules import is_creating_free_three, is_free_three
-	print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
+	# print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
 	print(littleGomoku)
