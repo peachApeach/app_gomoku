@@ -1,5 +1,5 @@
 from GomokuSettings import GomokuSettings
-from little_gomoku_utils import get_actions_range
+from little_gomoku_utils import get_actions_range, is_useful_placement
 from gomoku_rules import *
 from gomoku_state import *
 from Gomoku import *
@@ -55,8 +55,10 @@ class LittleGomoku:
 
 	def is_valid_placement(self, i: int, j: int, stone: str = None) -> bool:
 		if i is None or j is None:
+			raise PlacementError("Some index are undefined.")
 			return False
 		if i < 0 or i >= self.__board_width or j < 0 or j >= self.__board_height:
+			raise PlacementError("Some index are out of range.")
 			return False
 
 		if self.board[i][j] == ' ' or stone == ' ':
@@ -69,12 +71,16 @@ class LittleGomoku:
 				if situation[0] == True:
 					if situation[1] != to_place:
 						self.board[i][j] = ' '
+						raise PlacementError("You are in a critical situation.")
 						return False
 				self.board[i][j] = ' '
 			if self.settings.allowed_double_three == False:
-				invalid_free_three = is_creating_free_three(self.board, i, j, to_place)
+				invalid_free_three = is_creating_db_free_three(self.board, i, j, to_place)
+				if invalid_free_three == True:
+					raise PlacementError("This will create double free-three.")
 				return invalid_free_three == False
 		else:
+			raise PlacementError("Placement already use.")
 			return False
 		return True
 
@@ -152,14 +158,17 @@ class LittleGomoku:
 		# 	for j in range(len(self.board[i])):
 		for i in range_i:
 			for j in range_j:
-				if self.board[i][j] == " ":
-					# try:
-					if self.is_valid_placement(i=i, j=j):
+
+				# print(is_useful_placement(self.board, i, j, self.player_turn))
+				# if self.board[i][j] == " ":
+				if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True:
+					try:
+						# if self.is_valid_placement(i=i, j=j):
 						empty_slot.append((i, j))
-					else:
-						print(f"Invalid slot : [{i}]:[{j}]")
-					# except Exception as e:
-					# 	print(f"Error : ({e}):({i},{j}) : Invalid case. {iteration}")
+						# else:
+						# 	print(f"Invalid slot : [{i}]:[{j}]")
+					except Exception as e:
+						print(f"Error : ({e}):({i},{j}) : Invalid case.")
 					# iteration += 1
 
 		return empty_slot
@@ -177,8 +186,27 @@ class LittleGomoku:
 
 	pass
 
+
+def paint_actions(gomoku: Gomoku, actions: list[tuple[int]]):
+	for action in actions:
+		gomoku.board[action[0]][action[1]] = '??'
+
 if __name__ == "__main__":
+	from Gomoku import Gomoku
+	from gomoku_algorithm import minimax
+	from MeasureTime import MeasureTime
 	gomoku = Gomoku()
+	gomoku.place_stone("G6", "B")
+	gomoku.place_stone("H7", "W")
+	gomoku.place_stone("J3", "B")
+	gomoku.place_stone("H8", "W")
+	gomoku.place_stone("J8", "B")
+	gomoku.place_stone("H9", "W")
+	gomoku.place_stone("J10", "B")
+	gomoku.place_stone("R17", "W")
+	gomoku.place_stone("R18", "W")
+	# gomoku.switch_player_turn()
+
 	littleGomoku = LittleGomoku(
 		board=gomoku.board,
 		player_turn=gomoku.player_turn,
@@ -191,6 +219,21 @@ if __name__ == "__main__":
 		free_three_white=gomoku.free_three_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
-	n_little_gomoku = littleGomoku.simulate_action((3, 6))
-	# n_little_gomoku.simulate_action((3, 5))
-	pass
+
+	print(gomoku)
+	# gomoku.board[3][1] = "W"
+	print(littleGomoku.player_turn)
+	print(littleGomoku.maximizing_player)
+	print(littleGomoku.minimizing_player)
+
+
+	measureTime = MeasureTime(start=True)
+	actions = littleGomoku.get_actions()
+	print(actions)
+	print(minimax(littleGomoku, MAX_DEPTH=3))
+	measureTime.stop()
+	paint_actions(littleGomoku, actions)
+	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
+	# littleGomoku.board[7][5] = "W"
+	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
+	print(littleGomoku)

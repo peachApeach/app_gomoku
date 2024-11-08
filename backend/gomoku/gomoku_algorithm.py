@@ -2,6 +2,7 @@ from gomoku_state import terminate_state
 from GomokuSettings import GomokuSettings
 from LittleGomoku import LittleGomoku
 import time
+import random
 
 class GomokuIAError(Exception):
 	pass
@@ -40,7 +41,7 @@ def minimax(
 	alpha: float = float("-inf"),
 	beta: float = float("+inf"),
 	DEPTH: int = 0,
-	MAX_DEPTH: int = 2
+	MAX_DEPTH: int = 1
 ):
 	# MAX_DEPTH : 1 : 352ms
 	# MAX_DEPTH : 2 : 17539ms
@@ -48,6 +49,7 @@ def minimax(
 	# print(f"===== DEPTH : {DEPTH} =====")
 	# print("=====================")
 	if DEPTH == MAX_DEPTH:
+		# return random.randint(-5, 5), None
 		return 0, None
 	# if terminate_state(board) or DEPTH == MAX_DEPTH:
 	# 	return game_state(gomoku), None
@@ -56,7 +58,11 @@ def minimax(
 		value = float('-inf')
 		best_action = None
 		for action in gomoku.get_actions():
-			state, r_action = minimax(gomoku.simulate_action(action), alpha, beta, DEPTH + 1)
+			try:
+				new_gomoku = gomoku.simulate_action(action)
+			except:
+				continue
+			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
 			if state > value:
 				value = state
@@ -71,7 +77,11 @@ def minimax(
 		value = float('+inf')
 		best_action = None
 		for action in gomoku.get_actions():
-			state, r_action = minimax(gomoku.simulate_action(action), alpha, beta, DEPTH + 1)
+			try:
+				new_gomoku = gomoku.simulate_action(action)
+			except:
+				continue
+			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
 			if state < value:
 				value = state
@@ -95,6 +105,7 @@ if __name__ == "__main__":
 	gomoku.place_stone("J8", "B")
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
+	gomoku.place_stone("R18", "W")
 	gomoku.switch_player_turn()
 
 	littleGomoku = LittleGomoku(
@@ -119,11 +130,11 @@ if __name__ == "__main__":
 
 	measureTime = MeasureTime(start=True)
 	# print(littleGomoku.get_actions())
-	print(minimax(littleGomoku))
+	print(minimax(littleGomoku, MAX_DEPTH=2))
 	measureTime.stop()
 
-	from gomoku_rules import is_creating_free_three, is_free_three
-	# print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
+	from gomoku_rules import is_creating_db_free_three, is_free_three
+	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
 	print(littleGomoku)

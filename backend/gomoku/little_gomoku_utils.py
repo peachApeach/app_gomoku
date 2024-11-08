@@ -1,3 +1,44 @@
+def stone_is_a_menace(board: list[list[str]], i: int, j: int, radius: int = 1):
+	"""
+	Pour ne pas prendre en compte les pierres isoles dans le champ des actions
+	"""
+	stone = board[i][j]
+	count_same = 0
+	min_i = i - radius if i - radius >= 0 else 0
+	min_j = j - radius if j - radius >= 0 else 0
+
+	max_i = i + 1 + radius if i + 1 + radius <= len(board) else len(board)
+	max_j = j + 1 + radius if j + 1 + radius <= len(board[min_i]) else len(board[min_i])
+
+	for i in range(min_i, max_i):
+		for j in range(min_j, max_j):
+			if board[i][j] == stone:
+				count_same += 1
+			# littleGomoku.board[i][j] = '_'
+	return count_same > 1
+
+def is_useful_placement(board: list[list[str]], i: int, j: int, stone: str, radius: int = 2):
+	"""
+	Pour ne pas prendre en compte les pierres isoles dans le champ des actions
+	"""
+	count_same = 0
+	count_different = 0
+	min_i = i - radius if i - radius >= 0 else 0
+	min_j = j - radius if j - radius >= 0 else 0
+
+	max_i = i + 1 + radius if i + 1 + radius <= len(board) else len(board)
+	max_j = j + 1 + radius if j + 1 + radius <= len(board[min_i]) else len(board[min_i])
+
+	for i in range(min_i, max_i):
+		for j in range(min_j, max_j):
+			if board[i][j] != ' ':
+				if board[i][j] == stone:
+					count_same += 1
+				else:
+					count_different += 1
+
+	return count_same > 0 or count_different > 1
+
 def get_actions_range(board: list[list[str]], radius: int = 1):
 	"""
 	Pour un tableau, ca nous renvoie l'area de jeu a checker. Pour eviter de parcourir les 19x19 cases a chaque fois, ca peut etre reduit a 6x6 par exemple. On peut aussi gerer largeur du cercle de range.
@@ -8,25 +49,22 @@ def get_actions_range(board: list[list[str]], radius: int = 1):
 	max_j = float("-inf")
 	for i in range(len(board)):
 		for j in range(len(board[i])):
-			if board[i][j] != ' ':
+			if board[i][j] != ' ' and stone_is_a_menace(board, i, j, radius=2) == True:
 				if min_i is None:
 					min_i = i
-				max_i = i + 1
+				max_i = i
 				if j < min_j:
 					min_j = j
 				if j > max_j:
-					max_j = j + 1
+					max_j = j
 
 
-	min_i = min_i - radius if min_i - radius >= 0 else 0
-	min_j = min_j - radius if min_j - radius >= 0 else 0
+	min_i = min_i - radius - 1 if min_i - radius - 1 >= 0 else 0
+	min_j = min_j - radius - 1 if min_j - radius - 1>= 0 else 0
 
-	max_i = max_i + radius if max_i + radius <= len(board[min_i]) else len(board[min_i])
-	max_j = max_j + radius if max_j + radius <= len(board[min_i]) else len(board[min_i])
+	max_i = max_i + radius + 1 if max_i + radius + 1 <= len(board) else len(board)
+	max_j = max_j + radius + 1 if max_j + radius + 1 <= len(board[min_i]) else len(board[min_i])
 
-
-	print(f"Range i : ({min_i}, {max_i})")
-	print(f"Range j : ({min_j}, {max_j})")
 	return (range(min_i, max_i), range(min_j, max_j))
 
 
@@ -45,9 +83,10 @@ if __name__ == "__main__":
 	gomoku.place_stone("J8", "B")
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
-	# gomoku.place_stone("R18", "W")
+	gomoku.place_stone("R18", "W")
+	# gomoku.place_stone("R17", "W")
 	# gomoku.place_stone("B2", "B")
-	gomoku.switch_player_turn()
+	# gomoku.switch_player_turn()
 
 	littleGomoku = LittleGomoku(
 		board=gomoku.board,
@@ -64,10 +103,12 @@ if __name__ == "__main__":
 
 
 	measureTime = MeasureTime(start=True)
-	range_i, range_j = get_actions_range(littleGomoku.board)
+	range_i, range_j = get_actions_range(littleGomoku.board, radius=1)
 	measureTime.stop()
 	print(littleGomoku)
 	for i in range_i:
 		for j in range_j:
 			littleGomoku.board[i][j] = '_'
+	# stone_is_a_menace(littleGomoku.board, 2, 2, radius=2)
+	# stone_is_a_menace(littleGomoku.board, 9, 2, radius=2)
 	print(littleGomoku)
