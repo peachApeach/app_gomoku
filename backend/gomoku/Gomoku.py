@@ -55,8 +55,10 @@ class Gomoku:
 					content += f"{BLACKB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
-				else:
+				elif char == ' ':
 					content += f"{BLACKHB}  {RESET} "
+				else:
+					content += f"{REDHB}??{RESET} "
 
 			content += "\n\n"
 		return content

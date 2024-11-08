@@ -109,7 +109,7 @@ def test_create_double_free_three_1(gomoku):
 	gomoku.place_stone("F5", "B")
 	gomoku.place_stone("F6", "B")
 
-	assert is_creating_free_three(gomoku.board, 5, 7, "B") == True
+	assert is_creating_db_free_three(gomoku.board, 5, 7, "B") == True
 	# gomoku.place_stone("F8","B", force=True)
 
 	# print(gomoku)

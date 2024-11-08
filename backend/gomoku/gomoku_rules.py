@@ -208,7 +208,7 @@ def count_free_three(board: list[list[str]], stone: str):
 				count += is_free_three_no_doublons(board, i, j, stone)
 	return count
 
-def is_creating_free_three(board: list[list[str]], i_stone: int, j_stone: int, stone: str):
+def is_creating_db_free_three(board: list[list[str]], i_stone: int, j_stone: int, stone: str):
 	before_count = 0
 	after_count = 0
 	# top_left = board[i_stone - 3][j_stone - 3]
@@ -227,7 +227,7 @@ def is_creating_free_three(board: list[list[str]], i_stone: int, j_stone: int, s
 			if i < 0 or j < 0 or i >= len(board) or j >= len(board[i]):
 				continue
 			if board[i][j] == " ":
-				before_count += is_free_three(board, i, j, stone)
+				before_count += is_free_three_no_doublons(board, i, j, stone)
 
 	board[i_stone][j_stone] = stone
 	for i in range(i_min, i_max):
@@ -235,7 +235,7 @@ def is_creating_free_three(board: list[list[str]], i_stone: int, j_stone: int, s
 			if i < 0 or j < 0 or i >= len(board) or j >= len(board[i]):
 				continue
 			if board[i][j] == " ":
-				after_count += is_free_three(board, i, j, stone)
+				after_count += is_free_three_no_doublons(board, i, j, stone)
 	board[i_stone][j_stone] = ' '
 
 
@@ -279,7 +279,7 @@ if __name__ == "__main__":
 	# gomoku.place_stone("I11", "W")
 	# with pytest.raises(PlacementError):
 	# 	gomoku.place_stone("F8", "B")
-	print(is_creating_free_three(gomoku.board, 5, 7, "B"))
+	print(is_creating_db_free_three(gomoku.board, 5, 7, "B"))
 	print(gomoku)
 	exit(1)
 
