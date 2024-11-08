@@ -215,11 +215,11 @@ def is_creating_db_free_three(board: list[list[str]], i_stone: int, j_stone: int
 	# bottom_right = board[i_stone + 3][j_stone + 3]
 	# print(top_left)
 	# print(bottom_right)
-	i_min = i_stone - 3 if i_stone - 3 >= 0 else 0
-	i_max = i_stone + 4 if i_stone + 4 < len(board) else len(board)
+	i_min = i_stone - 4 if i_stone - 4 >= 0 else 0
+	i_max = i_stone + 5 if i_stone + 5 < len(board) else len(board)
 
-	j_min = j_stone - 3 if j_stone - 3 >= 0 else 0
-	j_max = j_stone + 4 if j_stone + 4 < len(board[i_min]) else len(board[i_min])
+	j_min = j_stone - 4 if j_stone - 4 >= 0 else 0
+	j_max = j_stone + 5 if j_stone + 5 < len(board[i_min]) else len(board[i_min])
 
 
 	for i in range(i_min, i_max):

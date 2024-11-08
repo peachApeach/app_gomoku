@@ -1,6 +1,7 @@
 from gomoku_state import terminate_state
 from GomokuSettings import GomokuSettings
 from LittleGomoku import LittleGomoku
+from gomoku_rules import is_creating_db_free_three
 import time
 import random
 
@@ -49,7 +50,12 @@ def minimax(
 	# print(f"===== DEPTH : {DEPTH} =====")
 	# print("=====================")
 	if DEPTH == MAX_DEPTH:
-		# return random.randint(-5, 5), None
+		# return 5, None
+		if gomoku.player_turn == gomoku.maximizing_player:
+			return random.randint(0, 5), None
+		else:
+			return random.randint(-5, 0), None
+		# return random.choice([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]), None
 		return 0, None
 	# if terminate_state(board) or DEPTH == MAX_DEPTH:
 	# 	return game_state(gomoku), None
@@ -61,6 +67,14 @@ def minimax(
 			try:
 				new_gomoku = gomoku.simulate_action(action)
 			except:
+				print("Failed to simulate")
+				print(gomoku)
+				print(is_creating_db_free_three(gomoku.board, action[0], action[1], gomoku.player_turn))
+				print(gomoku.is_valid_placement(i=action[0], j=action[1], stone=gomoku.player_turn))
+				gomoku.board[action[0]][action[1]] = gomoku.player_turn
+				print(gomoku)
+				print(action)
+				exit(1)
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
@@ -130,7 +144,7 @@ if __name__ == "__main__":
 
 	measureTime = MeasureTime(start=True)
 	# print(littleGomoku.get_actions())
-	print(minimax(littleGomoku, MAX_DEPTH=2))
+	print(minimax(littleGomoku, MAX_DEPTH=3))
 	measureTime.stop()
 
 	from gomoku_rules import is_creating_db_free_three, is_free_three

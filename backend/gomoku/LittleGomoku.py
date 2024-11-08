@@ -163,8 +163,8 @@ class LittleGomoku:
 				# if self.board[i][j] == " ":
 				if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True:
 					try:
-						# if self.is_valid_placement(i=i, j=j):
-						empty_slot.append((i, j))
+						if self.is_valid_placement(i=i, j=j):
+							empty_slot.append((i, j))
 						# else:
 						# 	print(f"Invalid slot : [{i}]:[{j}]")
 					except Exception as e:
@@ -175,7 +175,8 @@ class LittleGomoku:
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
 		new_little_gomoku = copy.deepcopy(self)
-		new_little_gomoku.place_stone(action[0], action[1])
+		# new_little_gomoku.place_stone(action[0], action[1])
+		new_little_gomoku.board[action[0]][action[1]]
 		new_little_gomoku.switch_player_turn()
 		# print("COPY :")
 		# print(new_little_gomoku)
@@ -230,7 +231,7 @@ if __name__ == "__main__":
 	measureTime = MeasureTime(start=True)
 	actions = littleGomoku.get_actions()
 	print(actions)
-	print(minimax(littleGomoku, MAX_DEPTH=3))
+	# print(minimax(littleGomoku, MAX_DEPTH=3))
 	measureTime.stop()
 	paint_actions(littleGomoku, actions)
 	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
