@@ -175,8 +175,8 @@ class LittleGomoku:
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
 		new_little_gomoku = copy.deepcopy(self)
-		# new_little_gomoku.place_stone(action[0], action[1])
-		new_little_gomoku.board[action[0]][action[1]]
+		new_little_gomoku.place_stone(action[0], action[1])
+		# new_little_gomoku.board[action[0]][action[1]]
 		new_little_gomoku.switch_player_turn()
 		# print("COPY :")
 		# print(new_little_gomoku)
