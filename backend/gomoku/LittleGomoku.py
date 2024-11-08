@@ -1,4 +1,5 @@
 from GomokuSettings import GomokuSettings
+from little_gomoku_utils import get_actions_range
 from gomoku_rules import *
 from gomoku_state import *
 from Gomoku import *
@@ -37,8 +38,11 @@ class LittleGomoku:
 					content += f"{BLACKB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
-				else:
+				elif char == ' ':
 					content += f"{BLACKHB}  {RESET} "
+				else:
+					content += f"{REDHB}??{RESET} "
+
 
 			content += "\n\n"
 		return content
@@ -143,10 +147,11 @@ class LittleGomoku:
 		"""
 		empty_slot = []
 		# iteration = 0
-		for i in range(len(self.board)):
-			for j in range(len(self.board[i])):
-		# for i in range(self.__board_height):
-		# 	for j in range(self.__board_width):
+		range_i, range_j = get_actions_range(self.board)
+		# for i in range(len(self.board)):
+		# 	for j in range(len(self.board[i])):
+		for i in range_i:
+			for j in range_j:
 				if self.board[i][j] == " ":
 					# try:
 					if self.is_valid_placement(i=i, j=j):

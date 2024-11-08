@@ -40,7 +40,7 @@ def minimax(
 	alpha: float = float("-inf"),
 	beta: float = float("+inf"),
 	DEPTH: int = 0,
-	MAX_DEPTH: int = 1
+	MAX_DEPTH: int = 2
 ):
 	# MAX_DEPTH : 1 : 352ms
 	# MAX_DEPTH : 2 : 17539ms
@@ -86,6 +86,7 @@ def minimax(
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
+	from MeasureTime import MeasureTime
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")
 	gomoku.place_stone("H7", "W")
@@ -116,15 +117,15 @@ if __name__ == "__main__":
 	print(littleGomoku.minimizing_player)
 
 
-	start_classic = time.perf_counter_ns()
+	measureTime = MeasureTime(start=True)
 	# print(littleGomoku.get_actions())
 	print(minimax(littleGomoku))
-	duration_classic = time.perf_counter_ns() - start_classic
+	measureTime.stop()
+
 	from gomoku_rules import is_creating_free_three, is_free_three
 	# print(is_creating_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
 	print(littleGomoku)
-	print(f"Action duration {duration_classic // 1000000}ms.")
 
 
