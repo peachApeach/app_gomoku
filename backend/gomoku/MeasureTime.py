@@ -2,9 +2,11 @@ import time
 from Colors import *
 
 class MeasureTime:
-	def __init__(self):
+	def __init__(self, start: bool = False):
 		self.t_start = None
 		self.t_end = None
+		if start == True:
+			self.start()
 
 	def __str__(self) -> str:
 		if self.t_end is None:
@@ -20,7 +22,7 @@ class MeasureTime:
 		else:
 			self.t_end = time.perf_counter_ns() - self.t_start
 			self.t_start = None
-			print(f"{BHWHITE}Duration : {CYANHB}{BHBLACK}{self.t_end // 1000000}ms{RESET}")
+			print(f"{BHWHITE}Duration : {MAGB} {BHWHITE}{self.t_end // 1000000}ms {RESET}")
 
 if __name__ == "__main__":
 	measureTime = MeasureTime()
