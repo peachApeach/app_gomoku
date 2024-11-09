@@ -1,4 +1,4 @@
-from gomoku_state import terminate_state
+from gomoku_state import terminate_state, winner_found, critical_situation
 from GomokuSettings import GomokuSettings
 from LittleGomoku import LittleGomoku
 from gomoku_rules import is_creating_db_free_three
@@ -13,13 +13,12 @@ def game_state(gomoku: LittleGomoku) -> tuple[int, str]:
 	**********************
 	* HEURISTIC FUNCTION *
 	**********************
-
 	Ca renvoie la valeur du tableau.
 
 	End Game Conditions (TERMINATE = TRUE):
-	[6] - 5 stones aligned unbreakable
-	[5] - 5 pairs catched
-	[0] - No space left on board
+	[5] Victory = Max value - 5 stones aligned unbreakable ✅
+	[5] Victory = Max value - 5 pairs catched ✅
+	[0] Tie = No good- No space left on board
 
 	Good issue (TERMINATE = FALSE):
 	[4] - 5 stones aligned
@@ -28,7 +27,34 @@ def game_state(gomoku: LittleGomoku) -> tuple[int, str]:
 	[1] - More stone catch
 	# - (?) No Free Three for opponent (?)
 	# - No Free Four for opponent
+
+
+	All possiblities :
+	1 Free Three et l'adversaire 0 Free Three
+	1 Free Four et l'adversaire 0 Free Four
+	+ Free Three que l'adverse
+	+ Free Four que l'adverse
+	Si rien de tout ça, + de paires capturées que l'adverse
+	L'égalité est peut-être une bonne solution ?
+	
 	"""
+	value = 0
+	# print(gomoku_settings)
+	if gomoku.settings.allowed_win_by_capture == True and (gomoku.black_capture >= 5 or gomoku.white_capture >= 5):
+		value = 5
+	if gomoku.settings.allowed_capture == True:
+		if winner_found(gomoku.board)[0] == True:
+			value = 5
+	else:
+		if critical_situation(gomoku.board)[0] == True:
+			value = 4
+
+
+	for i in range(len(gomoku.board)):
+		for j in range(len(gomoku.board[i])):
+			if gomoku.board[i][j] == ' ':
+				return False
+	return True # Tie
 	if gomoku.player_turn == gomoku.maximizing_player:
 		return random.randint(1, 5)
 	else:
