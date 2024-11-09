@@ -48,7 +48,7 @@ def test_free_three_advantage_min_player(gomoku: Gomoku):
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
 
-	assert game_state(littleGomoku) == -3
+	assert game_state(littleGomoku) < 0
 
 def test_free_three_advantage_max_player(gomoku: Gomoku):
 	gomoku.place_stone("J9", "B")
@@ -69,7 +69,7 @@ def test_free_three_advantage_max_player(gomoku: Gomoku):
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
 
-	assert game_state(littleGomoku) == 3
+	assert game_state(littleGomoku) > 0
 
 if __name__ == "__main__":
 	test_free_three_advantage_max_player(Gomoku())

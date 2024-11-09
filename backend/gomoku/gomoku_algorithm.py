@@ -1,17 +1,12 @@
 from gomoku_state import terminate_state, winner_found, critical_situation
 from GomokuSettings import GomokuSettings
 from LittleGomoku import LittleGomoku
+from gomoku_heuristic_function import game_state
 from gomoku_rules import is_creating_db_free_three
 import time
 import random
 
 class GomokuIAError(Exception):
-	pass
-
-def simulate_action(gomoku: LittleGomoku) -> LittleGomoku:
-	"""
-	Ca cree un nouveau littleGomoku, avec le nouveau player turn, un nouveau board tout neuf et on retransmet les settings.
-	"""
 	pass
 
 def minimax(

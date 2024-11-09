@@ -15,12 +15,16 @@ class LittleGomoku:
 		self.player_turn = player_turn
 		self.maximizing_player = max_player
 		self.minimizing_player = min_player
-		self.black_capture = black_capture
-		self.white_capture = white_capture
-		self.free_three_black = free_three_black
-		self.free_three_white = free_three_white
 		self.__board_width = board_width
 		self.__board_height = board_height
+		# For heuristic function
+
+		self.black_capture = black_capture
+		self.white_capture = white_capture
+
+		# self.free_four_black =
+		self.free_three_black = free_three_black
+		self.free_three_white = free_three_white
 
 
 	def __str__(self) -> str:
@@ -174,6 +178,9 @@ class LittleGomoku:
 		return empty_slot
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
+		"""
+		Ca cree un nouveau littleGomoku, avec le nouveau player turn, un nouveau board tout neuf et on retransmet les settings.
+		"""
 		new_little_gomoku = copy.deepcopy(self)
 		new_little_gomoku.place_stone(action[0], action[1])
 		# new_little_gomoku.board[action[0]][action[1]]

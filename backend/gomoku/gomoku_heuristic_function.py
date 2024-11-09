@@ -6,6 +6,7 @@ def game_state(gomoku: LittleGomoku) -> int:
 	**********************
 	* HEURISTIC FUNCTION *
 	**********************
+	C'est uniquement lorsqu'on atteint une terminate state or DEPTH == MAX_DEPTH que cette fonction est appelé. Donc ce n'est pas nécessaire d'appeler les fonctions pour compter constamment à par celle pour les stones capturées.
 	Ca renvoie la valeur du tableau.
 
 	End Game Conditions (TERMINATE = TRUE):
@@ -32,13 +33,19 @@ def game_state(gomoku: LittleGomoku) -> int:
 
 
 	Value of thing :
-	5 stones aligned unbreakable: 100
+	5 stones aligned: 100
 	5 stones aligned: 80
 	Free Four: 70
-	4 stones aligned: 60
+	4 stones aligned not obstructed: 60
 	Free Three: 50
 	3 stones aligned: 40
-	Pairs catched: 10
+	# == PAIRS ==
+	5 pairs catched: 100
+	4 pairs catched: 40
+	3 pairs catched: 30
+	2 pairs catched: 20
+	1 pairs catched: 10
+	# == ===== ==
 	0
 	Make substraction of Maximizing Player Score and Minimizing Player Score
 	We doesn't need to know you player turn is
