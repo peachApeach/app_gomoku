@@ -15,7 +15,6 @@ export default {
     },
     extend: {
       colors: {
-
         // "app-bg": "#FEECFF", // 1. App background
         // "subtle-bg": "#FEEFFF", // 2. Subtle background
         // "ui-bg": "#FDEAFF", // 3. UI element background
@@ -61,16 +60,16 @@ export default {
       Poppins: ["Poppins, sans-serif"],
     },
     container: {
-      marginLeft: "auto",
-      marginRight: "auto",
+      // marginLeft: "auto",
+      // marginRight: "auto",
       width: "100%",
       padding: "2rem",
-      center: true,
+      // center: true,
       screens: {
         'sm': '100%',
         'md': '100%',
-        'lg': '1100px', // 48rem
-        'xl': '1100px'
+        'lg': '1800px', // 48rem
+        'xl': '1800px'
       }
     }
   },

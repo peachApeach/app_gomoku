@@ -9,18 +9,18 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        title: 'Title | Untitled'
+        title: 'Gomoku Game'
       }
     },
     {
-      path: '/page1',
-      name: 'page1',
-      component: () => import('../views/Page_1.vue')
+      path: '/rules',
+      name: 'rules',
+      component: () => import('../views/Rules.vue')
     },
     {
-      path: '/page2',
-      name: 'page2',
-      component: () => import('../views/Page_2.vue')
+      path: '/game',
+      name: 'game',
+      component: () => import('../views/Game.vue')
     }
   ]
 })
