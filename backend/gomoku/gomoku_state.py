@@ -73,7 +73,7 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 		pass
 	return False
 
-def critical_situation(board: list[list[str]]) -> bool:
+def critical_situation(board: list[list[str]]) -> tuple[bool, str | None]:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if five_alignments_found(board, i, j) == True:

@@ -35,7 +35,7 @@ class LittleGomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLACKB}  {RESET} "
+					content += f"{BLUEHB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
