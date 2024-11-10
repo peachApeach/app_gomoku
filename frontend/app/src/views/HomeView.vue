@@ -2,15 +2,13 @@
   <main class=" text-high-contrast-text container my-auto flex size-full flex-row items-center justify-center gap-24">
 
       <div class=" flex w-full flex-col justify-center gap-7">
-        <div class="gap-8">
-          <h1 class="text-8xl">GOMOKU<span class="font-bold"> GAME</span></h1>
-          <hr class="w-full h-px bg-gray-200 border-0">
-        </div>
+        <h1 class="text-8xl text-amber-400">GOMOKU<span class="text-high-contrast-text font-bold"> GAME</span></h1>
+        <hr class=" h-px bg-gray-200 border-0">
         <p class=" text-low-contrast-text text-start text-2xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec<br>
           et sapien a lectus fermentum mattis. Etiam ultricies diam<br>
           rutrum sapien pharetra tempor. Vivamus eleifend aliquam<br>
           gravida.</p>
-        <button type="button" class="w-40 text-black bg-amber-500 hover:bg-amber-400 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 mt-3 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get started!</button>
+        <button @click="routerTo('/game')" type="button" class="w-40 text-black bg-amber-400 hover:bg-amber-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 mt-3 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get started!</button>
       </div>
 
       <div class=" flex w-full flex-col items-center justify-end gap-6">
@@ -46,34 +44,42 @@
 
 <script setup lang="ts">
 
-const makeRequests = async () => {
-  console.log("Yo !");
-  const input: HTMLElement | null = document.getElementById("test-input");
+// const makeRequests = async () => {
+//   console.log("Yo !");
+//   const input: HTMLElement | null = document.getElementById("test-input");
 
-  let text: String = '';
-  if (input) {
-    text = input.value;
-  }
-  const url = "http://127.0.0.1:8000/test";
+//   let text: String = '';
+//   if (input) {
+//     text = input.value;
+//   }
+//   const url = "http://127.0.0.1:8000/test";
 
-  try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({name: text}),
-        });
+//   try {
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({name: text}),
+//         });
 
-        const result = await response.json();
-        console.log("Response from FastAPI:", result);
-        const api_result = document.getElementById("api_result");
-        if (api_result) {
-          api_result.innerHTML = result.message;
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-};
+//         const result = await response.json();
+//         console.log("Response from FastAPI:", result);
+//         const api_result = document.getElementById("api_result");
+//         if (api_result) {
+//           api_result.innerHTML = result.message;
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//     }
+// };
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const routerTo = (link: String, hideMenu = true) => {
+	router.push(`${link}`);
+}
 
 </script>

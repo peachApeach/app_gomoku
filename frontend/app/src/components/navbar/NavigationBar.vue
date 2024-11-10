@@ -53,14 +53,14 @@
 
 					</li>
 					<li class="group relative w-max">
-						<p @click="routerTo('/page1')"
+						<p @click="routerTo('/rules')"
 							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
 							Rules</p>
 						<span class="animate-underline"></span>
 
 					</li>
 					<li class="group relative w-max">
-						<p @click="routerTo('/page2')"
+						<p @click="routerTo('/game')"
 							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
 							Play</p>
 						<span class="animate-underline"></span>

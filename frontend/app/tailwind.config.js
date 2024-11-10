@@ -53,8 +53,6 @@ export default {
         "d-low-contrast-text": "#FFD1DC",
         "d-high-contrast-text": "#FFE4F1"
       }
-
-
     },
     fontFamily: {
       Poppins: ["Poppins, sans-serif"],
@@ -71,6 +69,17 @@ export default {
         'lg': '1800px', // 48rem
         'xl': '1800px'
       }
+    },
+    wHr: {
+      width: "25rem"
+    },
+    gridTemplateColumns: {
+      // 19 column grid
+      '19': 'repeat(19, minmax(0, 1fr))',
+    },
+    gridTemplateRows: {
+      // 19 row grid
+      '19': 'repeat(19, minmax(0, 1fr))',
     }
   },
   variants: {

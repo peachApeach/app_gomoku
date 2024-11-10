@@ -52,4 +52,32 @@
 	@apply border-ui-border hover:border-hover-ui-border  focus:border-accent-color dark:border-d-ui-border dark:hover:border-d-hover-ui-border dark:focus:border-d-accent-color;
 }
 
+ul {
+	list-style-position: inside;
+}
+
+.grid-button::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background-color: red;
+	transform: translateY(-50%);
+}
+
+.grid-button::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	width: 1px;
+	background-color: red;
+	transform: translateX(-50%);
+}
+
+
+
 @tailwind utilities;
