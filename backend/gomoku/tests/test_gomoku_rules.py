@@ -153,6 +153,19 @@ def test_breaking_line(gomoku):
 	# 	gomoku.place_stone("L11", "B")
 	print(gomoku)
 
+
+def test_check_alignment():
+	assert check_alignment("  WWW", "W", 3) == True
+	assert check_alignment(" W WW", "W", 3) == True
+	assert check_alignment("W WWW", "W", 4) == True
+	assert check_alignment("WW   ", "W", 2) == True
+	assert check_alignment("W  WW", "W", 3) == True
+	assert check_alignment(" WW ", "W", 2) == True
+
+	assert check_alignment("B WWW", "W", 3) == False
+	assert check_alignment(" WWWB", "W", 3) == False
+	assert check_alignment("BWWW ", "W", 3) == False
+
 if __name__ == "__main__":
 	os.system('clear')
 	# test_breaking_line(Gomoku())

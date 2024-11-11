@@ -149,6 +149,63 @@ def is_free_three(board: list[list[str]], i, j, stone):
 	return count
 
 
+def check_alignment(row: list[str], stone: str, stone_count: int) -> bool:
+	return row.count(stone) == stone_count and row.count(" ") == len(row) - stone_count
+	pass
+
+def is_three_aligned(board: list[list[str]], i, j, stone):
+	count = 0
+
+	try: # F
+		if check_alignment("".join([board[i][j + k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # I
+		if check_alignment("".join([board[i][j - k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # G
+		if check_alignment("".join([board[i + k][j] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # E
+		if check_alignment("".join([board[i - k][j] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # A
+		if check_alignment("".join([board[i - k][j - k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # D
+		if check_alignment("".join([board[i + k][j + k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # C
+		if check_alignment("".join([board[i - k][j + k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	try: # H
+		if check_alignment("".join([board[i + k][j - k] for k in range(1, 6)]), stone, 3):
+			count += 1
+	except:
+		pass
+	return count
+
+
+
+
+
+
+
+
+
 
 def is_free_three_no_doublons(board: list[list[str]], i, j, stone):
 	"""
@@ -172,29 +229,29 @@ def is_free_three_no_doublons(board: list[list[str]], i, j, stone):
 		# raise Exception
 		if "".join([board[i][j + k] for k in range(0, 6)]) in possibility:
 			count += 1
-		if "".join([board[i][j + k] for k in range(0, 7)]) == large_double_three:
-			count -= 1
+			if "".join([board[i][j + k] for k in range(0, 7)]) == large_double_three:
+				count -= 1
 	except:
 		pass
 	try: # G
 		if "".join([board[i + k][j] for k in range(0, 6)]) in possibility:
 			count += 1
-		if "".join([board[i + k][j] for k in range(0, 7)]) == large_double_three:
-			count -= 1
+			if "".join([board[i + k][j] for k in range(0, 7)]) == large_double_three:
+				count -= 1
 	except:
 		pass
 	try: # D
 		if "".join([board[i + k][j + k] for k in range(0, 6)]) in possibility:
 			count += 1
-		if "".join([board[i + k][j + k] for k in range(0, 7)]) == large_double_three:
-			count -= 1
+			if "".join([board[i + k][j + k] for k in range(0, 7)]) == large_double_three:
+				count -= 1
 	except:
 		pass
 	try: # H
 		if "".join([board[i + k][j - k] for k in range(0, 6)]) in possibility:
 			count += 1
-		if "".join([board[i + k][j - k] for k in range(0, 7)]) == large_double_three:
-			count -= 1
+			if "".join([board[i + k][j - k] for k in range(0, 7)]) == large_double_three:
+				count -= 1
 	except:
 		pass
 	return count
@@ -207,6 +264,24 @@ def count_free_three(board: list[list[str]], stone: str):
 			if board[i][j] == " ":
 				count += is_free_three_no_doublons(board, i, j, stone)
 	return count
+
+
+def count_three_aligned(board: list[list[str]], stone: str):
+	count = 0
+	opponent_stone = switch_opponent(stone)
+	for i in range(len(board)):
+		for j in range(len(board[i])):
+			if board[i][j] == opponent_stone:
+				count += is_three_aligned(board, i, j, stone)
+	return count
+
+def count_all_three(board: list[list[str]], stone: str):
+	free_three = count_free_three(board, stone)
+	three_aligned = count_three_aligned(board, stone)
+	return {
+		'free_three': free_three,
+		'three_aligned': three_aligned
+	}
 
 def is_creating_db_free_three(board: list[list[str]], i_stone: int, j_stone: int, stone: str):
 	before_count = 0
