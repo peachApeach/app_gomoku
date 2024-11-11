@@ -38,7 +38,19 @@ export default {
           const gridBtn = document.createElement('button')
           // gridBtn.classList.add(...['w-9', 'h-9'])
           gridBtn.classList.add(...['relative', 'grid-button', 'border-solid', 'border', 'border-sky-500', 'w-9', 'h-9'])
-          gridElement.classList.add(...['w-10', 'h-10'])
+          gridElement.classList.add(...['flex', 'items-center', 'justify-center', 'w-10', 'h-10'])
+
+          const hrHorizontal = document.createElement('hr')
+          hrHorizontal.classList.add(...['absolute', 'h-px', 'w-10', 'bg-red-600', 'border-0'])
+          gridElement.appendChild(hrHorizontal)
+
+          const hrVertical = document.createElement('hr')
+          if (i != 0)
+            hrVertical.classList.add(...['absolute', 'h-10', 'w-px', 'bg-red-600', 'border-0'])
+          else
+            hrVertical.classList.add(...['absolute', 'h-5', 'w-px', 'bg-red-600', 'border-0', 'top-0'])
+          gridElement.appendChild(hrVertical)
+          
           gridElement.appendChild(gridBtn)
           gridParentDiv.appendChild(gridElement)
           counter++
