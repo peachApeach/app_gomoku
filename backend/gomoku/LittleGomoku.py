@@ -22,10 +22,17 @@ class LittleGomoku:
 		self.black_capture = black_capture
 		self.white_capture = white_capture
 
-		# self.free_four_black =
+		self.three_aligned_black = 0
+		self.three_aligned_white = 0
+
+		self.four_aligned_black = 0
+		self.four_aligned_white = 0
+
 		self.free_three_black = free_three_black
 		self.free_three_white = free_three_white
 
+		self.free_four_black = 0
+		self.free_four_white = 0
 
 	def __str__(self) -> str:
 		content = "  "
@@ -89,11 +96,11 @@ class LittleGomoku:
 		return True
 
 	def place_stone(self, i: int, j: int, stone: str = None):
-		# if x is None or y is None:
-		# 	raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
+		if x is None or y is None:
+			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
-		# if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
-		# 	raise PlacementError("Your coordinates is out of the board.")
+		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
+			raise PlacementError("Your coordinates is out of the board.")
 
 		if stone == " ":
 			self.board[i][j] = " "
@@ -102,7 +109,7 @@ class LittleGomoku:
 		# 	self.board[i][j] = self.get_player_turn() if stone == None else stone
 		# 	return
 
-		if self.board[i][j] == ' ' or stone == ' ':
+		if self.board[i][j] == ' ':
 			to_place = self.player_turn if stone == None else stone
 			if self.settings.allowed_capture == True:
 				value = pair_can_be_capture(self.board, i, j, to_place)
@@ -144,6 +151,12 @@ class LittleGomoku:
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
 						else:
 							self.free_three_white = nb_free_three
+
+			# A ce stade, tout s'est bien passé
+			# COUNT NEW FREE FOUR
+			# COUNT NEW FOUR ALIGNED
+			# COUNT NEW FREE THREE
+			# COUNT NEW THREE ALIGNED
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
 

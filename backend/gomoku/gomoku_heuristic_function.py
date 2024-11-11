@@ -7,6 +7,8 @@ def game_state(gomoku: LittleGomoku) -> int:
 	**********************
 	* HEURISTIC FUNCTION *
 	**********************
+	* EXCEPT TIME < 5MS  *
+	**********************
 	C'est uniquement lorsqu'on atteint une terminate state or DEPTH == MAX_DEPTH que cette fonction est appelé. Donc ce n'est pas nécessaire d'appeler les fonctions pour compter constamment à par celle pour les stones capturées.
 	Ca renvoie la valeur du tableau.
 
@@ -80,30 +82,29 @@ def game_state(gomoku: LittleGomoku) -> int:
 		else:
 			score_white += S_FIVE_ALIGNED
 
-		print(who_critical)
-
 	########################################
 	# FREE FOUR
 	########################################
+	score_black += gomoku.free_four_black * S_FREE_FOUR
+	score_white += gomoku.free_four_white * S_FREE_FOUR
 
 	########################################
 	# FOUR ALIGNED
 	########################################
+	score_black += gomoku.four_aligned_black * S_FOUR_ALIGNED
+	score_white += gomoku.four_aligned_white * S_FOUR_ALIGNED
 
 	########################################
 	# FREE THREE
 	########################################
+	score_black += gomoku.free_three_black * S_FREE_THREE
+	score_white += gomoku.free_three_white * S_FREE_THREE
 
-	# Take in account of the count of three aligned can be more than the real value bc its count 2 times sometimes.
-	all_three_black = count_all_three(littleGomoku.board, "B")
-	all_three_white = count_all_three(littleGomoku.board, "W")
-
-	score_white += all_three_white['free_three'] * S_FREE_THREE + all_three_white['three_aligned'] * S_THREE_ALIGNED
-	score_black += all_three_black['free_three'] * S_FREE_THREE + all_three_black['three_aligned'] * S_THREE_ALIGNED
 	########################################
 	# THREE ALIGNED
 	########################################
-
+	score_black += gomoku.three_aligned_black * S_THREE_ALIGNED
+	score_white += gomoku.three_aligned_white * S_THREE_ALIGNED
 
 	########################################
 	# PAIRS CATCHED
@@ -112,8 +113,8 @@ def game_state(gomoku: LittleGomoku) -> int:
 	score_white += gomoku.white_capture * S_PAIRS_CAPTURED
 
 
-	print(f"Black player scores => {score_black}")
-	print(f"White player scores => {score_white}")
+	# print(f"Black player scores => {score_black}")
+	# print(f"White player scores => {score_white}")
 	return
 
 
@@ -137,6 +138,7 @@ if __name__ == "__main__":
 	from Gomoku import Gomoku
 	from gomoku_algorithm import minimax
 	from MeasureTime import MeasureTime
+	
 	gomoku = Gomoku()
 	gomoku.place_stone("H6", "B")
 	gomoku.place_stone("J9", "W")
@@ -154,6 +156,13 @@ if __name__ == "__main__":
 	gomoku.place_stone("H11", "W")
 	gomoku.place_stone("H12", "W")
 	gomoku.place_stone("H13", "W")
+
+	for i in range(7, 11):
+		gomoku.place_stone(f"C{i}", "W")
+
+	for i in range(9, 13):
+		gomoku.place_stone(f"E{i}", "W")
+	gomoku.place_stone(f"E13", "B")
 
 	gomoku.place_stone("H16", "B")
 	gomoku.place_stone("H10", "B")
@@ -175,9 +184,13 @@ if __name__ == "__main__":
 
 	print(littleGomoku)
 	mt = MeasureTime(start=True)
-	for i in range(200):
+	# for i in range(200):
+	# 	game_state(littleGomoku)
+	# iteration = 361
+	iteration = 1000
+	print(f"TIMER START FOR {iteration} ITERATIONS")
+	for i in range(iteration):
 		game_state(littleGomoku)
-	# game_state(littleGomoku)
 	# game_state(littleGomoku)
 	# game_state(littleGomoku)
 	# game_state(littleGomoku)
