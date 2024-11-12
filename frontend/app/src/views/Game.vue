@@ -6,7 +6,7 @@
     </div> -->
     <div class=" flex w-full flex-col items-center justify-center">
       <!-- <hr class="w-72 h-px bg-gray-200 border-0"> -->
-      <div ref="board" class="grid grid-cols-19 grid-rows-19 z-50">
+      <div ref="board" class="grid grid-cols-19 grid-rows-19">
 
       </div>
       <!-- <div class="absolute top-[9.6rem] size-17 overflow-hidden">
@@ -36,26 +36,43 @@ export default {
         for (let j = 0; j < 19; j++) {
           const gridElement = document.createElement('div')
           const gridBtn = document.createElement('button')
-          // gridBtn.classList.add(...['w-9', 'h-9'])
-          gridBtn.classList.add(...['relative', 'grid-button', 'border-solid', 'border', 'border-sky-500', 'w-9', 'h-9'])
-          gridElement.classList.add(...['flex', 'items-center', 'justify-center', 'w-10', 'h-10'])
+          gridBtn.classList.add(...['relative', 'grid-button', 'w-10', 'h-10'])
+          gridBtn.addEventListener("click", this.addBlackPown)
+          // gridBtn.classList.add(...['relative', 'grid-button', 'border-solid', 'border', 'border-sky-500', 'w-10', 'h-10'])
+          gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-10', 'h-10', 'grid-div'])
 
           const hrHorizontal = document.createElement('hr')
-          hrHorizontal.classList.add(...['absolute', 'h-px', 'w-10', 'bg-red-600', 'border-0'])
-          gridElement.appendChild(hrHorizontal)
-
+           
           const hrVertical = document.createElement('hr')
-          if (i != 0)
-            hrVertical.classList.add(...['absolute', 'h-10', 'w-px', 'bg-red-600', 'border-0'])
+          if (i == 0)
+            hrVertical.classList.add(...['vl-first-line'])
+          else if (i == 18)
+            hrVertical.classList.add(...['vl-last-line'])
           else
-            hrVertical.classList.add(...['absolute', 'h-5', 'w-px', 'bg-red-600', 'border-0', 'top-0'])
+            hrVertical.classList.add(...['vl'])
+          if (j == 0)
+            hrHorizontal.classList.add(...['hl-first-col'])
+          else if (j == 18)
+            hrHorizontal.classList.add(...['hl-last-col'])
+          else
+            hrHorizontal.classList.add(...['hl'])
+
+          const hoverCircle = document.createElement('div')
+          hoverCircle.classList.add(...['circle', 'absolute', 'group-hover:block'])
+          gridBtn.appendChild(hoverCircle)
+
           gridElement.appendChild(hrVertical)
+          gridElement.appendChild(hrHorizontal)
           
           gridElement.appendChild(gridBtn)
           gridParentDiv.appendChild(gridElement)
           counter++
         }
       }
+    },
+
+    addBlackPown() {
+      console.log("black")
     }
   }
 };
