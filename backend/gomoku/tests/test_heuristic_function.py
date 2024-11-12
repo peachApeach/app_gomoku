@@ -19,8 +19,14 @@ def convert_to_little_gomoku(gomoku: Gomoku):
 		min_player=gomoku.minimizing_player,
 		black_capture=gomoku.black_capture,
 		white_capture=gomoku.white_capture,
+		three_aligned_black=gomoku.three_aligned_black,
+		three_aligned_white=gomoku.three_aligned_white,
 		free_three_black=gomoku.free_three_black,
 		free_three_white=gomoku.free_three_white,
+		four_aligned_black=gomoku.four_aligned_black,
+		four_aligned_white=gomoku.four_aligned_white,
+		free_four_black=gomoku.free_four_black,
+		free_four_white=gomoku.free_four_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 

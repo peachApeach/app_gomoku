@@ -100,9 +100,6 @@ def game_state(gomoku: LittleGomoku) -> int:
 	score_black += gomoku.free_three_black * S_FREE_THREE
 	score_white += gomoku.free_three_white * S_FREE_THREE
 
-	score_black += count_free_three(gomoku.board, "B") * S_FREE_THREE
-	score_white += count_free_three(gomoku.board, "W") * S_FREE_THREE
-
 	########################################
 	# THREE ALIGNED
 	########################################
@@ -125,9 +122,6 @@ def game_state(gomoku: LittleGomoku) -> int:
 		return score_white - score_black
 
 
-	return
-
-
 	# print(gomoku_settings)
 	if gomoku.settings.allowed_win_by_capture == True and (gomoku.black_capture >= 5 or gomoku.white_capture >= 5):
 		value = 5
@@ -144,7 +138,7 @@ def game_state(gomoku: LittleGomoku) -> int:
 	else:
 		return random.randint(-5, -1)
 
-if __name__ == "__main__2":
+if __name__ == "2__main__2":
 	from Gomoku import Gomoku
 	from gomoku_algorithm import minimax
 	from MeasureTime import MeasureTime
@@ -248,6 +242,7 @@ if __name__ == "__main__":
 
 	measureTime = MeasureTime(start=True)
 	actions = littleGomoku.get_actions()
+	# littleGomoku.paint_actions(actions)
 	print(actions)
 	print(minimax(littleGomoku, MAX_DEPTH=1))
 	measureTime.stop()
