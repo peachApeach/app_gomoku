@@ -15,6 +15,7 @@ from gomoku_state import *
 from gomoku_rules import *
 from my_utils import print_error
 from GomokuSettings import GomokuSettings
+from handle_alignment import count_all_alignment
 
 class GomokuError(Exception):
 	pass
@@ -30,8 +31,20 @@ class Gomoku:
 		self.__board_height = board_size[1]
 		self.black_capture = 0
 		self.white_capture = 0
+
+		self.three_aligned_black = 0
+		self.three_aligned_white = 0
+
 		self.free_three_black = 0
 		self.free_three_white = 0
+
+		self.four_aligned_black = 0
+		self.four_aligned_white = 0
+
+		self.free_four_black = 0
+		self.free_four_white = 0
+
+
 		self.player_turn = who_start
 		self.maximizing_player = who_start
 		self.minimizing_player = 'W' if who_start == 'B' else 'B'
@@ -73,37 +86,30 @@ class Gomoku:
 
 	def get_player_turn(self) -> str:
 		return self.player_turn
-		# black_stone = 0
-		# white_stone = 0
-		# for i in range(self.__board_height):
-		# 	for j in range(self.__board_width):
-		# 		if self.board[i][j] == 'B':
-		# 			black_stone += 1
-		# 		elif self.board[i][j] == 'W':
-		# 			white_stone += 1
-		# return 'B' if black_stone == white_stone else 'W'
 
 	def place_stone(self, coordinate: str, stone: str = None, force: bool = False):
-		x, y = convert_coordinate(coordinate)
-		if x is None or y is None:
+		j, i = convert_coordinate(coordinate)
+		if i is None or j is None:
 			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
-		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
+		if j < 0 or j >= self.__board_width or i < 0 or i >= self.__board_height:
 			raise PlacementError("Your coordinates is out of the board.")
 
 		if force:
-			self.board[y][x] = self.get_player_turn() if stone == None else stone
+			self.board[i][j] = self.get_player_turn() if stone == None else stone
 			return
 
-		if self.board[y][x] == ' ' or stone == ' ':
+		if self.board[i][j] == ' ' or stone == ' ':
 			to_place = self.get_player_turn() if stone == None else stone
 			if self.settings.allowed_capture == True:
-				value = pair_can_be_capture(self.board, y, x, to_place)
+				value = pair_can_be_capture(self.board, i, j, to_place)
 			else:
 				value = None
+
+			before_placement_alignment = count_all_alignment(self.board, i, j)
+			self.board[i][j] = to_place
 			if value:
-				self.board[y][x] = to_place
-				if self.board[y][x] == 'B':
+				if self.board[i][j] == 'B':
 					self.black_capture += 1
 				else:
 					self.white_capture += 1
@@ -111,33 +117,51 @@ class Gomoku:
 				cd2 = value[1]
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
+				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
-				# print(self.free_three_black)
-				self.board[y][x] = to_place
+				# self.board[i][j] = to_place
 
 				if self.settings.allowed_capture:
 					situation = critical_situation(self.board)
 					if situation[0] == True:
 						if situation[1] != to_place:
-							self.board[y][x] = ' '
+							self.board[i][j] = ' '
 							raise PlacementError("You are in a critical situation. Please fix this !")
 
+				after_placement_alignment = count_all_alignment(self.board, i, j)
+
 				if self.settings.allowed_double_three == False:
-					nb_free_three = count_free_three(self.board, to_place)
-					if to_place == 'B':
-						if nb_free_three - self.free_three_black >= 2:
-							self.board[y][x] = ' '
+					if to_place == "B":
+						if after_placement_alignment['free_three_black'] - before_placement_alignment['free_three_black'] >= 2:
+							self.board[i][j] = ' '
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-						else:
-							self.free_three_black = nb_free_three
 					else:
-						if nb_free_three - self.free_three_white >= 2:
-							self.board[y][x] = ' '
+						if after_placement_alignment['free_three_white'] - before_placement_alignment['free_three_white'] >= 2:
+							self.board[i][j] = ' '
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-						else:
-							self.free_three_white = nb_free_three
+
+
+
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
+
+		# if (stone == None):
+		# 	print("BEFORE")
+		# 	print(before_placement_alignment)
+		# 	print("AFTER")
+		# 	print(after_placement_alignment)
+
+		self.three_aligned_black += after_placement_alignment['three_aligned_black'] - before_placement_alignment['three_aligned_black']
+		self.three_aligned_white += after_placement_alignment['three_aligned_white'] - before_placement_alignment['three_aligned_white']
+
+		self.free_three_black += after_placement_alignment['free_three_black'] - before_placement_alignment['free_three_black']
+		self.free_three_white += after_placement_alignment['free_three_white'] - before_placement_alignment['free_three_white']
+
+		self.four_aligned_black += after_placement_alignment['four_aligned_black'] - before_placement_alignment['four_aligned_black']
+		self.four_aligned_white += after_placement_alignment['four_aligned_white'] - before_placement_alignment['four_aligned_white']
+
+		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
+		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
 
 	def remove_pairs(self):
 		value = remove_pair_capture(self.board)
@@ -164,6 +188,20 @@ class Gomoku:
 		print(self)
 		print(f"{BLACKB}{BHWHITE}BLACK HAS CAPTURED {self.black_capture} WHITE PAIRS.{RESET}")
 		print(f"{WHITEHB}{BHBLACK}WHITE HAS CAPTURED {self.white_capture} BLACK PAIRS.{RESET}")
+
+		print(f"{BLACKB}{BHWHITE}")
+		# print()
+		print(f"Aligned three black : {self.three_aligned_black}")
+		print(f"Free Three black : {self.free_three_black}")
+		print(f"Aligned four black : {self.four_aligned_black}")
+		print(f"Free four black : {self.free_four_black}{RESET}")
+
+
+		print(f"{WHITEHB}{BHBLACK}")
+		print(f"Aligned three white : {self.three_aligned_white}")
+		print(f"Free Three white : {self.free_three_white}")
+		print(f"Aligned four white : {self.four_aligned_white}")
+		print(f"Free four white : {self.free_four_white}{RESET}")
 		print()
 
 
@@ -236,14 +274,16 @@ class Gomoku:
 
 if __name__ == "__main__":
 	settings = GomokuSettings(allowed_capture=True)
-	gomoku = Gomoku(IA=False, who_start="W", settings=settings)
+	gomoku = Gomoku(IA=False, who_start="B", settings=settings)
 
 
+
+	# DOUBLE THREE
 	gomoku.place_stone("B2", "B")
 	gomoku.place_stone("C3", "B")
-	gomoku.place_stone("D5", "B")
-	gomoku.place_stone("E5", "B")
-	gomoku.place_stone("F6", "B")
+	gomoku.place_stone("E6", "B")
+	gomoku.place_stone("E7", "B")
+	gomoku.place_stone("O7", "B")
 
 	gomoku.place_stone("D3", "W")
 	gomoku.place_stone("H3", "W")
@@ -251,8 +291,20 @@ if __name__ == "__main__":
 	gomoku.place_stone("I5", "W")
 	gomoku.place_stone("H10", "W")
 
+	# gomoku.place_stone("B2", "B")
+	# gomoku.place_stone("C3", "B")
+	# gomoku.place_stone("D5", "B")
+	# gomoku.place_stone("E5", "B")
+	# gomoku.place_stone("F6", "B")
 
-	gomoku.place_stone("D4", "B")
+	# gomoku.place_stone("D3", "W")
+	# gomoku.place_stone("H3", "W")
+	# gomoku.place_stone("I4", "W")
+	# gomoku.place_stone("I5", "W")
+	# gomoku.place_stone("H10", "W")
+
+
+	# gomoku.place_stone("D4", "B")
 
 	# gomoku.place_stone("L11", "W")
 
