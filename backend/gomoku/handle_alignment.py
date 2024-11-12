@@ -1,12 +1,5 @@
-import sys
-import os
 import re
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from Gomoku import Gomoku
-from Colors import *
 from gomoku_rules import switch_opponent
-from MeasureTime import MeasureTime
 
 def type_of_alignment(row: list[str], stone: str):
 	opponent_stone = switch_opponent(stone)
@@ -65,7 +58,6 @@ def alignment_streaks(line: str):
 					all_streaks['four_aligned_white'] += 1
 
 	black_streaks = re.findall(r"(\s*[B]{2,}\s?[B]*\s?)", line)
-	print(black_streaks)
 	if black_streaks:
 		for streak in black_streaks:
 			if (len(streak)) < 5:
@@ -88,24 +80,24 @@ def count_horizontal(board: list[list[str]], i: int):
 	line = ""
 	for j in range(len(board[i])):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
+		if board[i][j] == " ":
+			board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_vertical(board: list[list[str]], j: int):
 	line = ""
 	for i in range(len(board)):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
+		if board[i][j] == " ":
+			board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_diagonal_1(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j < len(board[i]):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
+		if board[i][j] == " ":
+			board[i][j] = "??"
 		i += 1
 		j += 1
 	return alignment_streaks(line)
@@ -115,8 +107,8 @@ def count_diagonal_2(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j >= 0:
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
+		if board[i][j] == " ":
+			board[i][j] = "??"
 		i += 1
 		j -= 1
 	return alignment_streaks(line)
@@ -125,7 +117,6 @@ import copy
 
 def count_all_alignment(board: list[list[str]], i: int, j: int):
 	dict_horizontal = count_horizontal(board, i)
-	print(f"HORIZONTAL {dict_horizontal}")
 	dict_vertical = count_vertical(board, j)
 	tmp_i = i
 	tmp_j = j
@@ -137,7 +128,7 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 
 	tmp_i = i
 	tmp_j = j
-	while tmp_i > 0 and tmp_j < len(board[0]):
+	while tmp_i > 0 and tmp_j < len(board[0]) - 1:
 		tmp_i -= 1
 		tmp_j += 1
 	dict_diagonal_2 = count_diagonal_2(board, tmp_i, tmp_j)
@@ -188,6 +179,10 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 	count_diagonal_2(board, tmp_i, tmp_j)
 
 if __name__ == "__main__":
+	from Colors import *
+	from MeasureTime import MeasureTime
+	from Gomoku import Gomoku
+
 	gomoku = Gomoku()
 
 	gomoku.place_stone("C5", "B")
@@ -214,6 +209,12 @@ if __name__ == "__main__":
 	gomoku.place_stone("F5", "B")
 	gomoku.place_stone("F6", "B")
 
+	gomoku.place_stone("S19", "B")
+	print(gomoku)
+	count_all_alignment(gomoku.board, 18, 18)
+	print(gomoku)
+	exit(1)
+
 	i = 5
 	j = 7
 
@@ -234,7 +235,7 @@ if __name__ == "__main__":
 	# count_all_alignment(gomoku.board, i, j)
 	# print(gomoku)
 
-	if False:
+	if True:
 		mt = MeasureTime(start=True)
 		iteration = 10000
 		for _ in range(iteration):
@@ -253,108 +254,3 @@ if __name__ == "__main__":
 	# print(alignment_streaks(line))
 	# print(alignment_streaks("   BBB WWWW        "))
 	pass
-
-def test_alignment_streaks():
-	"""
-	NEED TO RETURN THIS :
-	'free_four_black',
-	'free_four_white',
-	'four_aligned_black',
-	'four_aligned_white',
-	'free_three_black',
-	'free_three_white',
-	'three_aligned_black',
-	'three_aligned_white',
-	"""
-	assert alignment_streaks("   BBB WWWW        ") == {
-		'free_four_black': 0,
-		'free_four_white': 1,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 1,
-		'free_three_white': 0,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
-	}
-	assert alignment_streaks("   BBB   BB        ") == {
-		'free_four_black': 0,
-		'free_four_white': 0,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 1,
-		'free_three_white': 0,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
-	}
-	assert alignment_streaks("   BBB   BBB  WWW  ") == {
-		'free_four_black': 0,
-		'free_four_white': 0,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 2,
-		'free_three_white': 1,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
-	}
-	assert alignment_streaks("   BBB   BBB  WWWW ") == {
-		'free_four_black': 0,
-		'free_four_white': 1,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 2,
-		'free_three_white': 0,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
-	}
-	assert alignment_streaks("BBB                ") == {
-		'free_four_black': 0,
-		'free_four_white': 0,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 0,
-		'free_three_white': 0,
-
-		'three_aligned_black': 1,
-		'three_aligned_white': 0,
-	}
-	assert alignment_streaks("BBBB               ") == {
-		'free_four_black': 0,
-		'free_four_white': 0,
-
-		'four_aligned_black': 1,
-		'four_aligned_white': 0,
-
-		'free_three_black': 0,
-		'free_three_white': 0,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
-	}
-	# assert alignment_streaks("                   ") == {
-	# 	'free_four_black': 0,
-	# 	'free_four_white': 0,
-
-	# 	'four_aligned_black': 0,
-	# 	'four_aligned_white': 0,
-
-	# 	'free_three_black': 0,
-	# 	'free_three_white': 0,
-
-	# 	'three_aligned_black': 0,
-	# 	'three_aligned_white': 0,
-	# }
-
