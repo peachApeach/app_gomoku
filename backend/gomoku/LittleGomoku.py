@@ -252,6 +252,9 @@ class LittleGomoku:
 		range_i, range_j = get_actions_range(self.board)
 		# for i in range(len(self.board)):
 		# 	for j in range(len(self.board[i])):
+
+		return ((i, j) for i in range_i for j in range_j if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True)
+		# return [(i, j) for i in range_i for j in range_j if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True]
 		for i in range_i:
 			for j in range_j:
 
@@ -259,8 +262,8 @@ class LittleGomoku:
 				# if self.board[i][j] == " ":
 				if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True:
 					try:
-						if self.is_valid_placement(i=i, j=j):
-							empty_slot.append((i, j))
+						# if self.is_valid_placement(i=i, j=j):
+						empty_slot.append((i, j))
 						# else:
 						# 	print(f"Invalid slot : [{i}]:[{j}]")
 					except Exception as e:
@@ -304,8 +307,8 @@ if __name__ == "__main__":
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
 	gomoku.place_stone("R17", "W")
-	# gomoku.place_stone("R18", "W")
-	# gomoku.switch_player_turn()
+	gomoku.place_stone("R18", "B")
+	gomoku.switch_player_turn()
 
 	littleGomoku = LittleGomoku(
 		board=gomoku.board,
@@ -332,12 +335,15 @@ if __name__ == "__main__":
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
 
+	# exit(1)
 
 	measureTime = MeasureTime(start=True)
 	# actions = littleGomoku.get_actions()
 	# print(actions)
-	print(minimax(littleGomoku, MAX_DEPTH=3))
+	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=3)
 	measureTime.stop()
+	print(f"Score {score_state} | Optimal Move {optimal_move}")
+	littleGomoku.board[optimal_move[0]][optimal_move[1]] = "??"
 	# littleGomoku.paint_actions(actions)
 	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
