@@ -1,5 +1,5 @@
 from gomoku_state import terminate_state, winner_found, critical_situation
-from gomoku_rules import count_all_three
+from gomoku_rules import count_all_three, count_free_three
 from LittleGomoku import LittleGomoku
 
 def game_state(gomoku: LittleGomoku) -> int:
@@ -100,6 +100,9 @@ def game_state(gomoku: LittleGomoku) -> int:
 	score_black += gomoku.free_three_black * S_FREE_THREE
 	score_white += gomoku.free_three_white * S_FREE_THREE
 
+	score_black += count_free_three(gomoku.board, "B") * S_FREE_THREE
+	score_white += count_free_three(gomoku.board, "W") * S_FREE_THREE
+
 	########################################
 	# THREE ALIGNED
 	########################################
@@ -113,8 +116,15 @@ def game_state(gomoku: LittleGomoku) -> int:
 	score_white += gomoku.white_capture * S_PAIRS_CAPTURED
 
 
-	# print(f"Black player scores => {score_black}")
-	# print(f"White player scores => {score_white}")
+	print(f"Black player scores => {score_black}")
+	print(f"White player scores => {score_white}")
+
+	if gomoku.maximizing_player == "B":
+		return score_black - score_white
+	else:
+		return score_white - score_black
+
+
 	return
 
 
@@ -134,11 +144,11 @@ def game_state(gomoku: LittleGomoku) -> int:
 	else:
 		return random.randint(-5, -1)
 
-if __name__ == "__main__":
+if __name__ == "__main__2":
 	from Gomoku import Gomoku
 	from gomoku_algorithm import minimax
 	from MeasureTime import MeasureTime
-	
+
 	gomoku = Gomoku()
 	gomoku.place_stone("H6", "B")
 	gomoku.place_stone("J9", "W")
@@ -198,3 +208,51 @@ if __name__ == "__main__":
 	from gomoku_rules import count_all_three
 	print(count_all_three(littleGomoku.board, "W"))
 
+
+
+if __name__ == "__main__":
+	from Gomoku import Gomoku
+	from gomoku_algorithm import minimax
+	from MeasureTime import MeasureTime
+	gomoku = Gomoku()
+	gomoku.place_stone("G6", "B")
+	gomoku.place_stone("H7", "W")
+	gomoku.place_stone("J3", "B")
+	# gomoku.place_stone("H8", "W")
+	gomoku.place_stone("J8", "B")
+	gomoku.place_stone("H9", "W")
+	gomoku.place_stone("J10", "B")
+	gomoku.place_stone("R17", "W")
+	# gomoku.place_stone("R18", "W")
+	gomoku.switch_player_turn()
+
+	littleGomoku = LittleGomoku(
+		board=gomoku.board,
+		player_turn=gomoku.player_turn,
+		gomoku_settings=gomoku.settings,
+		max_player=gomoku.maximizing_player,
+		min_player=gomoku.minimizing_player,
+		black_capture=gomoku.black_capture,
+		white_capture=gomoku.white_capture,
+		free_three_black=gomoku.free_three_black,
+		free_three_white=gomoku.free_three_white,
+		board_width=gomoku.get_board_width(),
+		board_height=gomoku.get_board_height())
+
+	print(gomoku)
+	# gomoku.board[3][1] = "W"
+	print(littleGomoku.player_turn)
+	print(littleGomoku.maximizing_player)
+	print(littleGomoku.minimizing_player)
+
+
+	measureTime = MeasureTime(start=True)
+	actions = littleGomoku.get_actions()
+	print(actions)
+	print(minimax(littleGomoku, MAX_DEPTH=1))
+	measureTime.stop()
+	# littleGomoku.paint_actions(actions)
+	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
+	# littleGomoku.board[7][5] = "W"
+	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
+	print(littleGomoku)

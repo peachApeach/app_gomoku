@@ -96,11 +96,11 @@ class LittleGomoku:
 		return True
 
 	def place_stone(self, i: int, j: int, stone: str = None):
-		if x is None or y is None:
-			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
+		# if x is None or y is None:
+		# 	raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
-		if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
-			raise PlacementError("Your coordinates is out of the board.")
+		# if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
+		# 	raise PlacementError("Your coordinates is out of the board.")
 
 		if stone == " ":
 			self.board[i][j] = " "
@@ -204,13 +204,13 @@ class LittleGomoku:
 		# print(self)
 		return new_little_gomoku
 
+	def paint_actions(self, actions: list[tuple[int]]):
+		for action in actions:
+			self.board[action[0]][action[1]] = '??'
 
 	pass
 
 
-def paint_actions(gomoku: Gomoku, actions: list[tuple[int]]):
-	for action in actions:
-		gomoku.board[action[0]][action[1]] = '??'
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
@@ -253,7 +253,7 @@ if __name__ == "__main__":
 	print(actions)
 	# print(minimax(littleGomoku, MAX_DEPTH=3))
 	measureTime.stop()
-	paint_actions(littleGomoku, actions)
+	littleGomoku.paint_actions(actions)
 	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))

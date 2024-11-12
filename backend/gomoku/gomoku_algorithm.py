@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
 	measureTime = MeasureTime(start=True)
 	# print(littleGomoku.get_actions())
-	print(minimax(littleGomoku, MAX_DEPTH=2))
+	print(minimax(littleGomoku, MAX_DEPTH=3))
 	measureTime.stop()
 
 	from gomoku_rules import is_creating_db_free_three, is_free_three
