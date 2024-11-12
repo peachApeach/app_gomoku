@@ -51,11 +51,11 @@ def game_state(gomoku: LittleGomoku) -> int:
 	# 5 stones aligned: 80
 	S_FIVE_ALIGNED = 1000
 	# Free Four: 70
-	S_FREE_FOUR = 70
+	S_FREE_FOUR = 400
 	# 4 stones aligned not obstructed: 60
-	S_FOUR_ALIGNED = 60
+	S_FOUR_ALIGNED = 200
 	# Free Three: 50
-	S_FREE_THREE = 50
+	S_FREE_THREE = 150
 	# 3 stones aligned: 40
 	S_THREE_ALIGNED = 20
 	# # == PAIRS ==
@@ -67,8 +67,6 @@ def game_state(gomoku: LittleGomoku) -> int:
 	S_PAIRS_CAPTURED = 15
 
 
-
-	value = 0
 	score_white = 0
 	score_black = 0
 
@@ -120,23 +118,6 @@ def game_state(gomoku: LittleGomoku) -> int:
 		return score_black - score_white
 	else:
 		return score_white - score_black
-
-
-	# print(gomoku_settings)
-	if gomoku.settings.allowed_win_by_capture == True and (gomoku.black_capture >= 5 or gomoku.white_capture >= 5):
-		value = 5
-	if gomoku.settings.allowed_capture == True:
-		if winner_found(gomoku.board)[0] == True:
-			value = 5
-	else:
-		if critical_situation(gomoku.board)[0] == True:
-			value = 4
-
-
-	if gomoku.player_turn == gomoku.maximizing_player:
-		return random.randint(1, 5)
-	else:
-		return random.randint(-5, -1)
 
 if __name__ == "2__main__2":
 	from Gomoku import Gomoku
@@ -208,17 +189,31 @@ if __name__ == "__main__":
 	from Gomoku import Gomoku
 	from gomoku_algorithm import minimax
 	from MeasureTime import MeasureTime
+	# gomoku = Gomoku()
+	# gomoku.place_stone("G6", "B")
+	# gomoku.place_stone("H7", "W")
+	# gomoku.place_stone("J3", "B")
+	# # gomoku.place_stone("H8", "W")
+	# gomoku.place_stone("J8", "B")
+	# gomoku.place_stone("H9", "W")
+	# gomoku.place_stone("J10", "B")
+	# gomoku.place_stone("R17", "W")
+	# # gomoku.place_stone("R18", "W")
+	# gomoku.switch_player_turn()
+
+	# PLACEMENT 2
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")
 	gomoku.place_stone("H7", "W")
 	gomoku.place_stone("J3", "B")
-	# gomoku.place_stone("H8", "W")
+	gomoku.place_stone("H8", "W")
 	gomoku.place_stone("J8", "B")
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
 	gomoku.place_stone("R17", "W")
-	# gomoku.place_stone("R18", "W")
+	gomoku.place_stone("R18", "B")
 	gomoku.switch_player_turn()
+	# ###########
 
 	littleGomoku = LittleGomoku(
 		board=gomoku.board,
@@ -241,9 +236,10 @@ if __name__ == "__main__":
 
 
 	measureTime = MeasureTime(start=True)
-	actions = littleGomoku.get_actions()
+	for _ in range(400):
+		actions = littleGomoku.get_actions()
 	# littleGomoku.paint_actions(actions)
-	print(actions)
+	# print(actions)
 	print(minimax(littleGomoku, MAX_DEPTH=1))
 	measureTime.stop()
 	# littleGomoku.paint_actions(actions)

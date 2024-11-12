@@ -33,20 +33,15 @@ def minimax(
 		return game_state(gomoku), None
 
 	if gomoku.player_turn == gomoku.maximizing_player:
+		if game_state(gomoku) < alpha:
+			return alpha, None
 		value = float('-inf')
 		best_action = None
 		for action in gomoku.get_actions():
 			try:
 				new_gomoku = gomoku.simulate_action(action)
-			except Exception as e:
-				print(f"Failed to simulate")
-				# print(gomoku)
-				# print(is_creating_db_free_three(gomoku.board, action[0], action[1], gomoku.player_turn))
-				# print(gomoku.is_valid_placement(i=action[0], j=action[1], stone=gomoku.player_turn))
-				# gomoku.board[action[0]][action[1]] = gomoku.player_turn
-				# print(gomoku)
-				# print(action)
-				# exit(1)
+			except:
+				print("Failed to simulate")
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
@@ -55,11 +50,13 @@ def minimax(
 				best_action = action
 
 			alpha = max(alpha, state)
-			if beta <= alpha: # or state == 6:
+			if beta <= alpha:# or state == 6:
 				break
 		return value, best_action
 
 	elif gomoku.player_turn == gomoku.minimizing_player:
+		if game_state(gomoku) > beta:
+			return beta, None
 		value = float('+inf')
 		best_action = None
 		for action in gomoku.get_actions():
@@ -68,12 +65,13 @@ def minimax(
 			except:
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			print(f"{beta} | {state}")
 
-			if state < value: # or state == -6:
+			if state < value:
 				value = state
 				best_action = action
 			beta = min(beta, state)
-			if beta <= alpha:
+			if beta <= alpha:# or state == -6:
 				break
 		return value, best_action
 	else:
@@ -83,6 +81,20 @@ def minimax(
 if __name__ == "__main__":
 	from Gomoku import Gomoku
 	from MeasureTime import MeasureTime
+	# PLACEMENT 1
+	# gomoku = Gomoku()
+	# gomoku.place_stone("G6", "B")
+	# gomoku.place_stone("H7", "W")
+	# gomoku.place_stone("J3", "B")
+	# gomoku.place_stone("H8", "W")
+	# gomoku.place_stone("J8", "B")
+	# gomoku.place_stone("H9", "W")
+	# gomoku.place_stone("J10", "B")
+	# # gomoku.place_stone("R18", "W")
+	# gomoku.switch_player_turn()
+	# ###########
+
+	# PLACEMENT 2
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")
 	gomoku.place_stone("H7", "W")
@@ -91,8 +103,10 @@ if __name__ == "__main__":
 	gomoku.place_stone("J8", "B")
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
-	# gomoku.place_stone("R18", "W")
+	gomoku.place_stone("R17", "W")
+	gomoku.place_stone("R18", "B")
 	gomoku.switch_player_turn()
+	# ###########
 
 	littleGomoku = LittleGomoku(
 		board=gomoku.board,
@@ -102,8 +116,14 @@ if __name__ == "__main__":
 		min_player=gomoku.minimizing_player,
 		black_capture=gomoku.black_capture,
 		white_capture=gomoku.white_capture,
+		three_aligned_black=gomoku.three_aligned_black,
+		three_aligned_white=gomoku.three_aligned_white,
 		free_three_black=gomoku.free_three_black,
 		free_three_white=gomoku.free_three_white,
+		four_aligned_black=gomoku.four_aligned_black,
+		four_aligned_white=gomoku.four_aligned_white,
+		free_four_black=gomoku.free_four_black,
+		free_four_white=gomoku.free_four_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 
@@ -113,13 +133,30 @@ if __name__ == "__main__":
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
 
-
+	iteration = 15000
+	print("Measure Get Actions")
 	measureTime = MeasureTime(start=True)
-	# print(littleGomoku.get_actions())
-	print(minimax(littleGomoku, MAX_DEPTH=3))
+	for _ in range(iteration):
+		littleGomoku.get_actions()
 	measureTime.stop()
 
-	from gomoku_rules import is_creating_db_free_three, is_free_three
+	print("Measure Game State")
+	measureTime = MeasureTime(start=True)
+	for _ in range(iteration):
+		game_state(gomoku)
+	measureTime.stop()
+
+	print("Measure Minimax")
+	measureTime = MeasureTime(start=True)
+	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=2)
+	measureTime.stop()
+
+	# print(littleGomoku.get_actions())
+
+
+	print(f"Score {score_state} | Optimal Move {optimal_move}")
+	littleGomoku.board[optimal_move[0]][optimal_move[1]] = "??"
+
 	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))
