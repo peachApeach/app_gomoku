@@ -80,24 +80,24 @@ def count_horizontal(board: list[list[str]], i: int):
 	line = ""
 	for j in range(len(board[i])):
 		line += board[i][j]
-		if board[i][j] == " ":
-			board[i][j] = "??"
+		# if board[i][j] == " ":
+		# 	board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_vertical(board: list[list[str]], j: int):
 	line = ""
 	for i in range(len(board)):
 		line += board[i][j]
-		if board[i][j] == " ":
-			board[i][j] = "??"
+		# if board[i][j] == " ":
+		# 	board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_diagonal_1(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j < len(board[i]):
 		line += board[i][j]
-		if board[i][j] == " ":
-			board[i][j] = "??"
+		# if board[i][j] == " ":
+		# 	board[i][j] = "??"
 		i += 1
 		j += 1
 	return alignment_streaks(line)
@@ -107,8 +107,8 @@ def count_diagonal_2(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j >= 0:
 		line += board[i][j]
-		if board[i][j] == " ":
-			board[i][j] = "??"
+		# if board[i][j] == " ":
+		# 	board[i][j] = "??"
 		i += 1
 		j -= 1
 	return alignment_streaks(line)
