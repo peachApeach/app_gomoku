@@ -8,7 +8,18 @@ import copy
 
 class LittleGomoku:
 
-	def __init__(self, board: list[list[str]], player_turn: str, gomoku_settings: GomokuSettings, max_player: str, min_player: str, black_capture: int, white_capture: int, free_three_black: int, free_three_white: int, board_width: int = 19, board_height: int = 19):
+	def __init__(
+		self, board: list[list[str]], player_turn: str, gomoku_settings: GomokuSettings, max_player: str, min_player: str, black_capture: int, white_capture: int,
+		free_three_black: int,
+		free_three_white: int,
+		free_four_black: int,
+		free_four_white: int,
+		three_aligned_black: int,
+		three_aligned_white: int,
+		four_aligned_black: int,
+		four_aligned_white: int,
+
+		board_width: int = 19, board_height: int = 19):
 
 		self.board = board
 		self.settings = gomoku_settings
@@ -22,17 +33,17 @@ class LittleGomoku:
 		self.black_capture = black_capture
 		self.white_capture = white_capture
 
-		self.three_aligned_black = 0
-		self.three_aligned_white = 0
+		self.three_aligned_black = three_aligned_black
+		self.three_aligned_white = three_aligned_white
 
-		self.four_aligned_black = 0
-		self.four_aligned_white = 0
+		self.four_aligned_black = four_aligned_black
+		self.four_aligned_white = four_aligned_white
 
 		self.free_three_black = free_three_black
 		self.free_three_white = free_three_white
 
-		self.free_four_black = 0
-		self.free_four_white = 0
+		self.free_four_black = free_four_black
+		self.free_four_white = free_four_white
 
 	def __str__(self) -> str:
 		content = "  "
@@ -95,28 +106,90 @@ class LittleGomoku:
 			return False
 		return True
 
+	# def place_stone(self, i: int, j: int, stone: str = None):
+	# 	# if x is None or y is None:
+	# 	# 	raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
+
+	# 	# if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
+	# 	# 	raise PlacementError("Your coordinates is out of the board.")
+
+	# 	if stone == " ":
+	# 		self.board[i][j] = " "
+	# 		return
+	# 	# if force:
+	# 	# 	self.board[i][j] = self.get_player_turn() if stone == None else stone
+	# 	# 	return
+
+	# 	if self.board[i][j] == ' ':
+	# 		to_place = self.player_turn if stone == None else stone
+	# 		if self.settings.allowed_capture == True:
+	# 			value = pair_can_be_capture(self.board, i, j, to_place)
+	# 		else:
+	# 			value = None
+	# 		if value:
+	# 			self.board[i][j] = to_place
+	# 			if self.board[i][j] == 'B':
+	# 				self.black_capture += 1
+	# 			else:
+	# 				self.white_capture += 1
+	# 			cd1 = value[0]
+	# 			cd2 = value[1]
+	# 			self.board[cd1[0]][cd1[1]] = ' '
+	# 			self.board[cd2[0]][cd2[1]] = ' '
+	# 		else:
+	# 			# print(self.free_three_black)
+	# 			self.board[i][j] = to_place
+
+	# 			if self.settings.allowed_capture:
+	# 				situation = critical_situation(self.board)
+	# 				if situation[0] == True:
+	# 					if situation[1] != to_place:
+	# 						# print(to_place)
+	# 						self.board[i][j] = ' '
+	# 						raise PlacementError("You are in a critical situation. Please fix this !")
+
+	# 			if self.settings.allowed_double_three == False:
+	# 				nb_free_three = count_free_three(self.board, to_place)
+	# 				if to_place == 'B':
+	# 					if nb_free_three - self.free_three_black >= 2:
+	# 						self.board[i][j] = ' '
+	# 						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+	# 					else:
+	# 						self.free_three_black = nb_free_three
+	# 				else:
+	# 					if nb_free_three - self.free_three_white >= 2:
+	# 						self.board[i][j] = ' '
+	# 						raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+	# 					else:
+	# 						self.free_three_white = nb_free_three
+
+	# 		# A ce stade, tout s'est bien passé
+	# 		# COUNT NEW FREE FOUR
+	# 		# COUNT NEW FOUR ALIGNED
+	# 		# COUNT NEW FREE THREE
+	# 		# COUNT NEW THREE ALIGNED
+	# 	else:
+	# 		raise PlacementError("This slot is already use. Please choose an other.")
+
+
 	def place_stone(self, i: int, j: int, stone: str = None):
-		# if x is None or y is None:
+		# if i is None or j is None:
 		# 	raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
-		# if x < 0 or x >= self.__board_width or y < 0 or y >= self.__board_height:
-		# 	raise PlacementError("Your coordinates is out of the board.")
+		if j < 0 or j >= self.__board_width or i < 0 or i >= self.__board_height:
+			raise PlacementError("Your coordinates is out of the board.")
 
-		if stone == " ":
-			self.board[i][j] = " "
-			return
-		# if force:
-		# 	self.board[i][j] = self.get_player_turn() if stone == None else stone
-		# 	return
 
-		if self.board[i][j] == ' ':
+		if self.board[i][j] == ' ' or stone == ' ':
 			to_place = self.player_turn if stone == None else stone
 			if self.settings.allowed_capture == True:
 				value = pair_can_be_capture(self.board, i, j, to_place)
 			else:
 				value = None
+
+			before_placement_alignment = count_all_alignment(self.board, i, j)
+			self.board[i][j] = to_place
 			if value:
-				self.board[i][j] = to_place
 				if self.board[i][j] == 'B':
 					self.black_capture += 1
 				else:
@@ -125,40 +198,46 @@ class LittleGomoku:
 				cd2 = value[1]
 				self.board[cd1[0]][cd1[1]] = ' '
 				self.board[cd2[0]][cd2[1]] = ' '
+				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
-				# print(self.free_three_black)
-				self.board[i][j] = to_place
+				# self.board[i][j] = to_place
 
 				if self.settings.allowed_capture:
 					situation = critical_situation(self.board)
 					if situation[0] == True:
 						if situation[1] != to_place:
-							# print(to_place)
 							self.board[i][j] = ' '
 							raise PlacementError("You are in a critical situation. Please fix this !")
 
-				if self.settings.allowed_double_three == False:
-					nb_free_three = count_free_three(self.board, to_place)
-					if to_place == 'B':
-						if nb_free_three - self.free_three_black >= 2:
-							self.board[i][j] = ' '
-							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-						else:
-							self.free_three_black = nb_free_three
-					else:
-						if nb_free_three - self.free_three_white >= 2:
-							self.board[i][j] = ' '
-							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-						else:
-							self.free_three_white = nb_free_three
+				after_placement_alignment = count_all_alignment(self.board, i, j)
 
-			# A ce stade, tout s'est bien passé
-			# COUNT NEW FREE FOUR
-			# COUNT NEW FOUR ALIGNED
-			# COUNT NEW FREE THREE
-			# COUNT NEW THREE ALIGNED
+				if self.settings.allowed_double_three == False:
+					if to_place == "B":
+						if after_placement_alignment['free_three_black'] - before_placement_alignment['free_three_black'] >= 2:
+							self.board[i][j] = ' '
+							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+					else:
+						if after_placement_alignment['free_three_white'] - before_placement_alignment['free_three_white'] >= 2:
+							self.board[i][j] = ' '
+							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
+
+
+
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
+
+		self.three_aligned_black += after_placement_alignment['three_aligned_black'] - before_placement_alignment['three_aligned_black']
+		self.three_aligned_white += after_placement_alignment['three_aligned_white'] - before_placement_alignment['three_aligned_white']
+
+		self.free_three_black += after_placement_alignment['free_three_black'] - before_placement_alignment['free_three_black']
+		self.free_three_white += after_placement_alignment['free_three_white'] - before_placement_alignment['free_three_white']
+
+		self.four_aligned_black += after_placement_alignment['four_aligned_black'] - before_placement_alignment['four_aligned_black']
+		self.four_aligned_white += after_placement_alignment['four_aligned_white'] - before_placement_alignment['four_aligned_white']
+
+		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
+		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
+
 
 
 	def get_actions(self) -> list[tuple[int]]:
@@ -225,7 +304,7 @@ if __name__ == "__main__":
 	gomoku.place_stone("H9", "W")
 	gomoku.place_stone("J10", "B")
 	gomoku.place_stone("R17", "W")
-	gomoku.place_stone("R18", "W")
+	# gomoku.place_stone("R18", "W")
 	# gomoku.switch_player_turn()
 
 	littleGomoku = LittleGomoku(
@@ -236,8 +315,14 @@ if __name__ == "__main__":
 		min_player=gomoku.minimizing_player,
 		black_capture=gomoku.black_capture,
 		white_capture=gomoku.white_capture,
+		three_aligned_black=gomoku.three_aligned_black,
+		three_aligned_white=gomoku.three_aligned_white,
 		free_three_black=gomoku.free_three_black,
 		free_three_white=gomoku.free_three_white,
+		four_aligned_black=gomoku.four_aligned_black,
+		four_aligned_white=gomoku.four_aligned_white,
+		free_four_black=gomoku.free_four_black,
+		free_four_white=gomoku.free_four_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 
@@ -249,11 +334,11 @@ if __name__ == "__main__":
 
 
 	measureTime = MeasureTime(start=True)
-	actions = littleGomoku.get_actions()
-	print(actions)
-	# print(minimax(littleGomoku, MAX_DEPTH=3))
+	# actions = littleGomoku.get_actions()
+	# print(actions)
+	print(minimax(littleGomoku, MAX_DEPTH=3))
 	measureTime.stop()
-	littleGomoku.paint_actions(actions)
+	# littleGomoku.paint_actions(actions)
 	# print(is_creating_db_free_three(littleGomoku.board, 3, 1, "W"))
 	# littleGomoku.board[7][5] = "W"
 	# print(is_free_three(littleGomoku.board, 7, 5, "W"))

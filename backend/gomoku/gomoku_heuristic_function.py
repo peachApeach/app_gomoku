@@ -113,8 +113,8 @@ def game_state(gomoku: LittleGomoku) -> int:
 	score_white += gomoku.white_capture * S_PAIRS_CAPTURED
 
 
-	print(f"Black player scores => {score_black}")
-	print(f"White player scores => {score_white}")
+	# print(f"Black player scores => {score_black}")
+	# print(f"White player scores => {score_white}")
 
 	if gomoku.maximizing_player == "B":
 		return score_black - score_white

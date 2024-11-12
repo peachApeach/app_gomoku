@@ -38,8 +38,8 @@ def minimax(
 		for action in gomoku.get_actions():
 			try:
 				new_gomoku = gomoku.simulate_action(action)
-			except:
-				print("Failed to simulate")
+			except Exception as e:
+				print(f"Failed to simulate")
 				# print(gomoku)
 				# print(is_creating_db_free_three(gomoku.board, action[0], action[1], gomoku.player_turn))
 				# print(gomoku.is_valid_placement(i=action[0], j=action[1], stone=gomoku.player_turn))
@@ -55,7 +55,7 @@ def minimax(
 				best_action = action
 
 			alpha = max(alpha, state)
-			if beta <= alpha or state == 6:
+			if beta <= alpha: # or state == 6:
 				break
 		return value, best_action
 
@@ -69,11 +69,11 @@ def minimax(
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
-			if state < value:
+			if state < value: # or state == -6:
 				value = state
 				best_action = action
 			beta = min(beta, state)
-			if beta <= alpha or state == -6:
+			if beta <= alpha:
 				break
 		return value, best_action
 	else:
