@@ -37,7 +37,8 @@ def is_useful_placement(board: list[list[str]], i: int, j: int, stone: str, radi
 				else:
 					count_different += 1
 
-	return count_same > 0 or count_different > 1
+	return count_same, count_different
+	# return count_same > 0 or count_different > 1
 
 def get_actions_range(board: list[list[str]], radius: int = 1):
 	"""

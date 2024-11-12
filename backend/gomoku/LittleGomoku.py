@@ -248,28 +248,35 @@ class LittleGomoku:
 		(?) Ne pas tester les cases en dehors d'un rayon de +2/3 du carré former par les pions pour eviter de tester les bords inutiles. (?)
 		"""
 		empty_slot = []
+		slot_no_filter = []
 		# iteration = 0
 		range_i, range_j = get_actions_range(self.board)
 		# for i in range(len(self.board)):
 		# 	for j in range(len(self.board[i])):
 
-		return ((i, j) for i in range_i for j in range_j if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True)
+		# return ((i, j) for i in range_i for j in range_j if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True)
 		# return [(i, j) for i in range_i for j in range_j if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True]
 		for i in range_i:
 			for j in range_j:
+				if self.board[i][j] == " ":
+						# En changeant le rayon, on peut gagner jusqu'à 800ms MAX_DEPTH=4.
+						count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
+						if count_same > 0 or count_different > 1:
+							# count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 1)
+							slot_no_filter.append((i, j, count_same * 2 + count_different))
+							# empty_slot.append((i, j))
 
-				# print(is_useful_placement(self.board, i, j, self.player_turn))
-				# if self.board[i][j] == " ":
-				if self.board[i][j] == " " and is_useful_placement(self.board, i, j, self.player_turn, 2) == True:
-					try:
-						# if self.is_valid_placement(i=i, j=j):
-						empty_slot.append((i, j))
-						# else:
-						# 	print(f"Invalid slot : [{i}]:[{j}]")
-					except Exception as e:
-						print(f"Error : ({e}):({i},{j}) : Invalid case.")
-					# iteration += 1
-
+		def last_item(e):
+			return e[-1]
+		# print("BEFORE SORT")
+		# print(slot_no_filter)
+		# print("AFTER SORT")
+		slot_no_filter.sort(key=last_item, reverse=True)
+		# print(slot_no_filter)
+		# print([(i[0], i[1]) for i in slot_no_filter])
+		return [(i[0], i[1]) for i in slot_no_filter]
+		return ((i[0], i[1]) for i in slot_no_filter)
+		# print(sorted_slot)
 		return empty_slot
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":

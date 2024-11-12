@@ -65,7 +65,7 @@ def minimax(
 			except:
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			print(f"{beta} | {state}")
+			# print(f"{beta} | {state}")
 
 			if state < value:
 				value = state
@@ -133,13 +133,14 @@ if __name__ == "__main__":
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
 
-	iteration = 15000
+	iteration = 1
 	print("Measure Get Actions")
 	measureTime = MeasureTime(start=True)
 	for _ in range(iteration):
 		littleGomoku.get_actions()
 	measureTime.stop()
 
+	# exit(1)
 	print("Measure Game State")
 	measureTime = MeasureTime(start=True)
 	for _ in range(iteration):
@@ -148,7 +149,7 @@ if __name__ == "__main__":
 
 	print("Measure Minimax")
 	measureTime = MeasureTime(start=True)
-	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=2)
+	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=4)
 	measureTime.stop()
 
 	# print(littleGomoku.get_actions())
