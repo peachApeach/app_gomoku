@@ -29,7 +29,7 @@ export default {
         // "high-contrast-text": "#5B0060", // 12. High-contrast text
         "app-bg": "#1E1E1E", // 1. App background
         "subtle-bg": "#F7F9FF", // 2. Subtle background
-        "ui-bg": "#EDF2FE", // 3. UI element background
+        "ui-bg": "#1E1E1E", // 3. UI element background
         "hover-ui-bg": "#E1E9FF", // 4. Hovered UI element background
         "active-ui-bg": "#D2DEFF", // 5. Active / Selected UI element background
         "subtle-border": "#C1D0FF", // 6. Subtle borders and separators
@@ -50,7 +50,7 @@ export default {
         "d-hover-ui-border": "#8546D4",
         "d-accent-color": "#EC64F4", // "#FF5F7E",
         "d-hover-accent-color": "#DC40E5", // "#FF4D7A",
-        "d-low-contrast-text": "#FFD1DC",
+        "d-low-contrast-text": "#FFFFFF",
         "d-high-contrast-text": "#FFE4F1"
       }
     },
