@@ -21,27 +21,28 @@ def minimax(
 	# print("=====================")
 	# print(f"===== DEPTH : {DEPTH} =====")
 	# print("=====================")
-	if DEPTH == MAX_DEPTH:
-		return game_state(gomoku), None
 
 	if terminate_state(
 		gomoku.board,
 		gomoku.black_capture,
 		gomoku.white_capture,
 		gomoku.settings
-		) or DEPTH == MAX_DEPTH:
+		):
 		return game_state(gomoku), None
 
+	if DEPTH == MAX_DEPTH:
+		return game_state(gomoku, True), None
+
 	if gomoku.player_turn == gomoku.maximizing_player:
-		if game_state(gomoku) < alpha:
-			return alpha, None
+		# if game_state(gomoku) < alpha:
+		# 	return alpha, None
 		value = float('-inf')
 		best_action = None
 		for action in gomoku.get_actions():
 			try:
 				new_gomoku = gomoku.simulate_action(action)
 			except:
-				print("Failed to simulate")
+				# print("Failed to simulate")
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
@@ -55,8 +56,8 @@ def minimax(
 		return value, best_action
 
 	elif gomoku.player_turn == gomoku.minimizing_player:
-		if game_state(gomoku) > beta:
-			return beta, None
+		# if game_state(gomoku) > beta:
+		# 	return beta, None
 		value = float('+inf')
 		best_action = None
 		for action in gomoku.get_actions():
@@ -65,12 +66,12 @@ def minimax(
 			except:
 				continue
 			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			# print(f"{beta} | {state}")
 
 			if state < value:
 				value = state
 				best_action = action
 			beta = min(beta, state)
+			# print(f"{beta} | {state}")
 			if beta <= alpha:# or state == -6:
 				break
 		return value, best_action

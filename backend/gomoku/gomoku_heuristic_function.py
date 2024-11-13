@@ -2,13 +2,13 @@ from gomoku_state import terminate_state, winner_found, critical_situation
 from gomoku_rules import count_all_three, count_free_three
 from LittleGomoku import LittleGomoku
 
-def game_state(gomoku: LittleGomoku) -> int:
+def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int:
 	"""
-	**********************
-	* HEURISTIC FUNCTION *
-	**********************
-	* EXCEPT TIME < 5MS  *
-	**********************
+	************************
+	* HEURISTIC FUNCTION   *
+	************************
+	* EXCEPT TIME < 5MS ✅ *
+	************************
 	C'est uniquement lorsqu'on atteint une terminate state or DEPTH == MAX_DEPTH que cette fonction est appelé. Donc ce n'est pas nécessaire d'appeler les fonctions pour compter constamment à par celle pour les stones capturées.
 	Ca renvoie la valeur du tableau.
 
@@ -49,7 +49,7 @@ def game_state(gomoku: LittleGomoku) -> int:
 	# Value of thing : (S_ = Score)
 	# 5 stones aligned: 100
 	# 5 stones aligned: 80
-	S_FIVE_ALIGNED = 1000
+	S_FIVE_ALIGNED = 5000
 	# Free Four: 70
 	S_FREE_FOUR = 400
 	# 4 stones aligned not obstructed: 60
@@ -107,12 +107,22 @@ def game_state(gomoku: LittleGomoku) -> int:
 	########################################
 	# PAIRS CATCHED
 	########################################
-	score_black += gomoku.black_capture * S_PAIRS_CAPTURED
-	score_white += gomoku.white_capture * S_PAIRS_CAPTURED
+	if gomoku.settings.allowed_win_by_capture == True:
+		score_black += gomoku.black_capture * S_PAIRS_CAPTURED
+		score_white += gomoku.white_capture * S_PAIRS_CAPTURED
 
 
 	# print(f"Black player scores => {score_black}")
 	# print(f"White player scores => {score_white}")
+
+	if advantage_next_player == True:
+		"""
+		Si DEPTH == MAX_DEPTH, il se peut que le score de prochain joueur soit plus dangereux, donc on ajuste les scores pour envisager le pire.
+		"""
+		if gomoku.player_turn == "B":
+			score_black *= 1.5
+		else:
+			score_white *= 1.5
 
 	if gomoku.maximizing_player == "B":
 		return score_black - score_white

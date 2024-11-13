@@ -50,6 +50,9 @@ class Gomoku:
 					)
 
 			logging.info(f"Game Info -> Start: {who_start}")
+			logging.info(f"Game Info -> Allowed Capture: {settings.allowed_capture}")
+			logging.info(f"Game Info -> Allowed Win By Capture: {settings.allowed_win_by_capture}")
+			logging.info(f"Game Info -> Allowed Double Three: {settings.allowed_double_three}")
 
 
 
@@ -202,7 +205,7 @@ class Gomoku:
 		return False
 
 	def display_board(self, message: str = None, is_err: str = None, last_duration: str = None, all_informations: bool = False):
-		os.system("clear")
+		# os.system("clear")
 		if (message != None):
 			print()
 			if is_err:
@@ -264,8 +267,13 @@ class Gomoku:
 		self.player_turn = all_steps[0][-1]
 		self.maximizing_player = self.player_turn
 		self.minimizing_player = 'W' if self.player_turn == 'B' else 'B'
+
+		allowed_capture = True if all_steps[1].split()[-1] == "True" else False
+		allowed_win_by_capture = True if all_steps[2].split()[-1] == "True" else False
+		allowed_double_three = True if all_steps[3].split()[-1] == "True" else False
+		self.settings = GomokuSettings(allowed_capture, allowed_win_by_capture, allowed_double_three)
 		try:
-			all_steps = all_steps[1:]
+			all_steps = all_steps[4:]
 			if stop_read == 0:
 				pass
 			elif stop_read < 0:
@@ -314,6 +322,8 @@ class Gomoku:
 						is_err = True
 						self.display_board(message=message, is_err=is_err)
 				last_duration = None
+				# self.display_board(message=message, last_duration=last_duration, is_err=is_err)
+				# exit(1)
 				# last_duration = mt.stop(get_str=True)
 
 			elif self.get_player_turn() == "W": # IA or 2 players turn
@@ -322,13 +332,14 @@ class Gomoku:
 					# littleGomoku = c
 					mt = MeasureTime(start=True)
 					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=3)
-					last_duration = mt.stop(get_str=True, duration_only=True)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
+					last_duration = mt.stop(get_str=True, duration_only=True)
 					try:
 						self.place_stone(ia_placement)
 						if self.save_game:
 							logging.info(f"{last_duration.ljust(12)} - Player(IA):{self.get_player_turn()} -> Move:{ia_placement}")
 						self.switch_player_turn()
+						last_duration += f" | Score: {score} | Move: {ia_placement}"
 					except Exception as e:
 						print_error(e)
 						print(move)
@@ -370,13 +381,50 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	SIMULATION = True
+	from gomoku_algorithm import minimax
+	from gomoku_heuristic_function import game_state
+	SIMULATION = False
 	if SIMULATION:
+		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
-		go_simulate.read_a_game(2, -2)
+		# go_simulate.read_a_game(3, -2)
+		go_simulate.read_a_game(4, -4)
+
+		# LEFT
+		# go_simulate.place_stone("h7", "W")
+		# go_simulate.place_stone("j8", "B")
+		# go_simulate.place_stone("j7", "W")
+		# go_simulate.switch_player_turn()
+
+
+		# RIGHT
+		# go_simulate.place_stone("j8", "W")
+		# go_simulate.place_stone("f8", "B")
+		# go_simulate.place_stone("e8", "W")
+		# go_simulate.switch_player_turn()
+
+
+
+
+		# go_simulate.read_a_game(2, -5)
+		print(go_simulate)
+		print(go_simulate.settings.allowed_capture)
+		print(go_simulate.settings.allowed_win_by_capture)
+		print(go_simulate.settings.allowed_double_three)
+		print(go_simulate.player_turn)
+		print(go_simulate.maximizing_player)
+		print(go_simulate.minimizing_player)
+
+
+		littleGomoku = convert_to_little_gomoku(go_simulate)
+		result = minimax(littleGomoku, MAX_DEPTH=3)
+		# littleGomoku.paint_actions(littleGomoku.get_actions())
+		print(littleGomoku)
+		# print(game_state(littleGomoku, True))
+		print(result)
 		go_simulate.play()
 	else:
-		settings = GomokuSettings(allowed_capture=True)
+		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=True)
 		gomoku = Gomoku(IA=True, who_start="B", save_game=True, settings=settings)
 		gomoku.play()
 
