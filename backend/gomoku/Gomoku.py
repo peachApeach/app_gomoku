@@ -11,6 +11,7 @@ from Colors import *
 import string
 import os
 from gomoku_utils import convert_coordinate
+from little_gomoku_utils import convert_to_little_gomoku
 from gomoku_state import *
 from gomoku_rules import *
 from my_utils import print_error
@@ -177,7 +178,7 @@ class Gomoku:
 			return True
 		return False
 
-	def display_board(self, message: str = None, is_err: str = False):
+	def display_board(self, message: str = None, is_err: str = None, all_informations: bool = False):
 		os.system("clear")
 		if (message != None):
 			print()
@@ -189,19 +190,20 @@ class Gomoku:
 		print(f"{BLACKB}{BHWHITE}BLACK HAS CAPTURED {self.black_capture} WHITE PAIRS.{RESET}")
 		print(f"{WHITEHB}{BHBLACK}WHITE HAS CAPTURED {self.white_capture} BLACK PAIRS.{RESET}")
 
-		print(f"{BLACKB}{BHWHITE}")
-		# print()
-		print(f"Aligned three black : {self.three_aligned_black}")
-		print(f"Free Three black : {self.free_three_black}")
-		print(f"Aligned four black : {self.four_aligned_black}")
-		print(f"Free four black : {self.free_four_black}{RESET}")
+		if all_informations:
+			print(f"{BLACKB}{BHWHITE}")
+			# print()
+			print(f"Aligned three black : {self.three_aligned_black}")
+			print(f"Free Three black : {self.free_three_black}")
+			print(f"Aligned four black : {self.four_aligned_black}")
+			print(f"Free four black : {self.free_four_black}{RESET}")
 
 
-		print(f"{WHITEHB}{BHBLACK}")
-		print(f"Aligned three white : {self.three_aligned_white}")
-		print(f"Free Three white : {self.free_three_white}")
-		print(f"Aligned four white : {self.four_aligned_white}")
-		print(f"Free four white : {self.free_four_white}{RESET}")
+			print(f"{WHITEHB}{BHBLACK}")
+			print(f"Aligned three white : {self.three_aligned_white}")
+			print(f"Free Three white : {self.free_three_white}")
+			print(f"Aligned four white : {self.four_aligned_white}")
+			print(f"Free four white : {self.free_four_white}{RESET}")
 		print()
 
 
@@ -223,6 +225,8 @@ class Gomoku:
 			self.opening_swap2()
 
 	def play(self, opening: str = "standard"):
+		from gomoku_algorithm import minimax
+
 		is_err = False
 		message = None
 		self.handle_opening(opening)
@@ -245,7 +249,11 @@ class Gomoku:
 			elif self.get_player_turn() == "W": # IA or 2 players turn
 				if self.IA == True:
 					# Handle IA
-					pass
+					# littleGomoku = c
+					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=3)
+					print(score)
+					print(move)
+					exit(1)
 				else:
 					while True:
 						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
@@ -274,23 +282,24 @@ class Gomoku:
 
 if __name__ == "__main__":
 	settings = GomokuSettings(allowed_capture=True)
-	gomoku = Gomoku(IA=False, who_start="B", settings=settings)
+	gomoku = Gomoku(IA=True, who_start="B", settings=settings)
 
 
 
-	# DOUBLE THREE
-	gomoku.place_stone("B2", "B")
-	gomoku.place_stone("C3", "B")
-	gomoku.place_stone("E6", "B")
-	gomoku.place_stone("E7", "B")
-	gomoku.place_stone("O7", "B")
+	# PAIRS TO BROKE
+	# gomoku.place_stone("B2", "B")
+	# gomoku.place_stone("C3", "B")
+	# gomoku.place_stone("E6", "B")
+	# gomoku.place_stone("E7", "B")
+	# gomoku.place_stone("O7", "B")
 
-	gomoku.place_stone("D3", "W")
-	gomoku.place_stone("H3", "W")
-	gomoku.place_stone("I4", "W")
-	gomoku.place_stone("I5", "W")
-	gomoku.place_stone("H10", "W")
+	# gomoku.place_stone("D3", "W")
+	# gomoku.place_stone("H3", "W")
+	# gomoku.place_stone("I4", "W")
+	# gomoku.place_stone("I5", "W")
+	# gomoku.place_stone("H10", "W")
 
+	# ###########
 	# gomoku.place_stone("B2", "B")
 	# gomoku.place_stone("C3", "B")
 	# gomoku.place_stone("D5", "B")
