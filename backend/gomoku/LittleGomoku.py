@@ -251,6 +251,13 @@ class LittleGomoku:
 		slot_no_filter = []
 		# iteration = 0
 		range_i, range_j = get_actions_range(self.board)
+		if range_i is None or range_j is None:
+			# range_i = range(5, 5)
+			# range_j = range(5, 5)
+			range_i = range(5, 5)
+			range_j = range(5, 5)
+		print(range_i)
+		print(range_j)
 		# for i in range(len(self.board)):
 		# 	for j in range(len(self.board[i])):
 
@@ -272,6 +279,10 @@ class LittleGomoku:
 		# print(slot_no_filter)
 		# print("AFTER SORT")
 		slot_no_filter.sort(key=last_item, reverse=True)
+		final_action = [(i[0], i[1]) for i in slot_no_filter]
+		if len(final_action) != 0:
+			return final_action
+		return [(i, j) for i in range(8, 11) for j in range(8, 11)]
 		# print(slot_no_filter)
 		# print([(i[0], i[1]) for i in slot_no_filter])
 		return [(i[0], i[1]) for i in slot_no_filter]
