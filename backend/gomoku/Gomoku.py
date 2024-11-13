@@ -10,13 +10,16 @@
 from Colors import *
 import string
 import os
-from gomoku_utils import convert_coordinate
+from gomoku_utils import convert_coordinate_to_xy, convert_xy_to_coordinate
 from little_gomoku_utils import convert_to_little_gomoku
 from gomoku_state import *
 from gomoku_rules import *
 from my_utils import print_error
 from GomokuSettings import GomokuSettings
 from handle_alignment import count_all_alignment
+from MeasureTime import MeasureTime
+import logging
+import re
 
 class GomokuError(Exception):
 	pass
@@ -25,11 +28,31 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B', settings: GomokuSettings = GomokuSettings()):
+	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings()):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
+		self.save_game = save_game
+		if self.save_game == True:
+			i = 0
+			while True:
+				if os.path.isfile(f"./game_history/game_{i}.log"):
+					i += 1
+				else:
+					break
+			logging.basicConfig(level=logging.INFO,
+					filename=f"./game_history/game_{i}.log",
+					filemode="w",
+					encoding="utf_8",
+					# format='entClass.py - %(asctime)s - %(levelname)s - %(message)s'
+					format=f'GameNumber : {i} - %(asctime)s - %(message)s'
+					)
+
+			logging.info(f"Game Info -> Start: {who_start}")
+
+
+
 		self.black_capture = 0
 		self.white_capture = 0
 
@@ -89,7 +112,7 @@ class Gomoku:
 		return self.player_turn
 
 	def place_stone(self, coordinate: str, stone: str = None, force: bool = False):
-		j, i = convert_coordinate(coordinate)
+		j, i = convert_coordinate_to_xy(coordinate)
 		if i is None or j is None:
 			raise PlacementError("Your coordinates are in invalid format. Except: 'LETTERS:NUMBER'")
 
@@ -152,6 +175,9 @@ class Gomoku:
 		# 	print("AFTER")
 		# 	print(after_placement_alignment)
 
+		if self.save_game:
+			logging.info(f"Player:{self.get_player_turn()} -> Move:{coordinate}")
+
 		self.three_aligned_black += after_placement_alignment['three_aligned_black'] - before_placement_alignment['three_aligned_black']
 		self.three_aligned_white += after_placement_alignment['three_aligned_white'] - before_placement_alignment['three_aligned_white']
 
@@ -178,7 +204,7 @@ class Gomoku:
 			return True
 		return False
 
-	def display_board(self, message: str = None, is_err: str = None, all_informations: bool = False):
+	def display_board(self, message: str = None, is_err: str = None, last_duration: str = None, all_informations: bool = False):
 		os.system("clear")
 		if (message != None):
 			print()
@@ -204,6 +230,9 @@ class Gomoku:
 			print(f"Free Three white : {self.free_three_white}")
 			print(f"Aligned four white : {self.four_aligned_white}")
 			print(f"Free four white : {self.free_four_white}{RESET}")
+
+		if last_duration:
+			print(f"{BHWHITE}IA Reflexion {RESET}{last_duration}")
 		print()
 
 
@@ -224,17 +253,53 @@ class Gomoku:
 		elif opening == "swap2":
 			self.opening_swap2()
 
+	def read_a_game(self, n: int, stop_read: int):
+		filename = f"./game_history/game_{n}.log"
+		try:
+			with open(filename, "r") as f:
+				all_steps = f.read().splitlines()
+				if len(all_steps) == 0:
+					return
+		except Exception as e:
+			print_error(e)
+			return
+
+		self.player_turn = all_steps[0][-1]
+		self.maximizing_player = self.player_turn
+		self.minimizing_player = 'W' if self.player_turn == 'B' else 'B'
+		try:
+			all_steps = all_steps[1:]
+			if stop_read == 0:
+				pass
+			elif stop_read < 0:
+				all_steps = all_steps[0:stop_read]
+			else:
+				all_steps = all_steps[stop_read:]
+		except Exception as e:
+			print_error(e)
+		for step in all_steps:
+			cut_step = step.split(":")
+			player = cut_step[-2][0]
+			# print(f"{player} : {cut_step[-1]}")
+			if player != self.player_turn:
+				self.switch_player_turn()
+			self.place_stone(cut_step[-1])
+			self.switch_player_turn()
+		# print(all_steps)
+
 	def play(self, opening: str = "standard"):
 		from gomoku_algorithm import minimax
 
 		is_err = False
 		message = None
+		last_duration = None
 		self.handle_opening(opening)
 		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
-			self.display_board(message=message, is_err=is_err)
+			self.display_board(message=message, last_duration=last_duration, is_err=is_err)
 			if self.get_player_turn() == "B": # Black turn, so player turn
+				# mt = MeasureTime(start=True)
 				while True:
 					user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 					try:
@@ -245,15 +310,27 @@ class Gomoku:
 						message = str(e)
 						is_err = True
 						self.display_board(message=message, is_err=is_err)
+				last_duration = None
+				# last_duration = mt.stop(get_str=True)
 
 			elif self.get_player_turn() == "W": # IA or 2 players turn
 				if self.IA == True:
 					# Handle IA
 					# littleGomoku = c
+					mt = MeasureTime(start=True)
 					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=3)
-					print(score)
-					print(move)
-					exit(1)
+					last_duration = mt.stop(get_str=True)
+					ia_placement = convert_xy_to_coordinate(move[1], move[0])
+					try:
+						self.place_stone(ia_placement)
+						self.switch_player_turn()
+					except Exception as e:
+						print_error(e)
+						print(move)
+						print(ia_placement)
+						print(f"{BHRED}Sorry, the IA cannot continue the game, you win by forfeit...{RESET}")
+						# print(score)
+						exit(1)
 				else:
 					while True:
 						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
@@ -282,8 +359,11 @@ class Gomoku:
 
 if __name__ == "__main__":
 	settings = GomokuSettings(allowed_capture=True)
-	gomoku = Gomoku(IA=True, who_start="B", settings=settings)
+	gomoku = Gomoku(IA=True, who_start="B", save_game=False, settings=settings)
 
+	go_simulate = Gomoku()
+	go_simulate.read_a_game(1, -2)
+	go_simulate.play()
 
 
 	# PAIRS TO BROKE
@@ -329,7 +409,7 @@ if __name__ == "__main__":
 
 	# gomoku.place_stone("E2", "B")
 	# gomoku.place_stone("E10", "W")
-	gomoku.play()
+	# gomoku.play()
 	# t = 3
 	# for i in range(10):
 	# 	if i % 2 == 0:

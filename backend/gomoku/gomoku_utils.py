@@ -1,7 +1,7 @@
 import string
 import re
 
-def convert_coordinate(coordinate: str) -> tuple[int] | None:
+def convert_coordinate_to_xy(coordinate: str) -> tuple[int] | None:
 
 	# regex = r"([A-Z]:\d+)|(\d+:[A-Z])"
 	regex = r"(?:(?:(?P<y>[a-zA-Z])(?P<x>\d+))|(?:(?P<x_alt>\d+)(?P<y_alt>[a-zA-Z])))$"
@@ -22,8 +22,18 @@ def convert_coordinate(coordinate: str) -> tuple[int] | None:
 		# print("Not found.")
 		return (None, None)
 
+def convert_xy_to_coordinate(x: int, y: int): # x = j | y = i
+	try:
+		y_str = string.ascii_uppercase[y]
+		x_str = str(x + 1)
+	except:
+		return None
+	return (f"{y_str}{x_str}")
+
 if __name__ == "__main__":
-	convert_coordinate("D3")
-	convert_coordinate("D33")
-	convert_coordinate("3D")
-	convert_coordinate("3:D")
+	# convert_coordinate_to_xy("D3")
+	# convert_coordinate_to_xy("D33")
+	# convert_coordinate_to_xy("3D")
+	# convert_coordinate_to_xy("3:D")
+
+	print(convert_xy_to_coordinate(3, 5))
