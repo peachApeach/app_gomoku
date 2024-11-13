@@ -256,8 +256,8 @@ class LittleGomoku:
 			# range_j = range(5, 5)
 			range_i = range(5, 5)
 			range_j = range(5, 5)
-		print(range_i)
-		print(range_j)
+		# print(range_i)
+		# print(range_j)
 		# for i in range(len(self.board)):
 		# 	for j in range(len(self.board[i])):
 
