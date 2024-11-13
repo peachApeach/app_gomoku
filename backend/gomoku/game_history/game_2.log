@@ -1,0 +1,13 @@
+GameNumber : 2 - Game Info -> Start: B
+GameNumber : 2 - 3195ms       - Player    :B -> Move:G8
+GameNumber : 2 - 26ms         - Player(IA):W -> Move:I9
+GameNumber : 2 - 16547ms      - Player    :B -> Move:I10
+GameNumber : 2 - 62ms         - Player(IA):W -> Move:H9
+GameNumber : 2 - 5406ms       - Player    :B -> Move:G9
+GameNumber : 2 - 114ms        - Player(IA):W -> Move:G10
+GameNumber : 2 - 3498ms       - Player    :B -> Move:G7
+GameNumber : 2 - 233ms        - Player(IA):W -> Move:H8
+GameNumber : 2 - 4356ms       - Player    :B -> Move:G6
+GameNumber : 2 - 2782ms       - Player(IA):W -> Move:G5
+GameNumber : 2 - 4798ms       - Player    :B -> Move:J10
+GameNumber : 2 - 51ms         - Player(IA):W -> Move:H8

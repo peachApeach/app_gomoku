@@ -46,7 +46,7 @@ class Gomoku:
 					filemode="w",
 					encoding="utf_8",
 					# format='entClass.py - %(asctime)s - %(levelname)s - %(message)s'
-					format=f'GameNumber : {i} - %(asctime)s - %(message)s'
+					format=f'GameNumber : {i} - %(message)s'
 					)
 
 			logging.info(f"Game Info -> Start: {who_start}")
@@ -175,9 +175,6 @@ class Gomoku:
 		# 	print("AFTER")
 		# 	print(after_placement_alignment)
 
-		if self.save_game:
-			logging.info(f"Player:{self.get_player_turn()} -> Move:{coordinate}")
-
 		self.three_aligned_black += after_placement_alignment['three_aligned_black'] - before_placement_alignment['three_aligned_black']
 		self.three_aligned_white += after_placement_alignment['three_aligned_white'] - before_placement_alignment['three_aligned_white']
 
@@ -232,7 +229,7 @@ class Gomoku:
 			print(f"Free four white : {self.free_four_white}{RESET}")
 
 		if last_duration:
-			print(f"{BHWHITE}IA Reflexion {RESET}{last_duration}")
+			print(f"{BHWHITE}IA Reflexion Duration :{MAGB} {last_duration} {RESET}")
 		print()
 
 
@@ -300,10 +297,16 @@ class Gomoku:
 			self.display_board(message=message, last_duration=last_duration, is_err=is_err)
 			if self.get_player_turn() == "B": # Black turn, so player turn
 				# mt = MeasureTime(start=True)
+				log_mt = MeasureTime(start=True)
 				while True:
 					user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 					try:
 						self.place_stone(user_placement)
+						log_str_time = log_mt.stop(get_str=True, duration_only=True)
+
+						if self.save_game:
+							logging.info(f"{log_str_time.ljust(12)} - Player    :{self.get_player_turn()} -> Move:{user_placement}")
+
 						self.switch_player_turn()
 						break
 					except Exception as e:
@@ -319,10 +322,12 @@ class Gomoku:
 					# littleGomoku = c
 					mt = MeasureTime(start=True)
 					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=3)
-					last_duration = mt.stop(get_str=True)
+					last_duration = mt.stop(get_str=True, duration_only=True)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
 					try:
 						self.place_stone(ia_placement)
+						if self.save_game:
+							logging.info(f"{last_duration.ljust(12)} - Player(IA):{self.get_player_turn()} -> Move:{ia_placement}")
 						self.switch_player_turn()
 					except Exception as e:
 						print_error(e)
@@ -332,10 +337,17 @@ class Gomoku:
 						# print(score)
 						exit(1)
 				else:
+					log_mt = MeasureTime(start=True)
 					while True:
 						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 						try:
 							self.place_stone(user_placement)
+
+							log_str_time = log_mt.stop(get_str=True, duration_only=True)
+
+							if self.save_game:
+								logging.info(f"{log_str_time.ljust(12)} - Player    :{self.get_player_turn()} -> Move:{user_placement}")
+
 							self.switch_player_turn()
 							break
 						except Exception as e:
@@ -358,12 +370,16 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	settings = GomokuSettings(allowed_capture=True)
-	gomoku = Gomoku(IA=True, who_start="B", save_game=False, settings=settings)
+	SIMULATION = True
+	if SIMULATION:
+		go_simulate = Gomoku()
+		go_simulate.read_a_game(2, -2)
+		go_simulate.play()
+	else:
+		settings = GomokuSettings(allowed_capture=True)
+		gomoku = Gomoku(IA=True, who_start="B", save_game=True, settings=settings)
+		gomoku.play()
 
-	go_simulate = Gomoku()
-	go_simulate.read_a_game(1, -2)
-	go_simulate.play()
 
 
 	# PAIRS TO BROKE
