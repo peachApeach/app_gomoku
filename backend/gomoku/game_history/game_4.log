@@ -1,0 +1,15 @@
+GameNumber : 4 - Game Info -> Start: B
+GameNumber : 4 - Game Info -> Allowed Capture: False
+GameNumber : 4 - Game Info -> Allowed Win By Capture: False
+GameNumber : 4 - Game Info -> Allowed Double Three: True
+GameNumber : 4 - 2157ms       - Player    :B -> Move:G8
+GameNumber : 4 - 24ms         - Player(IA):W -> Move:I9
+GameNumber : 4 - 25109ms      - Player    :B -> Move:G9
+GameNumber : 4 - 76ms         - Player(IA):W -> Move:G7
+GameNumber : 4 - 6683ms       - Player    :B -> Move:H8
+GameNumber : 4 - 309ms        - Player(IA):W -> Move:I7
+GameNumber : 4 - 5273ms       - Player    :B -> Move:I8
+GameNumber : 4 - 287ms        - Player(IA):W -> Move:H7
+GameNumber : 4 - 7056ms       - Player    :B -> Move:F8
+GameNumber : 4 - 678ms        - Player(IA):W -> Move:F7
+GameNumber : 4 - 5945ms       - Player    :B -> Move:E8

@@ -1,4 +1,7 @@
 GameNumber : 1 - 2024-11-13 10:52:43,438 - Game Info -> Start: B
+GameNumber : 1 - Game Info -> Allowed Capture: True
+GameNumber : 1 - Game Info -> Allowed Win By Capture: True
+GameNumber : 1 - Game Info -> Allowed Double Three: True
 GameNumber : 1 - 2024-11-13 10:52:50,391 - Player:B -> Move:G8
 GameNumber : 1 - 2024-11-13 10:52:50,418 - Player:W -> Move:I9
 GameNumber : 1 - 2024-11-13 10:53:03,910 - Player:B -> Move:I10
