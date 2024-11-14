@@ -5,17 +5,47 @@
 `POST /game/new` \
 Body example :
 ```json
+// 1v1 between 2 players with an IA assistant.
 {
-   "board_size": 15,
-   "options": "standard",
+   "mode": "hotseat",
+   "who_start": "B", // or "W"
+   "IA_suggestion": True,
+   "options": {
+      "allowed_capture": True,
+      "allowed_win_by_capture": True,
+      "allowed_double_three": False
+   },
+   "opening": "standard",
    "difficulty": "medium"
 }
+
+// 1v1 against a bot
+{
+   "mode": "ia",
+   "who_start": "B",
+   "IA_suggestion": False,
+   "options": {
+      "allowed_capture": True,
+      "allowed_win_by_capture": True,
+      "allowed_double_three": False
+   },
+   "opening": "pro",
+   "difficulty": "hard"
+}
+
 ```
 Response example:
 ```json
 {
    "game_id": "1",
-   "board": [[0, 0, 0, ...], [0, 0, 0, ...], ...]
+   "player_turn": "W",
+   "IA": True,
+   "IA_suggestion": False,
+   "board": [
+      [' ', ' ', ' ', ...],
+      [' ', ' ', ' ', ...],
+      ...
+   ]
 }
 ```
 
@@ -31,10 +61,19 @@ Body example :
 Response example:
 ```json
 {
-   "player_move": {"x": 7, "y": 7},
-   "ai_move": {"x": 8, "y": 7},
-   "board": [[0, 0, 0, ...], [0, 0, 0, ...], ...],
-   "status": "ongoing"
+   "player_turn": "B",
+   "IA_suggestion": False,
+   "IA_move": {"x": 8, "y": 7},
+   "IA_duration": 99,//xp streamez Jolagreen23
+   "board": [
+      ["W", "B", " ", ...],
+      [" ", " ", " ", ...],
+      ...
+   ],
+   "black_capture": 2,
+   "white_capture": 1,
+   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
+   "status": "playing"
 }
 ```
 
@@ -46,8 +85,10 @@ Response example:
 ```json
 {
    "moves": [
-      {"player": "player", "move": {"x": 7, "y": 7}},
-      {"player": "ai", "move": {"x": 8, "y": 7}},
+      {"player": "B", "move": {"x": 7, "y": 7}, "duration": 4213},
+      {"player": "W", "move": {"x": 8, "y": 7}, "duration": 99},
+      {"player": "B", "move": {"x": 6, "y": 7}, "duration": 1406},
+      {"player": "W", "move": {"x": 1, "y": 8}, "duration": 333},
       ...
    ]
 }
