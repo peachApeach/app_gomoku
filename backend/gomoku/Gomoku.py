@@ -28,13 +28,14 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, ia_against_ia: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings()):
+	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, ia_against_ia: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings(), IA_MAX_DEPTH: int = 2):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
 		self.save_game = save_game
 		self.ia_against_ia = ia_against_ia
+		self.IA_MAX_DEPTH = IA_MAX_DEPTH
 		if self.save_game == True:
 			i = 0
 			while True:
@@ -294,7 +295,7 @@ class Gomoku:
 		# print(all_steps)
 
 	def play(self, opening: str = "standard"):
-		from gomoku_algorithm import minimax
+		from gomoku_algorithm import minimax, minimax2
 
 		is_err = False
 		message = None
@@ -309,7 +310,7 @@ class Gomoku:
 				log_mt = MeasureTime(start=True)
 				while True:
 					if self.ia_against_ia == True:
-						score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
+						score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 						user_placement = convert_xy_to_coordinate(move[1], move[0])
 					else:
 						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
@@ -336,7 +337,7 @@ class Gomoku:
 					# Handle IA
 					# littleGomoku = c
 					mt = MeasureTime(start=True)
-					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
+					score, move = minimax2(convert_to_little_gomoku(self), MAX_DEPTH=3)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
 					last_duration = mt.stop(get_str=True, duration_only=True)
 					try:
@@ -397,7 +398,20 @@ if __name__ == "__main__":
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(11, -1)
+		go_simulate.read_a_game(17, -15)
+		print(go_simulate)
+		# print(game_state(go_simulate))
+
+
+		# pair_choose = convert_to_little_gomoku(go_simulate).simulate_action((8, 12))
+		# print(pair_choose)
+		# print(game_state(pair_choose))
+
+		# five_align = convert_to_little_gomoku(go_simulate).simulate_action((11, 6))
+		# print(five_align)
+		# print(game_state(five_align))
+		# print(critical_situation(five_align.board))
+
 		go_simulate.play()
 		exit(1)
 
@@ -436,7 +450,13 @@ if __name__ == "__main__":
 		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
-		gomoku = Gomoku(IA=True, who_start="B", save_game=False, settings=settings, ia_against_ia=True)
+		gomoku = Gomoku(
+			IA=True,
+			who_start="B",
+			save_game=False,
+			settings=settings,
+			ia_against_ia=True,
+			IA_MAX_DEPTH=2)
 		gomoku.play()
 
 

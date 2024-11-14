@@ -49,22 +49,36 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 	# Value of thing : (S_ = Score)
 	# 5 stones aligned: 100
 	# 5 stones aligned: 80
-	S_FIVE_ALIGNED = 5000
+	S_FIVE_ALIGNED = 15000
 	# Free Four: 70
-	S_FREE_FOUR = 400
+	S_FREE_FOUR = 3000
 	# 4 stones aligned not obstructed: 60
-	S_FOUR_ALIGNED = 200
+	S_FOUR_ALIGNED = 1500
 	# Free Three: 50
-	S_FREE_THREE = 150
+	S_FREE_THREE = 1000
 	# 3 stones aligned: 40
 	S_THREE_ALIGNED = 20
+
+
 	# # == PAIRS ==
-	# 5 pairs catched: 100
-	# 4 pairs catched: 40
-	# 3 pairs catched: 30
-	# 2 pairs catched: 20
-	# 1 pairs catched: 10
-	S_PAIRS_CAPTURED = 15
+	pairs = {
+		'0': 0,
+		'1': 50,
+		'2': 200,
+		'3': 400,
+		'4': 1000,
+		'5': 15000
+	}
+	# # 5 pairs catched: 100
+	# S_5_PAIR_CAPTURED = 50
+	# # 4 pairs catched: 40
+	# S_4_PAIR_CAPTURED = 50
+	# # 3 pairs catched: 30
+	# S_3_PAIR_CAPTURED = 50
+	# # 2 pairs catched: 20
+	# S_2_PAIR_CAPTURED = 50
+	# # 1 pairs catched: 10
+	# S_1_PAIR_CAPTURED = 50
 
 
 	score_white = 0
@@ -107,9 +121,12 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 	########################################
 	# PAIRS CATCHED
 	########################################
+
 	if gomoku.settings.allowed_win_by_capture == True:
-		score_black += gomoku.black_capture * S_PAIRS_CAPTURED
-		score_white += gomoku.white_capture * S_PAIRS_CAPTURED
+		score_black += pairs[f'{gomoku.black_capture}']
+		score_white += pairs[f'{gomoku.white_capture}']
+		# score_black += gomoku.black_capture * S_PAIRS_CAPTURED
+		# score_white += gomoku.white_capture * S_PAIRS_CAPTURED
 
 
 	# print(f"Black player scores => {score_black}")
