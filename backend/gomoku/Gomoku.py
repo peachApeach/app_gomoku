@@ -20,6 +20,7 @@ from handle_alignment import count_all_alignment
 from MeasureTime import MeasureTime
 import logging
 import re
+import time
 
 class GomokuError(Exception):
 	pass
@@ -255,7 +256,7 @@ class Gomoku:
 		elif opening == "swap2":
 			self.opening_swap2()
 
-	def read_a_game(self, n: int, stop_read: int):
+	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
 		filename = f"./game_history/game_{n}.log"
 		try:
 			with open(filename, "r") as f:
@@ -290,7 +291,11 @@ class Gomoku:
 			# print(f"{player} : {cut_step[-1]}")
 			if player != self.player_turn:
 				self.switch_player_turn()
+
 			self.place_stone(cut_step[-1])
+			if live_visualisation:
+				self.display_board()
+				time.sleep(live_speed)
 			self.switch_player_turn()
 		# print(all_steps)
 
@@ -393,12 +398,12 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = False
+	SIMULATION = True
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(17, -15)
+		go_simulate.read_a_game(17, -15, live_visualisation=True, live_speed=1)
 		print(go_simulate)
 		# print(game_state(go_simulate))
 
