@@ -5,6 +5,8 @@ from gomoku_state import *
 from Gomoku import *
 from Colors import *
 import copy
+import time
+import os
 
 class LittleGomoku:
 
@@ -305,9 +307,13 @@ class LittleGomoku:
 		# print(self)
 		return new_little_gomoku
 
-	def paint_actions(self, actions: list[tuple[int]]):
+	def paint_actions(self, actions: list[tuple[int]], live_visualisation: bool = False):
 		for action in actions:
 			self.board[action[0]][action[1]] = '??'
+			if live_visualisation == True:
+				os.system('clear')
+				print(self)
+				time.sleep(0.5)
 
 	pass
 
