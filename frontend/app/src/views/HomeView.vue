@@ -1,27 +1,28 @@
 <template>
-  <main class=" text-high-contrast-text container my-12 flex size-full flex-col items-center justify-center gap-24">
-    <div class=" flex w-full flex-col items-center justify-center gap-6">
-      <h1 class="text-3xl font-bold">Project name</h1>
-      <p class=" text-low-contrast-text text-center">Est nulla ea do nulla qui. Do minim eiusmod laboris ea nostrud eu consequat aliqua. Reprehenderit et nisi tempor cupidatat cupidatat nisi tempor occaecat aliquip et. Cupidatat labore sint ipsum magna ut dolore sit duis qui dolore esse. Fugiat enim id nulla qui. Laborum aute culpa qui nisi aliquip minim aliquip. Eiusmod dolore culpa laborum cillum officia esse fugiat Lorem nisi amet est labore et. Dolore commodo aliqua mollit cupidatat ex veniam quis sit non cupidatat exercitation fugiat amet. Dolore cillum labore excepteur culpa labore ea qui id sunt in magna ad nisi veniam.</p>
-      <div class="flex h-40 w-full flex-col gap-2 md:flex-row">
-        <div class="border-ui-border h-full rounded-md border-4 bg-black md:w-1/3">
+  <main class=" text-high-contrast-text container my-auto flex size-full flex-row items-center justify-center gap-24">
 
-        </div>
-        <div class="border-ui-border h-full rounded-md border-4 bg-black md:w-1/3">
-
-        </div>
-        <div class="border-ui-border h-full rounded-md border-4 bg-black md:w-1/3">
-
-        </div>
+      <div class=" flex w-full flex-col justify-center gap-7">
+        <h1 class="text-8xl text-amber-400">GOMOKU<span class="text-high-contrast-text font-bold"> GAME</span></h1>
+        <hr class=" h-px bg-gray-200 border-0">
+        <p class=" text-low-contrast-text text-start text-2xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec<br>
+          et sapien a lectus fermentum mattis. Etiam ultricies diam<br>
+          rutrum sapien pharetra tempor. Vivamus eleifend aliquam<br>
+          gravida.</p>
+        <button @click="routerTo('/game')" type="button" class="w-40 text-black bg-amber-400 hover:bg-amber-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 mt-3 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get started!</button>
       </div>
-    </div>
 
-    <div class="flex w-full flex-col items-center justify-center gap-6">
+      <div class=" flex w-full flex-col items-center justify-end gap-6">
+        <div class=" size-17 overflow-hidden">
+					<img src="../assets/images/GomokuBoard.png" alt="Gomoku Board" class=" size-full object-cover">
+				</div>
+      </div>
+
+    <!-- <div class="flex w-full flex-col items-center justify-center gap-6">
       <h1 class="text-2xl font-bold">Test Overview</h1>
       <p class=" text-low-contrast-text text-center">Excepteur fugiat excepteur occaecat sint id reprehenderit excepteur nulla non ipsum. Pariatur aute sunt laboris tempor proident proident exercitation ad nisi deserunt sit dolor labore. Enim consectetur est est non id veniam aliquip elit exercitation. Ex aliqua duis enim incididunt incididunt.</p>
-    </div>
+    </div> -->
 
-    <div class="flex w-full flex-col items-center justify-center gap-6">
+    <!-- <div class="flex w-full flex-col items-center justify-center gap-6">
       <h1 class="text-2xl font-bold">Test Execution</h1>
       <div class="flex w-full flex-col items-center justify-center gap-3">
         <label for="test-input">Lorem ipsum :</label>
@@ -36,41 +37,49 @@
 
         <p id="api_result"></p>
       </div>
-    </div>
+    </div> -->
     <!-- <TheWelcome /> -->
   </main>
 </template>
 
 <script setup lang="ts">
 
-const makeRequests = async () => {
-  console.log("Yo !");
-  const input: HTMLElement | null = document.getElementById("test-input");
+// const makeRequests = async () => {
+//   console.log("Yo !");
+//   const input: HTMLElement | null = document.getElementById("test-input");
 
-  let text: String = '';
-  if (input) {
-    text = input.value;
-  }
-  const url = "http://127.0.0.1:4000/test";
+//   let text: String = '';
+//   if (input) {
+//     text = input.value;
+//   }
+//   const url = "http://127.0.0.1:8000/test";
 
-  try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({name: text}),
-        });
+//   try {
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({name: text}),
+//         });
 
-        const result = await response.json();
-        console.log("Response from FastAPI:", result);
-        const api_result = document.getElementById("api_result");
-        if (api_result) {
-          api_result.innerHTML = result.message;
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-};
+//         const result = await response.json();
+//         console.log("Response from FastAPI:", result);
+//         const api_result = document.getElementById("api_result");
+//         if (api_result) {
+//           api_result.innerHTML = result.message;
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//     }
+// };
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const routerTo = (link: String, hideMenu = true) => {
+	router.push(`${link}`);
+}
 
 </script>
