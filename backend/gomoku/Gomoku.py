@@ -205,7 +205,7 @@ class Gomoku:
 		return False
 
 	def display_board(self, message: str = None, is_err: str = None, last_duration: str = None, all_informations: bool = False):
-		# os.system("clear")
+		os.system("clear")
 		if (message != None):
 			print()
 			if is_err:
@@ -369,7 +369,11 @@ class Gomoku:
 				raise GomokuError("Player turn error")
 
 		if self.settings.allowed_capture:
-			has_winner, who_win = winner_found(self.board)
+			if self.black_capture >= 5 or self.white_capture >= 5:
+				has_winner = True
+				who_win = "B" if self.black_capture >= 5 else "W"
+			else:
+				has_winner, who_win = winner_found(self.board)
 		else:
 			has_winner, who_win = critical_situation(self.board)
 		is_err = False
@@ -383,12 +387,14 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = False
+	SIMULATION = True
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(4, -4)
+		go_simulate.read_a_game(11, -1)
+		go_simulate.play()
+		exit(1)
 
 		# LEFT
 		# go_simulate.place_stone("h7", "W")
@@ -424,7 +430,7 @@ if __name__ == "__main__":
 		print(result)
 		go_simulate.play()
 	else:
-		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=True)
+		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		gomoku = Gomoku(IA=True, who_start="B", save_game=True, settings=settings)
 		gomoku.play()
 
