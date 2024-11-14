@@ -28,13 +28,24 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 		return True
 	except:
 		pass
-	# DIAGONALE
+	# DIAGONALE #1
 	try:
 		for k in range(number_to_win):
 			if stone != board[i + k][j + k]:
 				raise Exception
 		for k in range(number_to_win):
 			if stone_catchable(board, i + k, j + k) != None:
+				raise Exception
+		return True
+	except:
+		pass
+	# DIAGONALE #2
+	try:
+		for k in range(number_to_win):
+			if stone != board[i + k][j - k]:
+				raise Exception
+		for k in range(number_to_win):
+			if stone_catchable(board, i + k, j - k) != None:
 				raise Exception
 		return True
 	except:
@@ -63,10 +74,18 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 		return True
 	except:
 		pass
-	# DIAGONALE
+	# DIAGONALE #1
 	try:
 		for k in range(number_to_win):
 			if stone != board[i + k][j + k]:
+				raise Exception
+		return True
+	except:
+		pass
+	# DIAGONALE #2
+	try:
+		for k in range(number_to_win):
+			if stone != board[i + k][j - k]:
 				raise Exception
 		return True
 	except:
