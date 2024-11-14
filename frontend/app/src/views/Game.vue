@@ -4,10 +4,6 @@
       <div id="board" class="grid grid-cols-19 grid-rows-19">
       </div>
     </div>
-    <!-- Bouton pour ouvrir la modal -->
-    <button class="icon-button" @click="toggleGeneratorModal">
-      <p>OPEN MODAL</p>
-    </button>
   </main>
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
     <h1 class="text-center text-xl font-extrabold text-high-contrast-text">
@@ -72,7 +68,10 @@ import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false);
-var currentRoundTurn = 0; // 0 -> white   1 -> black
+let gameId: Number;
+
+let whoStartFirst = 0; // 0 -> white   1 -> black
+
 
 const toggleGeneratorModal = () => {
   generatorModalActive.value = !generatorModalActive.value;
@@ -124,7 +123,26 @@ const createGrid = () => {
 const initGame = () => {
   toggleGeneratorModal()
   createGrid()
-  startGame()
+  fillGridWithList(['W'])
+  // startGame()
+}
+
+const fillGridWithList = (list: any) => {
+  const board = document.getElementById('board')
+  var childrens = board.children;
+  list = list.flat()
+  for (let i = 0; i < childrens.length; i++) {
+    var tableChild = childrens[i];
+    var circleElement = tableChild.querySelector('.circle');
+    if (list[i] == 'W') {
+      circleElement.style.backgroundColor = '#000000'
+      circleElement.style.opacity = "1"
+    }
+    else if (list[i] == 'B'){
+      circleElement.style.backgroundColor = '#FFFFFF'
+      circleElement.style.opacity = "1"
+    }
+  }
 }
 
 const postRequest = async (url: string, payload: any) => {
@@ -150,7 +168,7 @@ const postRequest = async (url: string, payload: any) => {
 const startGame = () => {
   const timePerTurn = document.getElementById('time-per-turn')?.value
   const minPerPlayer = document.getElementById('min-per-player')?.value
-  let whoStartFirst = document.getElementById('first-player')?.value
+  whoStartFirst = document.getElementById('first-player')?.value
   const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
   if (whoStartFirst == -1) { whoStartFirst = Math.floor(Math.random() * 2) }
   const payload = {
@@ -169,8 +187,20 @@ const startGame = () => {
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
-  const data = postRequest("http://127.0.0.1:8000/game/new", payload)
-  if (currentRoundTurn) {
+  // const data = postRequest("http://127.0.0.1:8000/game/new", payload)
+  const data = {
+   "game_id": 1,
+   "player_turn": "W",
+   "IA": true,
+   "IA_suggestion": false,
+   "board": [
+      [' ', ' ', ' '],
+      [' ', ' ', ' '],
+   ]
+  }
+  fillGridWithList(data.board)
+  gameId = data.game_id
+  if (data.player_turn == 'B') {
     // hover == black 
     const circleClass = document.getElementsByClassName('circle')
     for (var i = 0; i < circleClass.length; i++ )
@@ -201,32 +231,50 @@ const addPown = (event) => {
     console.log('already clicked')
     return
   }
-  pawnCircle.style.opacity = "1"
-  if (currentRoundTurn) {
-    // add black pawn
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-      if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFFFFF' }
+  
+  // pawnCircle.style.opacity = "1"
+  // if (whoStartFirst) {
+  //   // add black pawn
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //     if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFFFFF' }
+  // }
+  // else {
+  //   // add white pawn
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //     if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000000' }
+  // }
+  // whoStartFirst = 1 - whoStartFirst
+  const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
+  const payload = {
+    "player_move": {"x": coordinates[0], "y": coordinates[1]}
   }
-  else {
-    // add white pawn
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-      if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000000' }
+  // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
+  const data = {
+   "player_turn": "B",
+   "IA_suggestion": false,
+   "IA_move": {"x": 8, "y": 7},
+   "IA_duration": 99,//xp streamez Jolagreen23
+   "board": [
+      ["W", "B", " "],
+      [" ", " ", " "]
+   ],
+   "black_capture": 2,
+   "white_capture": 1,
+   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
+   "status": "playing"
   }
-  currentRoundTurn = 1 - currentRoundTurn
+  if (data.error != null)
+    console.log('Placement error')
+  if (data.status != "playing")
+    console.log('Fin')
+  fillGridWithList(data.board)
 }
 
-const addWhitePown = () => {
-  console.log("white")
-}
-
-const openModal = () => {
-
-}
 
 onMounted(() => {
-  // createGrid();
+  toggleGeneratorModal()
 });
 
 </script>
