@@ -1,0 +1,37 @@
+GameNumber : 12 - Game Info -> Start: B
+GameNumber : 12 - Game Info -> Allowed Capture: True
+GameNumber : 12 - Game Info -> Allowed Win By Capture: True
+GameNumber : 12 - Game Info -> Allowed Double Three: False
+GameNumber : 12 - 6076ms       - Player    :B -> Move:G8
+GameNumber : 12 - 6750ms       - Player    :W -> Move:S19
+GameNumber : 12 - 5342ms       - Player    :B -> Move:G9
+GameNumber : 12 - 6046ms       - Player    :W -> Move:G7
+GameNumber : 12 - 3215ms       - Player    :B -> Move:G10
+GameNumber : 12 - 6486ms       - Player    :W -> Move:G11
+GameNumber : 12 - 14526ms      - Player    :B -> Move:F11
+GameNumber : 12 - 23247ms      - Player    :W -> Move:H9
+GameNumber : 12 - 23926ms      - Player    :B -> Move:G12
+GameNumber : 12 - 21975ms      - Player    :W -> Move:E12
+GameNumber : 12 - 18214ms      - Player    :B -> Move:G10
+GameNumber : 12 - 28022ms      - Player    :W -> Move:R18
+GameNumber : 12 - 10199ms      - Player    :B -> Move:Q17
+GameNumber : 12 - 11231ms      - Player    :W -> Move:S18
+GameNumber : 12 - 42903ms      - Player    :B -> Move:F11
+GameNumber : 12 - 12446ms      - Player    :W -> Move:e10
+GameNumber : 12 - 15046ms      - Player    :B -> Move:h13
+GameNumber : 12 - 7151ms       - Player    :W -> Move:i14
+GameNumber : 12 - 20558ms      - Player    :B -> Move:F13
+GameNumber : 12 - 16494ms      - Player    :W -> Move:f12
+GameNumber : 12 - 7638ms       - Player    :B -> Move:D12
+GameNumber : 12 - 72272ms      - Player    :W -> Move:h10
+GameNumber : 12 - 12518ms      - Player    :B -> Move:e12
+GameNumber : 12 - 36510ms      - Player    :W -> Move:d11
+GameNumber : 12 - 8038ms       - Player    :B -> Move:F12
+GameNumber : 12 - 18462ms      - Player    :W -> Move:g14
+GameNumber : 12 - 7238ms       - Player    :B -> Move:E12
+GameNumber : 12 - 118127ms     - Player    :W -> Move:f10
+GameNumber : 12 - 8006ms       - Player    :B -> Move:D10
+GameNumber : 12 - 17350ms      - Player    :W -> Move:f10
+GameNumber : 12 - 7511ms       - Player    :B -> Move:f13
+GameNumber : 12 - 39199ms      - Player    :W -> Move:h11
+GameNumber : 12 - 12454ms      - Player    :B -> Move:C12
