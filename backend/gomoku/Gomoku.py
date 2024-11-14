@@ -28,12 +28,13 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings()):
+	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, ia_against_ia: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings()):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
 		self.save_game = save_game
+		self.ia_against_ia = ia_against_ia
 		if self.save_game == True:
 			i = 0
 			while True:
@@ -307,7 +308,11 @@ class Gomoku:
 				# mt = MeasureTime(start=True)
 				log_mt = MeasureTime(start=True)
 				while True:
-					user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
+					if self.ia_against_ia == True:
+						score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
+						user_placement = convert_xy_to_coordinate(move[1], move[0])
+					else:
+						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
 					try:
 						self.place_stone(user_placement)
 						log_str_time = log_mt.stop(get_str=True, duration_only=True)
@@ -327,11 +332,11 @@ class Gomoku:
 				# last_duration = mt.stop(get_str=True)
 
 			elif self.get_player_turn() == "W": # IA or 2 players turn
-				if self.IA == True:
+				if self.IA == True or self.ia_against_ia == True:
 					# Handle IA
 					# littleGomoku = c
 					mt = MeasureTime(start=True)
-					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=3)
+					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
 					last_duration = mt.stop(get_str=True, duration_only=True)
 					try:
@@ -387,7 +392,7 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = True
+	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
@@ -431,7 +436,7 @@ if __name__ == "__main__":
 		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
-		gomoku = Gomoku(IA=True, who_start="B", save_game=True, settings=settings)
+		gomoku = Gomoku(IA=True, who_start="B", save_game=False, settings=settings, ia_against_ia=True)
 		gomoku.play()
 
 
