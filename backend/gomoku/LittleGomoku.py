@@ -86,7 +86,7 @@ class LittleGomoku:
 		if self.board[i][j] == ' ' or stone == ' ':
 			to_place = self.player_turn if stone == None else stone
 			if self.settings.allowed_capture == True:
-				if pair_can_be_capture(self.board, i, j, to_place):
+				if pair_can_be_capture(self.board, i, j, to_place) != []:
 					return True
 				self.board[i][j] = to_place
 				situation = critical_situation(self.board)
@@ -183,21 +183,22 @@ class LittleGomoku:
 		if self.board[i][j] == ' ' or stone == ' ':
 			to_place = self.player_turn if stone == None else stone
 			if self.settings.allowed_capture == True:
-				value = pair_can_be_capture(self.board, i, j, to_place)
+				pairs_captured = pair_can_be_capture(self.board, i, j, to_place)
 			else:
-				value = None
+				pairs_captured = []
 
 			before_placement_alignment = count_all_alignment(self.board, i, j)
 			self.board[i][j] = to_place
-			if value:
+			if pairs_captured != []:
 				if self.board[i][j] == 'B':
-					self.black_capture += 1
+					self.black_capture += len(pairs_captured)
 				else:
-					self.white_capture += 1
-				cd1 = value[0]
-				cd2 = value[1]
-				self.board[cd1[0]][cd1[1]] = ' '
-				self.board[cd2[0]][cd2[1]] = ' '
+					self.white_capture += len(pairs_captured)
+				for pair in pairs_captured:
+					cd1 = pairs_captured[0]
+					cd2 = pairs_captured[1]
+					self.board[cd1[0]][cd1[1]] = ' '
+					self.board[cd2[0]][cd2[1]] = ' '
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
 				# self.board[i][j] = to_place

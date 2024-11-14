@@ -53,49 +53,50 @@ def switch_opponent(string: str) -> str:
 			r_str += c
 	return r_str
 
-def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[tuple[int]] | None:
+def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[list[tuple[int]]]:
 	possibility = ("WBBW", "BWWB")
+	captured = []
 	try: # F
 		if stone + "".join([board[i][j + k] for k in range(1, 4)]) in possibility:
-			return [(i, j + 1), (i, j + 2)]
+			captured.append([(i, j + 1), (i, j + 2)])
 	except:
 		pass
 	try: # I
 		if stone + "".join([board[i][j - k] for k in range(1, 4)]) in possibility:
-			return [(i, j - 1), (i, j - 2)]
+			captured.append([(i, j - 1), (i, j - 2)])
 	except:
 		pass
 	try: # G
 		if stone + "".join([board[i + k][j] for k in range(1, 4)]) in possibility:
-			return [(i + 1, j), (i + 2, j)]
+			captured.append([(i + 1, j), (i + 2, j)])
 	except:
 		pass
 	try: # E
 		if stone + "".join([board[i - k][j] for k in range(1, 4)]) in possibility:
-			return [(i - 1, j), (i - 2, j)]
+			captured.append([(i - 1, j), (i - 2, j)])
 	except:
 		pass
 	try: # A
 		if stone + "".join([board[i - k][j - k] for k in range(1, 4)]) in possibility:
-			return [(i - 1, j - 1), (i - 2, j - 2)]
+			captured.append([(i - 1, j - 1), (i - 2, j - 2)])
 	except:
 		pass
 	try: # D
 		if stone + "".join([board[i + k][j + k] for k in range(1, 4)]) in possibility:
-			return [(i + 1, j + 1), (i + 1, j + 2)]
+			captured.append([(i + 1, j + 1), (i + 1, j + 2)])
 	except:
 		pass
 	try: # C
 		if stone + "".join([board[i - k][j + k] for k in range(1, 4)]) in possibility:
-			return [(i - 1, j + 1), (i - 1, j + 2)]
+			captured.append([(i - 1, j + 1), (i - 1, j + 2)])
 	except:
 		pass
 	try: # H
 		if stone + "".join([board[i + k][j - k] for k in range(1, 4)]) in possibility:
-			return [(i + 1, j - 1), (i + 2, j - 2)]
+			captured.append([(i + 1, j - 1), (i + 2, j - 2)])
 	except:
 		pass
-	return None
+	return captured
 
 # board = [
 # 	[" ", "C", " ", " ", " ", " ", " ", " "],
@@ -362,7 +363,7 @@ def remove_pair_capture(board: list[list[str]]) -> dict | None:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			value = pair_can_be_capture(board, i, j)
-			if value:
+			if value != []:
 				return {'stone_attack': board[i][j], 'coordinate_to_remove': value}
 	return None
 
