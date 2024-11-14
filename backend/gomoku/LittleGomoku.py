@@ -197,8 +197,8 @@ class LittleGomoku:
 				else:
 					self.white_capture += len(pairs_captured)
 				for pair in pairs_captured:
-					cd1 = pairs_captured[0]
-					cd2 = pairs_captured[1]
+					cd1 = pair[0]
+					cd2 = pair[1]
 					self.board[cd1[0]][cd1[1]] = ' '
 					self.board[cd2[0]][cd2[1]] = ' '
 				after_placement_alignment = count_all_alignment(self.board, i, j)

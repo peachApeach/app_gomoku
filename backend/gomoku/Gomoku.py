@@ -293,10 +293,12 @@ class Gomoku:
 			if player != self.player_turn:
 				self.switch_player_turn()
 
+			# if live_visualisation:
+			# 	print(f"{player} will move in {cut_step[-1]}")
 			self.place_stone(cut_step[-1])
 			if live_visualisation:
 				self.display_board()
-				print(f"{player} move in {cut_step[-1]}")
+				print(f"{player} has placed in {cut_step[-1]}")
 				time.sleep(live_speed)
 			self.switch_player_turn()
 		# print(all_steps)
@@ -400,12 +402,12 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = False
+	SIMULATION = True
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(17, -15, live_visualisation=True, live_speed=1)
+		go_simulate.read_a_game(17, 0, live_visualisation=True, live_speed=0.7)
 		print(go_simulate)
 		# print(game_state(go_simulate))
 
@@ -419,7 +421,7 @@ if __name__ == "__main__":
 		# print(game_state(five_align))
 		# print(critical_situation(five_align.board))
 
-		go_simulate.play()
+		# go_simulate.play()
 		exit(1)
 
 		# LEFT
