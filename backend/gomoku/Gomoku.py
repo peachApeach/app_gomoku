@@ -346,7 +346,7 @@ class Gomoku:
 					# Handle IA
 					# littleGomoku = c
 					mt = MeasureTime(start=True)
-					score, move = minimax2(convert_to_little_gomoku(self), MAX_DEPTH=3)
+					score, move = minimax2(convert_to_little_gomoku(self), MAX_DEPTH=2)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
 					last_duration = mt.stop(get_str=True, duration_only=True)
 					try:
@@ -402,13 +402,13 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = True
+	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku()
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(17, 0, live_visualisation=True, live_speed=0.7)
-		print(go_simulate)
+		go_simulate.read_a_game(18, 0, live_visualisation=True, live_speed=0.4)
+		# print(go_simulate)
 		# print(game_state(go_simulate))
 
 
@@ -421,8 +421,8 @@ if __name__ == "__main__":
 		# print(game_state(five_align))
 		# print(critical_situation(five_align.board))
 
-		# go_simulate.play()
-		exit(1)
+		go_simulate.play()
+		# exit(1)
 
 		# LEFT
 		# go_simulate.place_stone("h7", "W")

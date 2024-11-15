@@ -1,0 +1,23 @@
+GameNumber : 16 - Game Info -> Start: B
+GameNumber : 16 - Game Info -> Allowed Capture: True
+GameNumber : 16 - Game Info -> Allowed Win By Capture: True
+GameNumber : 16 - Game Info -> Allowed Double Three: False
+GameNumber : 16 - 54ms         - Player    :B -> Move:I9
+GameNumber : 16 - 4ms          - Player(IA):W -> Move:I10
+GameNumber : 16 - 497ms        - Player    :B -> Move:J10
+GameNumber : 16 - 18ms         - Player(IA):W -> Move:H8
+GameNumber : 16 - 2004ms       - Player    :B -> Move:K11
+GameNumber : 16 - 195ms        - Player(IA):W -> Move:L12
+GameNumber : 16 - 1029ms       - Player    :B -> Move:J9
+GameNumber : 16 - 24ms         - Player(IA):W -> Move:J11
+GameNumber : 16 - 2956ms       - Player    :B -> Move:H9
+GameNumber : 16 - 84ms         - Player(IA):W -> Move:K9
+GameNumber : 16 - 5305ms       - Player    :B -> Move:K12
+GameNumber : 16 - 87ms         - Player(IA):W -> Move:G9
+GameNumber : 16 - 2059ms       - Player    :B -> Move:J11
+GameNumber : 16 - 29ms         - Player(IA):W -> Move:I10
+GameNumber : 16 - 2960ms       - Player    :B -> Move:J8
+GameNumber : 16 - 123ms        - Player(IA):W -> Move:L13
+GameNumber : 16 - 9ms          - Player    :B -> Move:J11
+GameNumber : 16 - 146ms        - Player(IA):W -> Move:I7
+GameNumber : 16 - 9ms          - Player    :B -> Move:J7
