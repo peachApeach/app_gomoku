@@ -1,0 +1,14 @@
+GameNumber : 15 - Game Info -> Start: B
+GameNumber : 15 - Game Info -> Allowed Capture: True
+GameNumber : 15 - Game Info -> Allowed Win By Capture: True
+GameNumber : 15 - Game Info -> Allowed Double Three: False
+GameNumber : 15 - 1762ms       - Player    :B -> Move:i10
+GameNumber : 15 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 15 - 4626ms       - Player    :B -> Move:h9
+GameNumber : 15 - 20ms         - Player(IA):W -> Move:G8
+GameNumber : 15 - 40672ms      - Player    :B -> Move:h8
+GameNumber : 15 - 33ms         - Player(IA):W -> Move:J11
+GameNumber : 15 - 42276ms      - Player    :B -> Move:h7
+GameNumber : 15 - 23ms         - Player(IA):W -> Move:H9
+GameNumber : 15 - 8348ms       - Player    :B -> Move:h6
+GameNumber : 15 - 50ms         - Player(IA):W -> Move:I10

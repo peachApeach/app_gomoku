@@ -1,0 +1,4 @@
+GameNumber : 10 - Game Info -> Start: B
+GameNumber : 10 - Game Info -> Allowed Capture: True
+GameNumber : 10 - Game Info -> Allowed Win By Capture: True
+GameNumber : 10 - Game Info -> Allowed Double Three: False
