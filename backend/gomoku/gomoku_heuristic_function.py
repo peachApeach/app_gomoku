@@ -136,7 +136,7 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 	# print(f"Black player scores => {score_black}")
 	# print(f"White player scores => {score_white}")
 
-	if advantage_next_player == True:
+	if score_black == score_white:
 		"""
 		Si DEPTH == MAX_DEPTH, il se peut que le score de prochain joueur soit plus dangereux, donc on ajuste les scores pour envisager le pire.
 		"""

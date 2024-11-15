@@ -304,7 +304,7 @@ class Gomoku:
 		# print(all_steps)
 
 	def play(self, opening: str = "standard"):
-		from gomoku_algorithm import minimax, minimax2
+		from gomoku_algorithm import minimax
 
 		is_err = False
 		message = None
@@ -344,9 +344,8 @@ class Gomoku:
 			elif self.get_player_turn() == "W": # IA or 2 players turn
 				if self.IA == True or self.ia_against_ia == True:
 					# Handle IA
-					# littleGomoku = c
 					mt = MeasureTime(start=True)
-					score, move = minimax2(convert_to_little_gomoku(self), MAX_DEPTH=2)
+					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 					ia_placement = convert_xy_to_coordinate(move[1], move[0])
 					last_duration = mt.stop(get_str=True, duration_only=True)
 					try:
@@ -405,9 +404,9 @@ if __name__ == "__main__":
 	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
-		go_simulate = Gomoku()
+		go_simulate = Gomoku(ia_against_ia=False)
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(18, 0, live_visualisation=True, live_speed=0.4)
+		go_simulate.read_a_game(26, -2, live_visualisation=True, live_speed=0.1)
 		# print(go_simulate)
 		# print(game_state(go_simulate))
 
@@ -458,13 +457,14 @@ if __name__ == "__main__":
 		print(result)
 		go_simulate.play()
 	else:
-		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
+		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=True)
+		AGAINST_HUMAN = True
 		gomoku = Gomoku(
 			IA=True,
 			who_start="B",
-			save_game=False,
+			save_game=AGAINST_HUMAN,
 			settings=settings,
-			ia_against_ia=True,
+			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
 		gomoku.play()
 

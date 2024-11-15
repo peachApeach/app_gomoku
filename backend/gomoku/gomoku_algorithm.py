@@ -1,22 +1,16 @@
-from gomoku_state import terminate_state, winner_found, critical_situation
-from GomokuSettings import GomokuSettings
+from gomoku_state import terminate_state
 from LittleGomoku import LittleGomoku
 from gomoku_heuristic_function import game_state
-from gomoku_rules import is_creating_db_free_three
-import time
-import random
 
 class GomokuIAError(Exception):
 	pass
 
 def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
-	state = game_state(gomoku, True)
-	if state == 0:
-		return DEPTH + 1
+	# state = game_state(gomoku, True)
+	# if state == 0:
+	# 	return DEPTH + 1
 	if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
 		return DEPTH + 1
-	# if gomoku.black_capture > 3 or gomoku.white_capture > 3:
-	# 	return DEPTH + 1
 	if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_white >= 1:
 		return DEPTH + 1
 	else:
@@ -71,6 +65,7 @@ def minimax(
 	elif gomoku.player_turn == gomoku.minimizing_player:
 		value = float('+inf')
 		best_action = None
+		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		for action in gomoku.get_actions():
 			try:
 				new_gomoku = gomoku.simulate_action(action)

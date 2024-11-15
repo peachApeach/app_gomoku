@@ -2,8 +2,9 @@ from GomokuSettings import GomokuSettings
 from little_gomoku_utils import get_actions_range, is_useful_placement
 from gomoku_rules import *
 from gomoku_state import *
-from Gomoku import *
+from Gomoku import Gomoku, PlacementError, count_all_alignment
 from Colors import *
+import string
 import copy
 import time
 import os
