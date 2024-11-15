@@ -1,1 +1,2 @@
 game_18:Play against Human - Problem of priority. Fix.
+game_31:Play against Human - Problem capturing decalage. Fix

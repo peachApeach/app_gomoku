@@ -83,12 +83,12 @@ def pair_can_be_capture(board: list[list[str]], i, j, stone) -> list[list[tuple[
 		pass
 	try: # D
 		if stone + "".join([board[i + k][j + k] for k in range(1, 4)]) in possibility:
-			captured.append([(i + 1, j + 1), (i + 1, j + 2)])
+			captured.append([(i + 1, j + 1), (i + 2, j + 2)])
 	except:
 		pass
 	try: # C
 		if stone + "".join([board[i - k][j + k] for k in range(1, 4)]) in possibility:
-			captured.append([(i - 1, j + 1), (i - 1, j + 2)])
+			captured.append([(i - 1, j + 1), (i - 2, j + 2)])
 	except:
 		pass
 	try: # H

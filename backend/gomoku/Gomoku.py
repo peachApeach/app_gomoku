@@ -401,15 +401,16 @@ class Gomoku:
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
 	from gomoku_heuristic_function import game_state
-	SIMULATION = False
+	SIMULATION = True
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku(ia_against_ia=False)
 		# go_simulate.read_a_game(3, -2)
-		go_simulate.read_a_game(26, -2, live_visualisation=True, live_speed=0.1)
-		# print(go_simulate)
+		go_simulate.read_a_game(31, -2, live_visualisation=False, live_speed=0.1)
 		# print(game_state(go_simulate))
-
+		go_simulate.place_stone("I7")
+		print(go_simulate)
+		exit(1)
 
 		# pair_choose = convert_to_little_gomoku(go_simulate).simulate_action((8, 12))
 		# print(pair_choose)
@@ -420,7 +421,7 @@ if __name__ == "__main__":
 		# print(game_state(five_align))
 		# print(critical_situation(five_align.board))
 
-		go_simulate.play()
+		# go_simulate.play()
 		# exit(1)
 
 		# LEFT
@@ -457,7 +458,7 @@ if __name__ == "__main__":
 		print(result)
 		go_simulate.play()
 	else:
-		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=True)
+		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		AGAINST_HUMAN = True
 		gomoku = Gomoku(
 			IA=True,
