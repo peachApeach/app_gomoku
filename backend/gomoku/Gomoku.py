@@ -21,6 +21,7 @@ from MeasureTime import MeasureTime
 import logging
 import re
 import time
+import random
 
 class GomokuError(Exception):
 	pass
@@ -255,10 +256,81 @@ class Gomoku:
 		pass
 
 	def opening_pro(self):
-		first_move = False
 		second_move = False
 		third_move = False
+		is_err = False
+		message = None
 
+
+		# MIDDLE J10 (9, 9)
+		self.place_stone("J10")
+		self.switch_player_turn()
+
+		# SOUTH-EAST : (K11, L12, M13, N14, O15, P16, Q17, R18, S19)
+		south_east = ("K11", "L12", "M13", "N14", "O15", "P16", "Q17", "R18", "S19")
+		south_east_coordinate = (
+			(10, 10),
+			(11, 11),
+			(12, 12),
+			(13, 13),
+			(14, 14),
+			(15, 15),
+			(16, 16),
+			(17, 17),
+			(18, 18),
+			(19, 19),
+		)
+		message = "PRO OPENING : Place the next stone in south east."
+		while not second_move:
+			self.display_board(message=message, is_err=is_err)
+			if self.ia_against_ia == True:
+				placement = random.choice(south_east[0:5])
+			else:
+				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
+				if self.IA == False:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Player 1 Turn -> "
+					else:
+						prompt = f"{color} - Player 2 Turn -> "
+				else:
+					prompt = f"{color} - Your Turn -> "
+				placement = input(prompt)
+
+			if convert_coordinate_to_xy(placement) not in south_east_coordinate:
+				message = "PRO OPENING : You need to place the stone in south east."
+				is_err = True
+				continue
+			self.place_stone(placement)
+			self.switch_player_turn()
+			second_move = True
+			is_err = True
+
+		# THREE AWAY
+		message = "PRO OPENING : Place the stone at least three intersections away from the first stone."
+		while not third_move:
+			self.display_board(message=message, is_err=is_err)
+			if self.ia_against_ia == True:
+				placement = random.choice(south_east[0:5])
+			else:
+				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
+				if self.IA == False:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Player 1 Turn -> "
+					else:
+						prompt = f"{color} - Player 2 Turn -> "
+				else:
+					prompt = f"{color} - Your Turn -> "
+				placement = input(prompt)
+
+			if convert_coordinate_to_xy(placement) not in south_east_coordinate:
+				message = "PRO OPENING : The stone must be placed at least three intersections away from the first stone."
+				is_err = True
+				continue
+
+			self.place_stone(placement)
+			self.switch_player_turn()
+			second_move = True
+		input()
 		pass
 	def opening_swap(self):
 		pass
@@ -266,6 +338,7 @@ class Gomoku:
 		pass
 
 	def handle_opening(self, opening: str):
+		opening = opening.lower()
 		if opening == "pro":
 			self.opening_pro()
 		elif opening == "swap":
@@ -464,16 +537,16 @@ if __name__ == "__main__":
 		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
-		AGAINST_HUMAN = False
+		AGAINST_HUMAN = True
 		gomoku = Gomoku(
 			IA=True,
 			who_start="B", # Always Black
-			main_player="W",
+			main_player="B",
 			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
-		gomoku.play()
+		gomoku.play(opening="pro")
 
 
 
