@@ -1,0 +1,43 @@
+GameNumber : 21 - Game Info -> Start: W
+GameNumber : 21 - Game Info -> Allowed Capture: True
+GameNumber : 21 - Game Info -> Allowed Win By Capture: True
+GameNumber : 21 - Game Info -> Allowed Double Three: False
+GameNumber : 21 - 20ms         - Player(IA):W -> Move:I9
+GameNumber : 21 - 5ms          - Player    :B -> Move:I10
+GameNumber : 21 - 73ms         - Player(IA):W -> Move:J9
+GameNumber : 21 - 20ms         - Player    :B -> Move:H9
+GameNumber : 21 - 425ms        - Player(IA):W -> Move:K9
+GameNumber : 21 - 120ms        - Player    :B -> Move:L9
+GameNumber : 21 - 361ms        - Player(IA):W -> Move:J11
+GameNumber : 21 - 21ms         - Player    :B -> Move:J10
+GameNumber : 21 - 448ms        - Player(IA):W -> Move:H10
+GameNumber : 21 - 35ms         - Player    :B -> Move:J8
+GameNumber : 21 - 651ms        - Player(IA):W -> Move:G11
+GameNumber : 21 - 206ms        - Player    :B -> Move:F12
+GameNumber : 21 - 469ms        - Player(IA):W -> Move:K11
+GameNumber : 21 - 38ms         - Player    :B -> Move:H11
+GameNumber : 21 - 711ms        - Player(IA):W -> Move:L11
+GameNumber : 21 - 62ms         - Player    :B -> Move:M11
+GameNumber : 21 - 660ms        - Player(IA):W -> Move:K10
+GameNumber : 21 - 70ms         - Player    :B -> Move:I12
+GameNumber : 21 - 850ms        - Player(IA):W -> Move:I8
+GameNumber : 21 - 65ms         - Player    :B -> Move:K10
+GameNumber : 21 - 1554ms       - Player(IA):W -> Move:J11
+GameNumber : 21 - 64ms         - Player    :B -> Move:H7
+GameNumber : 21 - 1389ms       - Player(IA):W -> Move:M8
+GameNumber : 21 - 85ms         - Player    :B -> Move:G10
+GameNumber : 21 - 1468ms       - Player(IA):W -> Move:J13
+GameNumber : 21 - 112ms        - Player    :B -> Move:F9
+GameNumber : 21 - 14ms         - Player(IA):W -> Move:E8
+GameNumber : 21 - 136ms        - Player    :B -> Move:F10
+GameNumber : 21 - 1969ms       - Player(IA):W -> Move:J12
+GameNumber : 21 - 94ms         - Player    :B -> Move:J10
+GameNumber : 21 - 2718ms       - Player(IA):W -> Move:F11
+GameNumber : 21 - 142ms        - Player    :B -> Move:E10
+GameNumber : 21 - 2975ms       - Player(IA):W -> Move:F8
+GameNumber : 21 - 246ms        - Player    :B -> Move:F9
+GameNumber : 21 - 3006ms       - Player(IA):W -> Move:G8
+GameNumber : 21 - 167ms        - Player    :B -> Move:G9
+GameNumber : 21 - 2353ms       - Player(IA):W -> Move:D11
+GameNumber : 21 - 254ms        - Player    :B -> Move:H8
+GameNumber : 21 - 2802ms       - Player(IA):W -> Move:I8

@@ -1,0 +1,36 @@
+GameNumber : 29 - Game Info -> Start: B
+GameNumber : 29 - Game Info -> Allowed Capture: True
+GameNumber : 29 - Game Info -> Allowed Win By Capture: True
+GameNumber : 29 - Game Info -> Allowed Double Three: True
+GameNumber : 29 - 7550ms       - Player    :B -> Move:H13
+GameNumber : 29 - 5ms          - Player(IA):W -> Move:I9
+GameNumber : 29 - 3344ms       - Player    :B -> Move:G12
+GameNumber : 29 - 33ms         - Player(IA):W -> Move:F11
+GameNumber : 29 - 4676ms       - Player    :B -> Move:H12
+GameNumber : 29 - 19ms         - Player(IA):W -> Move:I14
+GameNumber : 29 - 7049ms       - Player    :B -> Move:H11
+GameNumber : 29 - 26ms         - Player(IA):W -> Move:H10
+GameNumber : 29 - 3506ms       - Player    :B -> Move:H13
+GameNumber : 29 - 98ms         - Player(IA):W -> Move:H14
+GameNumber : 29 - 8859ms       - Player    :B -> Move:J8
+GameNumber : 29 - 45ms         - Player(IA):W -> Move:G14
+GameNumber : 29 - 7206ms       - Player    :B -> Move:F14
+GameNumber : 29 - 63ms         - Player(IA):W -> Move:G13
+GameNumber : 29 - 14606ms      - Player    :B -> Move:G11
+GameNumber : 29 - 51ms         - Player(IA):W -> Move:I11
+GameNumber : 29 - 6290ms       - Player    :B -> Move:H11
+GameNumber : 29 - 61ms         - Player(IA):W -> Move:H10
+GameNumber : 29 - 11735ms      - Player    :B -> Move:G12
+GameNumber : 29 - 41ms         - Player(IA):W -> Move:F12
+GameNumber : 29 - 11155ms      - Player    :B -> Move:E11
+GameNumber : 29 - 54ms         - Player(IA):W -> Move:I12
+GameNumber : 29 - 13519ms      - Player    :B -> Move:F13
+GameNumber : 29 - 40ms         - Player(IA):W -> Move:F15
+GameNumber : 29 - 10101ms      - Player    :B -> Move:F14
+GameNumber : 29 - 40ms         - Player(IA):W -> Move:G12
+GameNumber : 29 - 10444ms      - Player    :B -> Move:G11
+GameNumber : 29 - 36ms         - Player(IA):W -> Move:H12
+GameNumber : 29 - 5513ms       - Player    :B -> Move:E12
+GameNumber : 29 - 10ms         - Player(IA):W -> Move:J12
+GameNumber : 29 - 55731ms      - Player    :B -> Move:E10
+GameNumber : 29 - 42ms         - Player(IA):W -> Move:F11
