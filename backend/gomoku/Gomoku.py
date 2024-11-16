@@ -338,6 +338,7 @@ class Gomoku:
 			try:
 				self.place_stone(placement)
 				self.switch_player_turn()
+				third_move = True
 			except Exception as e:
 				message = e
 				is_err = True
@@ -405,6 +406,8 @@ class Gomoku:
 
 
 	def handle_player(self) -> list:
+		from gomoku_algorithm import minimax
+
 		color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
 		mt = MeasureTime(start=True)
 
@@ -459,8 +462,6 @@ class Gomoku:
 		return last_duration
 
 	def play(self, opening: str = "standard"):
-		from gomoku_algorithm import minimax
-
 		is_err = False
 		message = None
 		last_duration = None
