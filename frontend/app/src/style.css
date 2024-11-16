@@ -134,5 +134,9 @@ button:hover .circle {
 	opacity: 1;
 }
 
+.hidden-important {
+	display: none !important;
+}
+
 
 @tailwind utilities;

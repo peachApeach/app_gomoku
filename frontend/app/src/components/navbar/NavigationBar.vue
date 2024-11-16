@@ -1,5 +1,5 @@
 <template>
-	<div class=" fixed top-0 z-50 w-full">
+	<div id="nav-bar" class="fixed top-0 z-50 w-full">
 		<div id="navBar" class="my-scroll-nav my-scroll-nav-active">
 			<div id="navMenu"
 				class="absolute top-0 h-screen w-full -translate-x-full transition-transform duration-500 md:hidden">

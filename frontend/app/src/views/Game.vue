@@ -1,18 +1,35 @@
 <template>
   <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
     <div class=" flex w-full flex-col items-center justify-center">
+      <div id="scoreboard" class="flex flex-nowrap items-center gap-32 mb-5 text-low-contrast-text hidden-important">
+        <div id="player1" class="flex items-center gap-8">
+          <div id="player1-timer" class="text-lg px-4 py-2 bg-blue-700 rounded-lg">
+            
+          </div>
+          <h1 class="text-center text-3xl font-bold">Player 1</h1>
+        </div>
+        <div id="round-timer" class="text-6xl text-high-contrast-text px-4 py-2 ">
+            
+        </div>
+        <div id="player2" class="flex gap-8">
+          <h1 class="text-center text-3xl font-bold"></h1>
+          <div id="player2-timer" class="text-lg px-4 py-2 bg-orange-700 rounded-lg">
+            
+          </div>
+        </div>
+      </div>
       <div id="board" class="grid grid-cols-19 grid-rows-19">
       </div>
     </div>
   </main>
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
-    <h1 class="text-center text-xl font-extrabold text-high-contrast-text">
-      Game Settings</h1>
+    <h1 class="text-center text-3xl font-bold text-high-contrast-text mb-5">
+      Paramètres</h1>
 
-    <div class="flex w-full flex-col items-start gap-4 py-5">
-      <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text">Temps par tour</label>
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="time-per-turn-label" for="time-per-turn" class="block mb-2 text-sm font-medium text-low-contrast-text">Temps par tour</label>
       <div class="relative w-full">
-          <select name="time-p-turn" id="time-per-turn">
+          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
             <option value="10">10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
@@ -22,10 +39,10 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start gap-4 py-5">
-      <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text">Minutes par joueur</label>
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="min-per-player-label" for="min-per-player" class="block mb-2 text-sm font-medium text-low-contrast-text">Minutes par joueur</label>
       <div class="relative w-full">
-          <select name="min-p-player" id="min-per-player">
+          <select name="min-p-player" id="min-per-player" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
@@ -35,10 +52,10 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start gap-4 py-5">
-      <label id="first-player-label" for="first-player" class="text-low-contrast-text">Qui commence en premier ?</label>
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="first-player-label" for="first-player" class="block mb-2 text-sm font-medium text-low-contrast-text">Qui commence en premier ?</label>
       <div class="relative w-full">
-          <select name="f-player" id="first-player">
+          <select name="f-player" id="first-player" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
             <option value="-1">Aleatoire</option>
             <option value="0">Je commence en premier</option>
             <option value="1">L'opposant commence en premier</option>
@@ -46,19 +63,22 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start gap-4 py-5">
-      <label id="opposant-label" class="text-low-contrast-text">Jouer contre qui ?</label>
-      <div class="relative w-full">
-        <input type="radio" name="opposant" value="ia">
-        <label class="text-low-contrast-text" for="opposant">IA</label>
-        <br>
-        <input type="radio" name="opposant" value="hotseat">
-        <label class="text-low-contrast-text" for="opposant">Local</label>
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="opposant-label" class="block mb-2 text-sm font-medium text-low-contrast-text">Jouer contre qui ?</label>
+      <div class="flex">
+        <div class="flex items-center me-5 px-4 border border-gray-600 rounded-lg dark:border-gray-700">
+          <input id="opposant-ia" type="radio" name="opposant" value="ia" class="w-4 h-4 bg-gray-100 accent-amber-400" checked>
+          <label for="opposant-ia" class="w-full py-3 ms-2 text-sm font-medium text-low-contrast-text"> IA</label>
+        </div>
+        <div class="flex items-center px-4 border border-gray-600 rounded-lg dark:border-gray-700">
+          <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="w-4 h-4 bg-gray-100 border-gray-300 accent-amber-400">
+          <label class="w-full py-3 ms-2 text-sm font-medium text-low-contrast-text" for="opposant-hotseat"> Local</label>
+        </div>
       </div>
     </div>
 
-    <div class="mb-4 mt-6 flex w-full items-center justify-center">
-      <button class="text-button px-4 py-2 text-high-contrast-text dark:text-d-high-contrast-text" @click="initGame">PLAY</button>
+    <div class="mt-6 flex w-full items-center justify-center">
+      <button type="button" class="focus:outline-none text-base text-white bg-yellow-700 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2" @click="initGame">PLAY</button>
     </div>
   </Modal>
 </template>
@@ -67,8 +87,18 @@
 import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-const generatorModalActive = ref(false);
-let gameId: Number;
+const generatorModalActive = ref(false)
+let gameId: Number
+
+let timerPlayer1: Number
+let timerPlayer2: Number
+
+let timePerTurn: Number
+let currentRoundTimer: Number
+let currentRoundTurn: String
+
+let isPausedPlayer1 = true
+let isPausedPlayer2 = true
 
 let whoStartFirst = 0; // 0 -> white   1 -> black
 
@@ -77,8 +107,16 @@ const toggleGeneratorModal = () => {
   generatorModalActive.value = !generatorModalActive.value;
 }
 
+const initGame = () => {
+  toggleGeneratorModal()
+  createGrid()
+  fillGridWithList(['W'])
+  startGame()
+}
+
 const createGrid = () => {
   let counter = 0
+  document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
   for (let i = 0; i < 19; i++) {
     for (let j = 0; j < 19; j++) {
@@ -120,13 +158,6 @@ const createGrid = () => {
   }
 }
 
-const initGame = () => {
-  toggleGeneratorModal()
-  createGrid()
-  fillGridWithList(['W'])
-  // startGame()
-}
-
 const fillGridWithList = (list: any) => {
   const board = document.getElementById('board')
   var childrens = board.children;
@@ -135,11 +166,11 @@ const fillGridWithList = (list: any) => {
     var tableChild = childrens[i];
     var circleElement = tableChild.querySelector('.circle');
     if (list[i] == 'W') {
-      circleElement.style.backgroundColor = '#000000'
+      circleElement.style.backgroundColor = '#FFFFFF'
       circleElement.style.opacity = "1"
     }
     else if (list[i] == 'B'){
-      circleElement.style.backgroundColor = '#FFFFFF'
+      circleElement.style.backgroundColor = '#000000'
       circleElement.style.opacity = "1"
     }
   }
@@ -165,9 +196,27 @@ const postRequest = async (url: string, payload: any) => {
   }
 }
 
-const startGame = () => {
-  const timePerTurn = document.getElementById('time-per-turn')?.value
+const createScoreboard = () => {
+  const scoreboard = document.getElementById('scoreboard')
   const minPerPlayer = document.getElementById('min-per-player')?.value
+  timePerTurn = document.getElementById('time-per-turn')?.value
+  const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
+
+  document.getElementById('player1-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
+  document.getElementById('player2-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
+  document.getElementById('round-timer').textContent = timePerTurn != -1 ? '00:' + timePerTurn : ''
+  document.getElementById('player2').children[0].textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
+  if (minPerPlayer != -1) {
+    createCountdownPlayer1(minPerPlayer * 60, 'player1-timer')
+    createCountdownPlayer2(minPerPlayer * 60, 'player2-timer')
+  }
+  if (timePerTurn != -1) {
+    createCountdownForRound(timePerTurn, 'round-timer')
+  }
+  scoreboard.classList.remove('hidden-important')
+}
+
+const startGame = () => {
   whoStartFirst = document.getElementById('first-player')?.value
   const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
   if (whoStartFirst == -1) { whoStartFirst = Math.floor(Math.random() * 2) }
@@ -190,7 +239,7 @@ const startGame = () => {
   // const data = postRequest("http://127.0.0.1:8000/game/new", payload)
   const data = {
    "game_id": 1,
-   "player_turn": "W",
+   "player_turn": "B",
    "IA": true,
    "IA_suggestion": false,
    "board": [
@@ -199,9 +248,13 @@ const startGame = () => {
    ]
   }
   fillGridWithList(data.board)
+  createScoreboard()
   gameId = data.game_id
+  currentRoundTurn = data.player_turn
+  console.log(currentRoundTurn)
   if (data.player_turn == 'B') {
-    // hover == black 
+    // hover == black
+    isPausedPlayer2 = false
     const circleClass = document.getElementsByClassName('circle')
     for (var i = 0; i < circleClass.length; i++ )
       circleClass[i].style.backgroundColor = '#000000'
@@ -211,6 +264,7 @@ const startGame = () => {
   }
   else {
     // hover == white
+    isPausedPlayer1 = false
     const circleClass = document.getElementsByClassName('circle')
     for (var i = 0; i < circleClass.length; i++ )
       circleClass[i].style.backgroundColor = '#FFFFFF'
@@ -231,28 +285,13 @@ const addPown = (event) => {
     console.log('already clicked')
     return
   }
-  
-  // pawnCircle.style.opacity = "1"
-  // if (whoStartFirst) {
-  //   // add black pawn
-  //   const circleClass = document.getElementsByClassName('circle')
-  //   for (var i = 0; i < circleClass.length; i++ )
-  //     if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFFFFF' }
-  // }
-  // else {
-  //   // add white pawn
-  //   const circleClass = document.getElementsByClassName('circle')
-  //   for (var i = 0; i < circleClass.length; i++ )
-  //     if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000000' }
-  // }
-  // whoStartFirst = 1 - whoStartFirst
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
   const payload = {
     "player_move": {"x": coordinates[0], "y": coordinates[1]}
   }
   // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
   const data = {
-   "player_turn": "B",
+   "player_turn": "W",
    "IA_suggestion": false,
    "IA_move": {"x": 8, "y": 7},
    "IA_duration": 99,//xp streamez Jolagreen23
@@ -263,15 +302,109 @@ const addPown = (event) => {
    "black_capture": 2,
    "white_capture": 1,
    "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-   "status": "playing"
+   "status": "finished"
   }
+  // Handle response
+  if (data.status != 'playing')
+    return handleEndGame()
   if (data.error != null)
     console.log('Placement error')
   if (data.status != "playing")
     console.log('Fin')
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
+  if (timePerTurn != -1) {
+    clearInterval(currentRoundTimer)
+    createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
+  }
+  currentRoundTurn = data.player_turn
   fillGridWithList(data.board)
+  if (currentRoundTurn == 'B') {
+    // hover == black
+    const circleClass = document.getElementsByClassName('circle')
+    for (var i = 0; i < circleClass.length; i++ )
+    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000' }
+  }
+  else {
+    // hover == white
+    const circleClass = document.getElementsByClassName('circle')
+    for (var i = 0; i < circleClass.length; i++ )
+    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
+  }
 }
 
+const handleEndGame = () => {
+  clearInterval(timerPlayer1)
+  clearInterval(timerPlayer2)
+  clearInterval(currentRoundTimer)
+  document.removeEventListener('click', addPown)
+
+  // scoreboard.classList.add('hidden-important')
+  // document.getElementById('nav-bar').hidden = false
+}
+
+const secondsToMinSeconds = (count) => {
+  let minutes = Math.floor(count / 60);
+  let seconds = count - minutes * 60;
+  return [minutes, seconds]
+}
+
+const createCountdownPlayer1 = (count, timerDivId) => {
+  timerPlayer1 = setInterval(function() {
+    if (!isPausedPlayer1) {
+      count--;
+      const [minutes, seconds] = secondsToMinSeconds(count)
+      if (seconds < 10)
+        document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
+      else
+        document.getElementById(timerDivId).textContent = minutes + ':' + seconds
+      if (count === 0) {
+        clearInterval(timerPlayer1);
+        console.log("Time's up!");
+      }
+    }
+  }, 1000);
+}
+
+const createCountdownPlayer2 = (count, timerDivId) => {
+  timerPlayer2 = setInterval(function() {
+    if (!isPausedPlayer2) {
+      count--;
+      const [minutes, seconds] = secondsToMinSeconds(count)
+      if (seconds < 10)
+        document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
+      else
+        document.getElementById(timerDivId).textContent = minutes + ':' + seconds
+      if (count === 0) {
+        clearInterval(timerPlayer2);
+        console.log("Time's up!");
+      }
+    }
+  }, 1000);
+}
+
+const swapCurrentRound = () => {
+  // send ajax request with isTimeout = True
+  if (currentRoundTurn == 'B') {
+    currentRoundTurn = 'W'
+  }
+  else
+    currentRoundTurn = 'B'
+}
+
+const createCountdownForRound = (count, timerDivId) => {
+  currentRoundTimer = setInterval(function() {
+      count--;
+      if (count < 10)
+        document.getElementById(timerDivId).textContent = '00:0' + count
+      else
+        document.getElementById(timerDivId).textContent = '00:' + count
+      if (count === 0) {
+        clearInterval(currentRoundTimer);
+        swapCurrentRound()
+      }
+  }, 1000);
+}
 
 onMounted(() => {
   toggleGeneratorModal()
