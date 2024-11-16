@@ -30,10 +30,17 @@ def convert_xy_to_coordinate(x: int, y: int): # x = j | y = i
 		return None
 	return (f"{y_str}{x_str}")
 
+def calcul_distance_between_two_points(point1: tuple[int, int], point2: tuple[int, int]) -> float:
+	# d = √(x2 - x1)**2 + (y2 - y1)**2|
+	v1 = (point1[0] - point2[0]) ** 2
+	v2 = (point1[1] - point2[1]) ** 2
+	return (v1 + v2) ** 0.5
+
 if __name__ == "__main__":
 	# convert_coordinate_to_xy("D3")
 	# convert_coordinate_to_xy("D33")
 	# convert_coordinate_to_xy("3D")
 	# convert_coordinate_to_xy("3:D")
-	
-	print(convert_xy_to_coordinate(3, 5))
+	print(calcul_distance_between_two_points((0, 1), (-1, 3)))
+	# print(convert_xy_to_coordinate(3, 5))
+

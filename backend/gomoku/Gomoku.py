@@ -10,7 +10,7 @@
 from Colors import *
 import string
 import os
-from gomoku_utils import convert_coordinate_to_xy, convert_xy_to_coordinate
+from gomoku_utils import convert_coordinate_to_xy, convert_xy_to_coordinate, calcul_distance_between_two_points
 from little_gomoku_utils import convert_to_little_gomoku
 from gomoku_state import *
 from gomoku_rules import *
@@ -31,7 +31,7 @@ class PlacementError(Exception):
 
 class Gomoku:
 	def __init__(
-			self, board_size: tuple[int] = (19, 19),
+			self, board_size: tuple[int, int] = (19, 19),
 			IA: bool = True,
 			IA_suggestion: bool = False,
 			ia_against_ia: bool = False,
@@ -107,7 +107,7 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLACKB}  {RESET} "
+					content += f"{BLUEB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
@@ -220,7 +220,7 @@ class Gomoku:
 			return True
 		return False
 
-	def display_board(self, message: str = None, is_err: str = None, last_duration: str = None, all_informations: bool = False):
+	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False):
 		os.system("clear")
 		if (message != None):
 			print()
@@ -300,10 +300,16 @@ class Gomoku:
 				message = "PRO OPENING : You need to place the stone in south east."
 				is_err = True
 				continue
-			self.place_stone(placement)
-			self.switch_player_turn()
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
 			second_move = True
-			is_err = True
+			is_err = False
 
 		# THREE AWAY
 		message = "PRO OPENING : Place the stone at least three intersections away from the first stone."
@@ -322,16 +328,21 @@ class Gomoku:
 					prompt = f"{color} - Your Turn -> "
 				placement = input(prompt)
 
-			if convert_coordinate_to_xy(placement) not in south_east_coordinate:
+			convert_coordinate = convert_coordinate_to_xy(placement)
+
+			if calcul_distance_between_two_points(convert_coordinate, (9, 9)) <= 2:
 				message = "PRO OPENING : The stone must be placed at least three intersections away from the first stone."
 				is_err = True
 				continue
 
-			self.place_stone(placement)
-			self.switch_player_turn()
-			second_move = True
-		input()
-		pass
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
 	def opening_swap(self):
 		pass
 	def opening_swap2(self):
@@ -539,7 +550,7 @@ if __name__ == "__main__":
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		AGAINST_HUMAN = True
 		gomoku = Gomoku(
-			IA=True,
+			IA=False,
 			who_start="B", # Always Black
 			main_player="B",
 			save_game=False,
