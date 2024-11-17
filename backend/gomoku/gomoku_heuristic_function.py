@@ -1,5 +1,5 @@
-from gomoku_state import terminate_state, winner_found, critical_situation
-from gomoku_rules import count_all_three, count_free_three
+from gomoku_state import critical_situation
+from gomoku_rules import count_all_three
 from LittleGomoku import LittleGomoku
 
 def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int:

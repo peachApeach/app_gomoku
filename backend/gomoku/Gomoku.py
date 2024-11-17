@@ -50,6 +50,13 @@ class Gomoku:
 		self.ia_against_ia = ia_against_ia
 		self.IA_MAX_DEPTH = IA_MAX_DEPTH
 		self.main_player = main_player
+		self.who_start = who_start
+		self.player_turn = who_start
+		self.maximizing_player = who_start
+		self.minimizing_player = 'W' if who_start == 'B' else 'B'
+		self.settings = settings
+		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
+
 		if self.save_game == True:
 			i = 0
 			while True:
@@ -61,7 +68,6 @@ class Gomoku:
 					filename=f"./game_history/game_{i}.log",
 					filemode="w",
 					encoding="utf_8",
-					# format='entClass.py - %(asctime)s - %(levelname)s - %(message)s'
 					format=f'GameNumber : {i} - %(message)s'
 					)
 
@@ -70,8 +76,7 @@ class Gomoku:
 			logging.info(f"Game Info -> Allowed Win By Capture: {settings.allowed_win_by_capture}")
 			logging.info(f"Game Info -> Allowed Double Three: {settings.allowed_double_three}")
 
-
-
+		# Default score
 		self.black_capture = 0
 		self.white_capture = 0
 
@@ -87,15 +92,6 @@ class Gomoku:
 		self.free_four_black = 0
 		self.free_four_white = 0
 
-		self.who_start = who_start
-		self.player_turn = who_start
-		self.maximizing_player = who_start
-		self.minimizing_player = 'W' if who_start == 'B' else 'B'
-
-		self.settings = settings
-		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
-		# print(self.board)"x", "o", " ", "x"
-
 	def __str__(self) -> str:
 		content = "  "
 		for i in range(1, self.__board_width + 1):
@@ -108,7 +104,7 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLUEB}  {RESET} "
+					content += f"{BLACKB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
@@ -138,7 +134,7 @@ class Gomoku:
 		if j < 0 or j >= self.__board_width or i < 0 or i >= self.__board_height:
 			raise PlacementError("Your coordinates is out of the board.")
 
-		if force:
+		if force == True:
 			self.board[i][j] = self.get_player_turn() if stone == None else stone
 			return
 
@@ -163,8 +159,6 @@ class Gomoku:
 					self.board[cd2[0]][cd2[1]] = ' '
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
-				# self.board[i][j] = to_place
-
 				if self.settings.allowed_capture:
 					situation = critical_situation(self.board)
 					if situation[0] == True:
@@ -183,17 +177,8 @@ class Gomoku:
 						if after_placement_alignment['free_three_white'] - before_placement_alignment['free_three_white'] >= 2:
 							self.board[i][j] = ' '
 							raise PlacementError("Your coordinates will create a double-three, this is forbidden.")
-
-
-
 		else:
 			raise PlacementError("This slot is already use. Please choose an other.")
-
-		# if (stone == None):
-		# 	print("BEFORE")
-		# 	print(before_placement_alignment)
-		# 	print("AFTER")
-		# 	print(after_placement_alignment)
 
 		self.three_aligned_black += after_placement_alignment['three_aligned_black'] - before_placement_alignment['three_aligned_black']
 		self.three_aligned_white += after_placement_alignment['three_aligned_white'] - before_placement_alignment['three_aligned_white']
@@ -206,20 +191,6 @@ class Gomoku:
 
 		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
 		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
-
-	def remove_pairs(self):
-		value = remove_pair_capture(self.board)
-		if value:
-			if value['stone_attack'] == 'B':
-				self.black_capture += 1
-			else:
-				self.white_capture += 1
-			cd1 = value['coordinate_to_remove'][0]
-			cd2 = value['coordinate_to_remove'][1]
-			self.board[cd1[0]][cd1[1]] = ' '
-			self.board[cd2[0]][cd2[1]] = ' '
-			return True
-		return False
 
 	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False):
 		os.system("clear")
@@ -252,22 +223,16 @@ class Gomoku:
 			print(f"{BHWHITE}IA Reflexion Duration :{MAGB} {last_duration} {RESET}")
 		print()
 
-
-	def opening_standard(self):
-		pass
-
 	def opening_pro(self):
 		second_move = False
 		third_move = False
 		is_err = False
 		message = None
 
-
 		# MIDDLE J10 (9, 9)
 		self.place_stone("J10")
 		self.switch_player_turn()
 
-		# SOUTH-EAST : (K11, L12, M13, N14, O15, P16, Q17, R18, S19)
 		south_east = ("K11", "L12", "M13", "N14", "O15", "P16", "Q17", "R18", "S19")
 		south_east_coordinate = (
 			(10, 10),
@@ -345,7 +310,6 @@ class Gomoku:
 				message = "PRO OPENING : The stone must be placed at least three intersections away from the first stone."
 				is_err = True
 				continue
-
 			try:
 				self.place_stone(placement)
 				self.switch_player_turn()
@@ -385,7 +349,6 @@ class Gomoku:
 				else:
 					rdm_action = random.choice(opening_swap_get_actions(self.board))
 					placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
-
 			try:
 				self.place_stone(placement)
 				self.switch_player_turn()
@@ -465,19 +428,15 @@ class Gomoku:
 		for step in all_steps:
 			cut_step = step.split(":")
 			player = cut_step[-2][0]
-			# print(f"{player} : {cut_step[-1]}")
 			if player != self.player_turn:
 				self.switch_player_turn()
 
-			# if live_visualisation:
-			# 	print(f"{player} will move in {cut_step[-1]}")
 			self.place_stone(cut_step[-1])
 			if live_visualisation:
 				self.display_board()
 				print(f"{player} has placed in {cut_step[-1]}")
 				time.sleep(live_speed)
 			self.switch_player_turn()
-		# print(all_steps)
 
 
 	def handle_player(self) -> list:
@@ -565,62 +524,11 @@ class Gomoku:
 
 if __name__ == "__main__":
 	from gomoku_algorithm import minimax
-	from gomoku_heuristic_function import game_state
 	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku(ia_against_ia=False)
-		# go_simulate.read_a_game(3, -2)
 		go_simulate.read_a_game(31, -2, live_visualisation=False, live_speed=0.1)
-		# print(game_state(go_simulate))
-		go_simulate.place_stone("I7")
-		print(go_simulate)
-		exit(1)
-
-		# pair_choose = convert_to_little_gomoku(go_simulate).simulate_action((8, 12))
-		# print(pair_choose)
-		# print(game_state(pair_choose))
-
-		# five_align = convert_to_little_gomoku(go_simulate).simulate_action((11, 6))
-		# print(five_align)
-		# print(game_state(five_align))
-		# print(critical_situation(five_align.board))
-
-		# go_simulate.play()
-		# exit(1)
-
-		# LEFT
-		# go_simulate.place_stone("h7", "W")
-		# go_simulate.place_stone("j8", "B")
-		# go_simulate.place_stone("j7", "W")
-		# go_simulate.switch_player_turn()
-
-
-		# RIGHT
-		# go_simulate.place_stone("j8", "W")
-		# go_simulate.place_stone("f8", "B")
-		# go_simulate.place_stone("e8", "W")
-		# go_simulate.switch_player_turn()
-
-
-
-
-		# go_simulate.read_a_game(2, -5)
-		print(go_simulate)
-		print(go_simulate.settings.allowed_capture)
-		print(go_simulate.settings.allowed_win_by_capture)
-		print(go_simulate.settings.allowed_double_three)
-		print(go_simulate.player_turn)
-		print(go_simulate.maximizing_player)
-		print(go_simulate.minimizing_player)
-
-
-		littleGomoku = convert_to_little_gomoku(go_simulate)
-		result = minimax(gomoku=littleGomoku, MAX_DEPTH=3)
-		# littleGomoku.paint_actions(littleGomoku.get_actions())
-		print(littleGomoku)
-		# print(game_state(littleGomoku, True))
-		print(result)
 		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
@@ -634,74 +542,4 @@ if __name__ == "__main__":
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
 		gomoku.play(opening="pro")
-
-
-
-	# PAIRS TO BROKE
-	# gomoku.place_stone("B2", "B")
-	# gomoku.place_stone("C3", "B")
-	# gomoku.place_stone("E6", "B")
-	# gomoku.place_stone("E7", "B")
-	# gomoku.place_stone("O7", "B")
-
-	# gomoku.place_stone("D3", "W")
-	# gomoku.place_stone("H3", "W")
-	# gomoku.place_stone("I4", "W")
-	# gomoku.place_stone("I5", "W")
-	# gomoku.place_stone("H10", "W")
-
-	# ###########
-	# gomoku.place_stone("B2", "B")
-	# gomoku.place_stone("C3", "B")
-	# gomoku.place_stone("D5", "B")
-	# gomoku.place_stone("E5", "B")
-	# gomoku.place_stone("F6", "B")
-
-	# gomoku.place_stone("D3", "W")
-	# gomoku.place_stone("H3", "W")
-	# gomoku.place_stone("I4", "W")
-	# gomoku.place_stone("I5", "W")
-	# gomoku.place_stone("H10", "W")
-
-
-	# gomoku.place_stone("D4", "B")
-
-	# gomoku.place_stone("L11", "W")
-
-	# gomoku.place_stone("b2", "B")
-	# gomoku.place_stone("m4", "W")
-	# gomoku.place_stone("c3", "B")
-	# gomoku.place_stone("h3", "W")
-	# gomoku.place_stone("E6", "B")
-	# gomoku.place_stone("h8", "W")
-	# gomoku.place_stone("E7", "B")
-	# print(gomoku)
-
-
-	# gomoku.place_stone("E2", "B")
-	# gomoku.place_stone("E10", "W")
-	# gomoku.play()
-	# t = 3
-	# for i in range(10):
-	# 	if i % 2 == 0:
-	# 		gomoku.place_stone(f"C:{t}")
-	# 		t += 1
-	# 	else:
-	# 		gomoku.place_stone(f"I:{i + 1}")
-	# print()
-	# gomoku.place_stone("D3")
-	# gomoku.place_stone("D3")
-	# gomoku.place_stone("D4")
-	# gomoku.place_stone("D5")
-	# gomoku.place_stone("D6")
-	# gomoku.place_stone("D7")
-	# gomoku.place_stone("Z0")
-	# gomoku.place_stone((3, 2))
-	# gomoku.place_stone((3, 3))
-	# gomoku.place_stone((3, 4))
-	# gomoku.place_stone((3, 5))
-	# gomoku.place_stone((3, 6))
-	# print(gomoku)
-	# print(gomoku.get_player_turn())
-
 

@@ -1,18 +1,4 @@
-from gomoku_rules import is_free_three_no_doublons, is_three_aligned, switch_opponent
-
-def new_count_all_three(board: list[list[str]]):
-	for i in range(len(board)):
-		for j in range(len(board[i])):
-			stone = board[i][j]
-			if stone == " ":
-				is_free_three_no_doublons(board, i, j, "B")
-				pass
-			else:
-				is_three_aligned(board, i, j, "B")
-				pass
-	return
-
-
+from gomoku_rules import switch_opponent
 
 
 def check_alignment(row: list[str], stone: str, stone_count: int) -> bool:
@@ -56,30 +42,6 @@ def is_three_aligned(board: list[list[str]], i, j, stone):
 	except:
 		pass
 	return count
-
-
-
-def get_all_alignment(board: list[list[str]], i_stone: int, j_stone: int, stone: str):
-	"""
-	NEED TO RETURN THIS :
-	'free_four_black',
-	'free_four_white',
-	'four_aligned_black',
-	'four_aligned_white',
-	'free_three_black',
-	'free_three_white',
-	'three_aligned_black',
-	'three_aligned_white',
-	"""
-	range_i = len(board)
-	range_j= len(board[i_stone])
-	for i in range(range_i):
-		for j in range(range_j):
-			if board[i][j] != stone:
-				pass
-
-	pass
-
 
 """
 Si la couleur inverse de la stone (X -> Y) est au bord et unique, c'est un FREE, sinon c'est juste un alignment.
