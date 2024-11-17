@@ -8,6 +8,7 @@ import string
 import copy
 import time
 import os
+import random
 
 class LittleGomoku:
 
@@ -256,10 +257,8 @@ class LittleGomoku:
 		# iteration = 0
 		range_i, range_j = get_actions_range(self.board)
 		if range_i is None or range_j is None:
-			# range_i = range(5, 5)
-			# range_j = range(5, 5)
-			range_i = range(5, 5)
-			range_j = range(5, 5)
+			range_i = range(8, 11)
+			range_j = range(8, 11)
 		# print(range_i)
 		# print(range_j)
 		# for i in range(len(self.board)):
@@ -286,6 +285,8 @@ class LittleGomoku:
 		final_action = [(i[0], i[1]) for i in slot_no_filter]
 		if len(final_action) != 0:
 			return final_action
+		list_empty_slot = [(i, j) for i in range(8, 11) for j in range(8, 11) if self.board[i][j] == " "]
+		return [random.choice(list_empty_slot)]
 		return [(i, j) for i in range(8, 11) for j in range(8, 11)]
 		# print(slot_no_filter)
 		# print([(i[0], i[1]) for i in slot_no_filter])
@@ -366,7 +367,7 @@ if __name__ == "__main__":
 	measureTime = MeasureTime(start=True)
 	# actions = littleGomoku.get_actions()
 	# print(actions)
-	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=3)
+	score_state, optimal_move = minimax(gomoku=littleGomoku, MAX_DEPTH=3)
 	measureTime.stop()
 	print(f"Score {score_state} | Optimal Move {optimal_move}")
 	littleGomoku.board[optimal_move[0]][optimal_move[1]] = "??"

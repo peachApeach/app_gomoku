@@ -1,0 +1,10 @@
+GameNumber : 36 - Game Info -> Start: B
+GameNumber : 36 - Game Info -> Allowed Capture: True
+GameNumber : 36 - Game Info -> Allowed Win By Capture: True
+GameNumber : 36 - Game Info -> Allowed Double Three: True
+GameNumber : 36 - 2408ms       - Player    :B -> Move:i11
+GameNumber : 36 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 36 - 6960ms       - Player    :B -> Move:k11
+GameNumber : 36 - 15ms         - Player(IA):W -> Move:J11
+GameNumber : 36 - 5797ms       - Player    :B -> Move:j10
+GameNumber : 36 - 32ms         - Player(IA):W -> Move:L12

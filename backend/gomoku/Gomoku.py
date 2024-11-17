@@ -10,7 +10,7 @@
 from Colors import *
 import string
 import os
-from gomoku_utils import convert_coordinate_to_xy, convert_xy_to_coordinate
+from gomoku_utils import *
 from little_gomoku_utils import convert_to_little_gomoku
 from gomoku_state import *
 from gomoku_rules import *
@@ -21,6 +21,7 @@ from MeasureTime import MeasureTime
 import logging
 import re
 import time
+import random
 
 class GomokuError(Exception):
 	pass
@@ -29,7 +30,18 @@ class PlacementError(Exception):
 	pass
 
 class Gomoku:
-	def __init__(self, board_size: tuple[int] = (19, 19), IA: bool = True, IA_suggestion: bool = False, ia_against_ia: bool = False, who_start: str = 'B', save_game: bool = False, settings: GomokuSettings = GomokuSettings(), IA_MAX_DEPTH: int = 2):
+	def __init__(
+			self,
+			board_size: tuple[int, int] = (19, 19),
+			IA: bool = True,
+			IA_suggestion: bool = False,
+			ia_against_ia: bool = False,
+			who_start: str = 'B',
+			save_game: bool = False,
+			settings: GomokuSettings = GomokuSettings(),
+			IA_MAX_DEPTH: int = 2,
+			main_player: str = 'B',
+	):
 		self.IA = IA
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
@@ -37,6 +49,7 @@ class Gomoku:
 		self.save_game = save_game
 		self.ia_against_ia = ia_against_ia
 		self.IA_MAX_DEPTH = IA_MAX_DEPTH
+		self.main_player = main_player
 		if self.save_game == True:
 			i = 0
 			while True:
@@ -74,7 +87,7 @@ class Gomoku:
 		self.free_four_black = 0
 		self.free_four_white = 0
 
-
+		self.who_start = who_start
 		self.player_turn = who_start
 		self.maximizing_player = who_start
 		self.minimizing_player = 'W' if who_start == 'B' else 'B'
@@ -95,7 +108,7 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLACKB}  {RESET} "
+					content += f"{BLUEB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
@@ -208,7 +221,7 @@ class Gomoku:
 			return True
 		return False
 
-	def display_board(self, message: str = None, is_err: str = None, last_duration: str = None, all_informations: bool = False):
+	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False):
 		os.system("clear")
 		if (message != None):
 			print()
@@ -242,20 +255,183 @@ class Gomoku:
 
 	def opening_standard(self):
 		pass
+
 	def opening_pro(self):
-		pass
+		second_move = False
+		third_move = False
+		is_err = False
+		message = None
+
+
+		# MIDDLE J10 (9, 9)
+		self.place_stone("J10")
+		self.switch_player_turn()
+
+		# SOUTH-EAST : (K11, L12, M13, N14, O15, P16, Q17, R18, S19)
+		south_east = ("K11", "L12", "M13", "N14", "O15", "P16", "Q17", "R18", "S19")
+		south_east_coordinate = (
+			(10, 10),
+			(11, 11),
+			(12, 12),
+			(13, 13),
+			(14, 14),
+			(15, 15),
+			(16, 16),
+			(17, 17),
+			(18, 18),
+			(19, 19),
+		)
+		message = "PRO OPENING : Place the next stone in south east."
+		while not second_move:
+			self.display_board(message=message, is_err=is_err)
+			if self.ia_against_ia == True:
+				placement = random.choice(south_east[0:2])
+			else:
+				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
+				if self.IA == False:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Player 1 Turn -> "
+					else:
+						prompt = f"{color} - Player 2 Turn -> "
+					placement = input(prompt)
+				else:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Your Turn -> "
+						placement = input(prompt)
+					else:
+						placement = random.choice(south_east[0:2])
+
+			if convert_coordinate_to_xy(placement) not in south_east_coordinate:
+				message = "PRO OPENING : You need to place the stone in south east."
+				is_err = True
+				continue
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
+			second_move = True
+			is_err = False
+
+		# THREE AWAY
+		message = "PRO OPENING : Place the stone at least three intersections away from the first stone."
+		while not third_move:
+			self.display_board(message=message, is_err=is_err)
+			if self.ia_against_ia == True:
+				rdm_action = random.choice(opening_pro_get_actions(self.board))
+				placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
+			else:
+				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
+				if self.IA == False:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Player 1 Turn -> "
+					else:
+						prompt = f"{color} - Player 2 Turn -> "
+					placement = input(prompt)
+				else:
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Your Turn -> "
+						placement = input(prompt)
+					else:
+						rdm_action = random.choice(opening_pro_get_actions(self.board))
+						placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
+
+			convert_coordinate = convert_coordinate_to_xy(placement)
+
+			if calcul_distance_between_two_points(convert_coordinate, (9, 9)) <= 2:
+				message = "PRO OPENING : The stone must be placed at least three intersections away from the first stone."
+				is_err = True
+				continue
+
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+				third_move = True
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
 	def opening_swap(self):
-		pass
-	def opening_swap2(self):
-		pass
+		if self.ia_against_ia == True:
+			return
+		is_err = False
+		message = None
+
+		stone_placed = 0
+		message = "SWAP OPENING : First player places three stones."
+		while stone_placed < 3:
+			if is_err == False:
+				message = f"SWAP OPENING : First player places {3 - stone_placed} stone{'s' if 3 - stone_placed > 1 else ''}."
+				if stone_placed == 0 or stone_placed == 2:
+					message += " Black stone in your hands."
+				else:
+					message += " White stone in your hands."
+			self.display_board(message=message, is_err=is_err)
+
+			if self.IA == False:
+				if self.main_player == self.who_start:
+					prompt = "Opening - Player 1 Turn -> "
+				else:
+					prompt = "Opening - Player 2 Turn -> "
+				placement = input(prompt)
+			else:
+				if self.main_player == self.who_start:
+					prompt = f"Opening - Your Turn -> "
+					placement = input(prompt)
+				else:
+					rdm_action = random.choice(opening_swap_get_actions(self.board))
+					placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
+
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+				stone_placed += 1
+				is_err = False
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
+		message = "SWAP OPENING : Swap ?"
+		while True:
+			self.display_board(message=message, is_err=is_err)
+			if self.IA == False:
+				if self.main_player == self.who_start:
+					prompt = "Player 2, which color you want to play ? (b/w) -> "
+				else:
+					prompt = "Player 1, which color you want to play ? (b/w) -> "
+				user_choice = input(prompt).upper()
+			else:
+				if self.main_player != self.who_start:
+					user_choice = input("Which color you want to play ? (b/w) -> ")
+				else:
+					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
+					if score <= 0:
+						user_choice = self.minimizing_player
+					else:
+						user_choice = self.maximizing_player
+
+			if user_choice != "B" and user_choice != "W":
+				message = "Please enter a valid value -> (b/w)"
+				is_err = True
+				continue
+			else:
+				if self.main_player != self.who_start:
+					self.main_player = user_choice
+				else:
+					self.main_player = "B" if user_choice == "W" else "W"
+				break
 
 	def handle_opening(self, opening: str):
+		opening = opening.lower()
 		if opening == "pro":
 			self.opening_pro()
 		elif opening == "swap":
 			self.opening_swap()
-		elif opening == "swap2":
-			self.opening_swap2()
 
 	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
 		filename = f"./game_history/game_{n}.log"
@@ -303,9 +479,64 @@ class Gomoku:
 			self.switch_player_turn()
 		# print(all_steps)
 
-	def play(self, opening: str = "standard"):
+
+	def handle_player(self) -> list:
 		from gomoku_algorithm import minimax
 
+		color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
+		mt = MeasureTime(start=True)
+
+		# It's Human Turn
+		if self.ia_against_ia == False and (self.get_player_turn() == self.main_player or self.IA == False):
+			while True:
+				if self.ia_against_ia == True:
+					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+					user_placement = convert_xy_to_coordinate(move[1], move[0])
+				else:
+					if self.IA == False:
+						if self.main_player == self.get_player_turn():
+							prompt = f"{color} - Player 1 Turn -> "
+						else:
+							prompt = f"{color} - Player 2 Turn -> "
+					else:
+						prompt = f"{color} - Your Turn -> "
+					user_placement = input(prompt)
+				try:
+					self.place_stone(user_placement)
+					log_str_time = mt.stop(get_str=True, duration_only=True)
+
+					if self.save_game:
+						logging.info(f"{log_str_time.ljust(12)} - Player    :{self.get_player_turn()} -> Move:{user_placement}")
+
+					self.switch_player_turn()
+					break
+				except Exception as e:
+					message = str(e)
+					is_err = True
+					self.display_board(message=message, is_err=is_err)
+			last_duration = None
+		# It's IA Turn
+		else:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			last_duration = mt.stop(get_str=True, duration_only=True)
+			try:
+				self.place_stone(ia_placement)
+				if self.save_game:
+					logging.info(f"{last_duration.ljust(12)} - Player(IA):{self.get_player_turn()} -> Move:{ia_placement}")
+				self.switch_player_turn()
+				last_duration += f" | Score: {score} | Move: {ia_placement}"
+			except Exception as e:
+				print_error(e)
+				print(move)
+				print(ia_placement)
+				print(f"{BHRED}Sorry, the IA cannot continue the game, you win by forfeit...{RESET}")
+				exit(1)
+
+
+		return last_duration
+
+	def play(self, opening: str = "standard"):
 		is_err = False
 		message = None
 		last_duration = None
@@ -314,73 +545,7 @@ class Gomoku:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
 			self.display_board(message=message, last_duration=last_duration, is_err=is_err)
-			if self.get_player_turn() == "B": # Black turn, so player turn
-				# mt = MeasureTime(start=True)
-				log_mt = MeasureTime(start=True)
-				while True:
-					if self.ia_against_ia == True:
-						score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-						user_placement = convert_xy_to_coordinate(move[1], move[0])
-					else:
-						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
-					try:
-						self.place_stone(user_placement)
-						log_str_time = log_mt.stop(get_str=True, duration_only=True)
-
-						if self.save_game:
-							logging.info(f"{log_str_time.ljust(12)} - Player    :{self.get_player_turn()} -> Move:{user_placement}")
-
-						self.switch_player_turn()
-						break
-					except Exception as e:
-						message = str(e)
-						is_err = True
-						self.display_board(message=message, is_err=is_err)
-				last_duration = None
-				# self.display_board(message=message, last_duration=last_duration, is_err=is_err)
-				# exit(1)
-				# last_duration = mt.stop(get_str=True)
-
-			elif self.get_player_turn() == "W": # IA or 2 players turn
-				if self.IA == True or self.ia_against_ia == True:
-					# Handle IA
-					mt = MeasureTime(start=True)
-					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-					ia_placement = convert_xy_to_coordinate(move[1], move[0])
-					last_duration = mt.stop(get_str=True, duration_only=True)
-					try:
-						self.place_stone(ia_placement)
-						if self.save_game:
-							logging.info(f"{last_duration.ljust(12)} - Player(IA):{self.get_player_turn()} -> Move:{ia_placement}")
-						self.switch_player_turn()
-						last_duration += f" | Score: {score} | Move: {ia_placement}"
-					except Exception as e:
-						print_error(e)
-						print(move)
-						print(ia_placement)
-						print(f"{BHRED}Sorry, the IA cannot continue the game, you win by forfeit...{RESET}")
-						# print(score)
-						exit(1)
-				else:
-					log_mt = MeasureTime(start=True)
-					while True:
-						user_placement = input(f"{'Black' if self.get_player_turn() == 'B' else 'White'} Turn -> ")
-						try:
-							self.place_stone(user_placement)
-
-							log_str_time = log_mt.stop(get_str=True, duration_only=True)
-
-							if self.save_game:
-								logging.info(f"{log_str_time.ljust(12)} - Player    :{self.get_player_turn()} -> Move:{user_placement}")
-
-							self.switch_player_turn()
-							break
-						except Exception as e:
-							message = str(e)
-							is_err = True
-							self.display_board(message=message, is_err=is_err)
-			else:
-				raise GomokuError("Player turn error")
+			last_duration = self.handle_player()
 
 		if self.settings.allowed_capture:
 			if self.black_capture >= 5 or self.white_capture >= 5:
@@ -451,7 +616,7 @@ if __name__ == "__main__":
 
 
 		littleGomoku = convert_to_little_gomoku(go_simulate)
-		result = minimax(littleGomoku, MAX_DEPTH=3)
+		result = minimax(gomoku=littleGomoku, MAX_DEPTH=3)
 		# littleGomoku.paint_actions(littleGomoku.get_actions())
 		print(littleGomoku)
 		# print(game_state(littleGomoku, True))
@@ -462,12 +627,13 @@ if __name__ == "__main__":
 		AGAINST_HUMAN = True
 		gomoku = Gomoku(
 			IA=True,
-			who_start="B",
-			save_game=AGAINST_HUMAN,
+			who_start="B", # Always Black
+			main_player="B",
+			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
-		gomoku.play()
+		gomoku.play(opening="pro")
 
 
 
