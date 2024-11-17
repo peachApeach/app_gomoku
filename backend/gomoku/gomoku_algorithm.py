@@ -21,6 +21,7 @@ def minimax(
 	gomoku: LittleGomoku,
 	alpha: float = float("-inf"),
 	beta: float = float("+inf"),
+	actions: list[tuple[int]] = None,
 	DEPTH: int = 0,
 	MAX_DEPTH: int = 1
 ):
@@ -45,13 +46,15 @@ def minimax(
 		value = float('-inf')
 		best_action = None
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
-		for action in gomoku.get_actions():
+		if actions is None:
+			actions = gomoku.get_actions()
+		for action in actions:
 			try:
 				new_gomoku = gomoku.simulate_action(action)
 			except:
 				# print("Failed to simulate")
 				continue
-			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			state, r_action = minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
 			if state > value:
 				value = state
@@ -66,12 +69,14 @@ def minimax(
 		value = float('+inf')
 		best_action = None
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
-		for action in gomoku.get_actions():
+		if actions is None:
+			actions = gomoku.get_actions()
+		for action in actions:
 			try:
 				new_gomoku = gomoku.simulate_action(action)
 			except:
 				continue
-			state, r_action = minimax(new_gomoku, alpha, beta, DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			state, r_action = minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
 
 			if state < value:
 				value = state
@@ -225,7 +230,7 @@ if __name__ == "__main__":
 
 	print("Measure Minimax")
 	measureTime = MeasureTime(start=True)
-	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=4)
+	score_state, optimal_move = minimax(gomoku=littleGomoku, MAX_DEPTH=4)
 	measureTime.stop()
 
 	# print(littleGomoku.get_actions())

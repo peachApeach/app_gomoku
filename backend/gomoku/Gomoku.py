@@ -10,7 +10,7 @@
 from Colors import *
 import string
 import os
-from gomoku_utils import convert_coordinate_to_xy, convert_xy_to_coordinate, calcul_distance_between_two_points
+from gomoku_utils import *
 from little_gomoku_utils import convert_to_little_gomoku
 from gomoku_state import *
 from gomoku_rules import *
@@ -31,7 +31,8 @@ class PlacementError(Exception):
 
 class Gomoku:
 	def __init__(
-			self, board_size: tuple[int, int] = (19, 19),
+			self,
+			board_size: tuple[int, int] = (19, 19),
 			IA: bool = True,
 			IA_suggestion: bool = False,
 			ia_against_ia: bool = False,
@@ -284,7 +285,7 @@ class Gomoku:
 		while not second_move:
 			self.display_board(message=message, is_err=is_err)
 			if self.ia_against_ia == True:
-				placement = random.choice(south_east[0:5])
+				placement = random.choice(south_east[0:2])
 			else:
 				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
 				if self.IA == False:
@@ -292,9 +293,13 @@ class Gomoku:
 						prompt = f"{color} - Player 1 Turn -> "
 					else:
 						prompt = f"{color} - Player 2 Turn -> "
+					placement = input(prompt)
 				else:
-					prompt = f"{color} - Your Turn -> "
-				placement = input(prompt)
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Your Turn -> "
+						placement = input(prompt)
+					else:
+						placement = random.choice(south_east[0:2])
 
 			if convert_coordinate_to_xy(placement) not in south_east_coordinate:
 				message = "PRO OPENING : You need to place the stone in south east."
@@ -316,7 +321,8 @@ class Gomoku:
 		while not third_move:
 			self.display_board(message=message, is_err=is_err)
 			if self.ia_against_ia == True:
-				placement = random.choice(south_east[0:5])
+				rdm_action = random.choice(opening_pro_get_actions(self.board))
+				placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
 			else:
 				color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
 				if self.IA == False:
@@ -324,9 +330,14 @@ class Gomoku:
 						prompt = f"{color} - Player 1 Turn -> "
 					else:
 						prompt = f"{color} - Player 2 Turn -> "
+					placement = input(prompt)
 				else:
-					prompt = f"{color} - Your Turn -> "
-				placement = input(prompt)
+					if self.main_player == self.get_player_turn():
+						prompt = f"{color} - Your Turn -> "
+						placement = input(prompt)
+					else:
+						rdm_action = random.choice(opening_pro_get_actions(self.board))
+						placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
 
 			convert_coordinate = convert_coordinate_to_xy(placement)
 
@@ -415,7 +426,7 @@ class Gomoku:
 		if self.ia_against_ia == False and (self.get_player_turn() == self.main_player or self.IA == False):
 			while True:
 				if self.ia_against_ia == True:
-					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 					user_placement = convert_xy_to_coordinate(move[1], move[0])
 				else:
 					if self.IA == False:
@@ -442,7 +453,7 @@ class Gomoku:
 			last_duration = None
 		# It's IA Turn
 		else:
-			score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			last_duration = mt.stop(get_str=True, duration_only=True)
 			try:
@@ -541,7 +552,7 @@ if __name__ == "__main__":
 
 
 		littleGomoku = convert_to_little_gomoku(go_simulate)
-		result = minimax(littleGomoku, MAX_DEPTH=3)
+		result = minimax(gomoku=littleGomoku, MAX_DEPTH=3)
 		# littleGomoku.paint_actions(littleGomoku.get_actions())
 		print(littleGomoku)
 		# print(game_state(littleGomoku, True))
@@ -553,7 +564,7 @@ if __name__ == "__main__":
 		gomoku = Gomoku(
 			IA=False,
 			who_start="B", # Always Black
-			main_player="B",
+			main_player="W",
 			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,

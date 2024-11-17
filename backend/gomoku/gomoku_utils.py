@@ -36,6 +36,15 @@ def calcul_distance_between_two_points(point1: tuple[int, int], point2: tuple[in
 	v2 = (point1[1] - point2[1]) ** 2
 	return (v1 + v2) ** 0.5
 
+def opening_pro_get_actions(board: list[list[str]]) -> list[tuple[int]]:
+	actions = []
+	for i in range(len(board)):
+		for j in range(len(board[i])):
+			# (9, 9) = Center of the board
+			if 4 > calcul_distance_between_two_points((i, j), (9, 9)) > 2 and board[i][j] == " ":
+				actions.append((i, j))
+	return actions
+
 if __name__ == "__main__":
 	# convert_coordinate_to_xy("D3")
 	# convert_coordinate_to_xy("D33")

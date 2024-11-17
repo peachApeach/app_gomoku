@@ -366,7 +366,7 @@ if __name__ == "__main__":
 	measureTime = MeasureTime(start=True)
 	# actions = littleGomoku.get_actions()
 	# print(actions)
-	score_state, optimal_move = minimax(littleGomoku, MAX_DEPTH=3)
+	score_state, optimal_move = minimax(gomoku=littleGomoku, MAX_DEPTH=3)
 	measureTime.stop()
 	print(f"Score {score_state} | Optimal Move {optimal_move}")
 	littleGomoku.board[optimal_move[0]][optimal_move[1]] = "??"
