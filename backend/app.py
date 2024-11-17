@@ -32,6 +32,7 @@ REDIRECT_URI = 'http://127.0.0.1:8000/auth/callback'
 
 @flask_app.route('/')
 def index():
+    flask_app.logger.info('This is info output')
     if 'token' in session and session['token'] is not None:
         url = 'https://api.intra.42.fr/v2/me'
         headers = {
@@ -43,18 +44,18 @@ def index():
             data = {
                 'login': resultat['login']
             }
-            return render_template('index.html', user_data=data)
+            flask_app.logger.info('before redirect')
+            return redirect("http://localhost:5173/#/")
             # else:
             #     return render_template('whitelist.html')
         else:
             return render_template('login.html', error="Unable to fetch data from API")
-    else:
-        return render_template('login.html')
+    # else:
+    #     return render_template('login.html')
 
 @flask_app.route('/login')
 def login():
     auth_url = f'https://api.intra.42.fr/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code'
-    flask_app.logger.info('This is info output')
     return redirect(auth_url)
 
 @flask_app.route('/callback')
@@ -79,6 +80,7 @@ def auth_callback():
     token_json = token_response.json()
 
     try:
+        flask_app.logger.info('Add session cookie')
         session['token'] = token_json['access_token']
     except KeyError:
         return 'Access token not found in the response', 500
