@@ -30,7 +30,7 @@ def convert_to_little_gomoku(gomoku: Gomoku):
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 
-from gomoku_heuristic_function import game_state
+from algorithms.gomoku_heuristic_function import game_state
 
 
 

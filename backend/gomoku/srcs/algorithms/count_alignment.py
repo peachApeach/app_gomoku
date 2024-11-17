@@ -1,4 +1,4 @@
-from gomoku_rules import switch_opponent
+from rules.gomoku_rules import switch_opponent
 
 
 def check_alignment(row: list[str], stone: str, stone_count: int) -> bool:

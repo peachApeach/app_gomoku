@@ -7,17 +7,17 @@
 # Swap2 opening
 # https://en.wikipedia.org/wiki/Gomoku#Variants
 
-from Colors import *
+from utils.Colors import *
 import string
 import os
-from gomoku_utils import *
-from little_gomoku_utils import convert_to_little_gomoku
-from gomoku_state import *
-from gomoku_rules import *
-from my_utils import print_error
-from GomokuSettings import GomokuSettings
-from handle_alignment import count_all_alignment
-from MeasureTime import MeasureTime
+from utils.gomoku_utils import *
+from utils.little_gomoku_utils import convert_to_little_gomoku
+from algorithms.gomoku_state import *
+from rules.gomoku_rules import *
+from utils.my_utils import print_error
+from rules.GomokuSettings import GomokuSettings
+from algorithms.handle_alignment import count_all_alignment
+from utils.MeasureTime import MeasureTime
 import logging
 import re
 import time
@@ -60,12 +60,12 @@ class Gomoku:
 		if self.save_game == True:
 			i = 0
 			while True:
-				if os.path.isfile(f"./game_history/game_{i}.log"):
+				if os.path.isfile(f"../game_history/game_{i}.log"):
 					i += 1
 				else:
 					break
 			logging.basicConfig(level=logging.INFO,
-					filename=f"./game_history/game_{i}.log",
+					filename=f"../game_history/game_{i}.log",
 					filemode="w",
 					encoding="utf_8",
 					format=f'GameNumber : {i} - %(message)s'
@@ -397,7 +397,7 @@ class Gomoku:
 			self.opening_swap()
 
 	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
-		filename = f"./game_history/game_{n}.log"
+		filename = f"../game_history/game_{n}.log"
 		try:
 			with open(filename, "r") as f:
 				all_steps = f.read().splitlines()
@@ -440,7 +440,7 @@ class Gomoku:
 
 
 	def handle_player(self) -> list:
-		from gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax
 
 		color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
 		mt = MeasureTime(start=True)
@@ -523,7 +523,7 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	from gomoku_algorithm import minimax
+	from algorithms.gomoku_algorithm import minimax
 	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)

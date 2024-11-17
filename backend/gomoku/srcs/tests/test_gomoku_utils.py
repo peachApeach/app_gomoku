@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from gomoku_utils import *
+from utils.gomoku_utils import *
 
 def test_valid_convert_coordinate_to_xy():
 	assert convert_coordinate_to_xy("D3") == (2, 3)

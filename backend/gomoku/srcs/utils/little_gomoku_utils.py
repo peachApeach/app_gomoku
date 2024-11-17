@@ -96,8 +96,12 @@ def convert_to_little_gomoku(gomoku):
 
 
 if __name__ == "__main__":
+	import sys
+	import os
+	sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 	from Gomoku import Gomoku
-	from MeasureTime import MeasureTime
+	from utils.MeasureTime import MeasureTime
 	from LittleGomoku import LittleGomoku
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")

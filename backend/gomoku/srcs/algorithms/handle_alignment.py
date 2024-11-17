@@ -1,5 +1,5 @@
 import re
-from gomoku_rules import switch_opponent
+from rules.gomoku_rules import switch_opponent
 
 def type_of_alignment(row: list[str], stone: str):
 	opponent_stone = switch_opponent(stone)
@@ -119,8 +119,8 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 	}
 
 if __name__ == "__main__":
-	from Colors import *
-	from MeasureTime import MeasureTime
+	from utils.Colors import *
+	from utils.MeasureTime import MeasureTime
 	from Gomoku import Gomoku
 
 	gomoku = Gomoku()

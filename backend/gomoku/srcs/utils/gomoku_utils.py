@@ -1,6 +1,6 @@
 import string
 import re
-from little_gomoku_utils import get_actions_range
+from utils.little_gomoku_utils import get_actions_range
 
 def convert_coordinate_to_xy(coordinate: str) -> tuple[int] | None:
 	regex = r"(?:(?:(?P<y>[a-zA-Z])(?P<x>\d+))|(?:(?P<x_alt>\d+)(?P<y_alt>[a-zA-Z])))$"

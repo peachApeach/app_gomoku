@@ -1,4 +1,4 @@
-from GomokuSettings import GomokuSettings
+from rules.GomokuSettings import GomokuSettings
 
 def win_from_pos(board: list[list[str]], i, j) -> bool:
 	number_to_win = 5

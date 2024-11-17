@@ -1,9 +1,9 @@
-from GomokuSettings import GomokuSettings
-from little_gomoku_utils import get_actions_range, is_useful_placement
-from gomoku_rules import *
-from gomoku_state import *
+from rules.GomokuSettings import GomokuSettings
+from utils.little_gomoku_utils import get_actions_range, is_useful_placement
+from rules.gomoku_rules import *
+from algorithms.gomoku_state import *
 from Gomoku import Gomoku, PlacementError, count_all_alignment
-from Colors import *
+from utils.Colors import *
 import string
 import copy
 import time
@@ -205,8 +205,8 @@ class LittleGomoku:
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
-	from gomoku_algorithm import minimax
-	from MeasureTime import MeasureTime
+	from algorithms.gomoku_algorithm import minimax
+	from utils.MeasureTime import MeasureTime
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")
 	gomoku.place_stone("H7", "W")

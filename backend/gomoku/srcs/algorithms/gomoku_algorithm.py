@@ -1,6 +1,6 @@
-from gomoku_state import terminate_state
+from algorithms.gomoku_state import terminate_state
 from LittleGomoku import LittleGomoku
-from gomoku_heuristic_function import game_state
+from algorithms.gomoku_heuristic_function import game_state
 
 class GomokuIAError(Exception):
 	pass
@@ -92,7 +92,7 @@ def minimax(
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
-	from MeasureTime import MeasureTime
+	from utils.MeasureTime import MeasureTime
 	# PLACEMENT 1
 	# gomoku = Gomoku()
 	# gomoku.place_stone("G6", "B")

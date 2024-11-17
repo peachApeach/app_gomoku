@@ -1,5 +1,5 @@
 import time
-from Colors import *
+from utils.Colors import *
 
 class MeasureTime:
 	def __init__(self, start: bool = False):
