@@ -87,7 +87,7 @@ class Gomoku:
 		self.free_four_black = 0
 		self.free_four_white = 0
 
-
+		self.who_start = who_start
 		self.player_turn = who_start
 		self.maximizing_player = who_start
 		self.minimizing_player = 'W' if who_start == 'B' else 'B'
@@ -356,9 +356,79 @@ class Gomoku:
 				continue
 
 	def opening_swap(self):
-		pass
-	def opening_swap2(self):
-		pass
+		if self.ia_against_ia == True:
+			return
+		is_err = False
+		message = None
+
+		stone_placed = 0
+		message = "SWAP OPENING : First player places three stones."
+		while stone_placed < 3:
+			if is_err == False:
+				message = f"SWAP OPENING : First player places {3 - stone_placed} stone{'s' if 3 - stone_placed > 1 else ''}."
+				if stone_placed == 0 or stone_placed == 2:
+					message += " Black stone in your hands."
+				else:
+					message += " White stone in your hands."
+			self.display_board(message=message, is_err=is_err)
+
+			if self.IA == False:
+				if self.main_player == self.who_start:
+					prompt = "Opening - Player 1 Turn -> "
+				else:
+					prompt = "Opening - Player 2 Turn -> "
+				placement = input(prompt)
+			else:
+				if self.main_player == self.who_start:
+					prompt = f"Opening - Your Turn -> "
+					placement = input(prompt)
+				else:
+					rdm_action = random.choice(opening_swap_get_actions(self.board))
+					placement = convert_xy_to_coordinate(rdm_action[1], rdm_action[0])
+
+			try:
+				self.place_stone(placement)
+				self.switch_player_turn()
+				stone_placed += 1
+				is_err = False
+			except Exception as e:
+				message = e
+				is_err = True
+				continue
+
+		message = "SWAP OPENING : Swap ?"
+		while True:
+			self.display_board(message=message, is_err=is_err)
+			if self.IA == False:
+				if self.main_player == self.who_start:
+					prompt = "Player 2, which color you want to play ? (b/w) -> "
+				else:
+					prompt = "Player 1, which color you want to play ? (b/w) -> "
+				user_choice = input(prompt).upper()
+			else:
+				if self.main_player != self.who_start:
+					user_choice = input("Which color you want to play ? (b/w) -> ")
+				else:
+					# mt = MeasureTime(True)
+					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
+					if score <= 0:
+						user_choice = self.minimizing_player
+					else:
+						user_choice = self.maximizing_player
+					# mt.stop()
+					# print(score)
+					# exit(1)
+
+			if user_choice != "B" and user_choice != "W":
+				message = "Please enter a valid value -> (b/w)"
+				is_err = True
+				continue
+			else:
+				if self.main_player != self.who_start:
+					self.main_player = user_choice
+				else:
+					self.main_player = "B" if user_choice == "W" else "W"
+				break
 
 	def handle_opening(self, opening: str):
 		opening = opening.lower()
@@ -366,8 +436,6 @@ class Gomoku:
 			self.opening_pro()
 		elif opening == "swap":
 			self.opening_swap()
-		elif opening == "swap2":
-			self.opening_swap2()
 
 	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
 		filename = f"./game_history/game_{n}.log"
@@ -564,12 +632,12 @@ if __name__ == "__main__":
 		gomoku = Gomoku(
 			IA=False,
 			who_start="B", # Always Black
-			main_player="W",
+			main_player="B",
 			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
-		gomoku.play(opening="pro")
+		gomoku.play(opening="swap")
 
 
 

@@ -1,5 +1,6 @@
 import string
 import re
+from little_gomoku_utils import get_actions_range
 
 def convert_coordinate_to_xy(coordinate: str) -> tuple[int] | None:
 
@@ -42,6 +43,18 @@ def opening_pro_get_actions(board: list[list[str]]) -> list[tuple[int]]:
 		for j in range(len(board[i])):
 			# (9, 9) = Center of the board
 			if 4 > calcul_distance_between_two_points((i, j), (9, 9)) > 2 and board[i][j] == " ":
+				actions.append((i, j))
+	return actions
+
+def opening_swap_get_actions(board: list[list[str]]) -> list[tuple[int]]:
+	actions = []
+	range_i, range_j = get_actions_range(board)
+	if range_i is None or range_j is None:
+			range_i = range(7, 12)
+			range_j = range(7, 12)
+	for i in range_i:
+		for j in range_j:
+			if board[i][j] == " ":
 				actions.append((i, j))
 	return actions
 
