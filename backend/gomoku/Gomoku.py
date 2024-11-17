@@ -409,15 +409,11 @@ class Gomoku:
 				if self.main_player != self.who_start:
 					user_choice = input("Which color you want to play ? (b/w) -> ")
 				else:
-					# mt = MeasureTime(True)
 					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
 					if score <= 0:
 						user_choice = self.minimizing_player
 					else:
 						user_choice = self.maximizing_player
-					# mt.stop()
-					# print(score)
-					# exit(1)
 
 			if user_choice != "B" and user_choice != "W":
 				message = "Please enter a valid value -> (b/w)"
@@ -630,14 +626,14 @@ if __name__ == "__main__":
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		AGAINST_HUMAN = True
 		gomoku = Gomoku(
-			IA=False,
+			IA=True,
 			who_start="B", # Always Black
 			main_player="B",
 			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_MAX_DEPTH=2)
-		gomoku.play(opening="swap")
+		gomoku.play(opening="pro")
 
 
 
