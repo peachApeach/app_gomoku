@@ -230,7 +230,7 @@ const startGame = () => {
       "allowed_double_three": false
     },
     "opening": "standard",
-    "difficulty": "medium"
+    "difficulty": "medium",
     }
 
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
@@ -302,7 +302,7 @@ const addPown = (event) => {
    "black_capture": 2,
    "white_capture": 1,
    "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-   "status": "finished"
+   "status": "finished",
   }
   // Handle response
   if (data.status != 'playing')
@@ -383,13 +383,54 @@ const createCountdownPlayer2 = (count, timerDivId) => {
   }, 1000);
 }
 
-const swapCurrentRound = () => {
-  // send ajax request with isTimeout = True
-  if (currentRoundTurn == 'B') {
-    currentRoundTurn = 'W'
+const handlePlayerTimeout = () => {
+  // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
+  const payload = {
+    "player_move": {"x": coordinates[0], "y": coordinates[1]},
+    "is_timeout": true,
+    "player_timeout": currentRoundTurn,
   }
-  else
-    currentRoundTurn = 'B'
+  const data = {
+   "player_turn": "W",
+   "IA_suggestion": false,
+   "IA_move": {"x": 8, "y": 7},
+   "IA_duration": 99,//xp streamez Jolagreen23
+   "board": [
+      ["W", "B", " "],
+      [" ", " ", " "]
+   ],
+   "black_capture": 2,
+   "white_capture": 1,
+   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
+   "status": "finished"
+  }
+  // Handle response
+  if (data.status != 'playing')
+    return handleEndGame()
+  if (data.error != null)
+    console.log('Placement error')
+  if (data.status != "playing")
+    console.log('Fin')
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
+  if (timePerTurn != -1) {
+    clearInterval(currentRoundTimer)
+    createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
+  }
+  currentRoundTurn = data.player_turn
+  fillGridWithList(data.board)
+  if (currentRoundTurn == 'B') {
+    // hover == black
+    const circleClass = document.getElementsByClassName('circle')
+    for (var i = 0; i < circleClass.length; i++ )
+    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000' }
+  }
+  else {
+    // hover == white
+    const circleClass = document.getElementsByClassName('circle')
+    for (var i = 0; i < circleClass.length; i++ )
+    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
+  }
 }
 
 const createCountdownForRound = (count, timerDivId) => {
@@ -401,7 +442,7 @@ const createCountdownForRound = (count, timerDivId) => {
         document.getElementById(timerDivId).textContent = '00:' + count
       if (count === 0) {
         clearInterval(currentRoundTimer);
-        swapCurrentRound()
+        handlePlayerTimeout()
       }
   }, 1000);
 }
