@@ -9,7 +9,8 @@ export default defineConfig({
     vue(),
   ],
   define: {
-    'downloadProject': JSON.stringify("https://download-directory.github.io/?url=https://github.com/DevJ2K/template_webapp/tree/main/backend/project_name")
+    'downloadProject': JSON.stringify("https://download-directory.github.io/?url=https://github.com/DevJ2K/template_webapp/tree/main/backend/project_name"),
+    'authUrl': JSON.stringify("http://127.0.0.1:8000/auth/login"),
   },
   resolve: {
     alias: {

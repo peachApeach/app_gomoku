@@ -88,14 +88,14 @@ import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
-let gameId: Number
+let gameId: number
 
-let timerPlayer1: Number
-let timerPlayer2: Number
+let timerPlayer1: number
+let timerPlayer2: number
 
-let timePerTurn: Number
-let currentRoundTimer: Number
-let currentRoundTurn: String
+let timePerTurn: number
+let currentRoundTimer: number
+let currentRoundTurn: string
 
 let isPausedPlayer1 = true
 let isPausedPlayer2 = true
@@ -302,7 +302,7 @@ const addPown = (event) => {
    "black_capture": 2,
    "white_capture": 1,
    "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-   "status": "finished",
+   "status": "playing",
   }
   // Handle response
   if (data.status != 'playing')
@@ -343,13 +343,13 @@ const handleEndGame = () => {
   // document.getElementById('nav-bar').hidden = false
 }
 
-const secondsToMinSeconds = (count) => {
+const secondsToMinSeconds = (count: number) => {
   let minutes = Math.floor(count / 60);
   let seconds = count - minutes * 60;
   return [minutes, seconds]
 }
 
-const createCountdownPlayer1 = (count, timerDivId) => {
+const createCountdownPlayer1 = (count: number, timerDivId: string) => {
   timerPlayer1 = setInterval(function() {
     if (!isPausedPlayer1) {
       count--;
@@ -366,7 +366,7 @@ const createCountdownPlayer1 = (count, timerDivId) => {
   }, 1000);
 }
 
-const createCountdownPlayer2 = (count, timerDivId) => {
+const createCountdownPlayer2 = (count: number, timerDivId: string) => {
   timerPlayer2 = setInterval(function() {
     if (!isPausedPlayer2) {
       count--;
@@ -386,7 +386,7 @@ const createCountdownPlayer2 = (count, timerDivId) => {
 const handlePlayerTimeout = () => {
   // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
   const payload = {
-    "player_move": {"x": coordinates[0], "y": coordinates[1]},
+    "player_move": {"x": -1, "y": -1},
     "is_timeout": true,
     "player_timeout": currentRoundTurn,
   }
@@ -433,7 +433,7 @@ const handlePlayerTimeout = () => {
   }
 }
 
-const createCountdownForRound = (count, timerDivId) => {
+const createCountdownForRound = (count: number, timerDivId: string) => {
   currentRoundTimer = setInterval(function() {
       count--;
       if (count < 10)
