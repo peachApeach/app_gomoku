@@ -1,32 +1,39 @@
 #!/bin/python3
 
-from Gomoku import Gomoku
-from utils.Colors import *
+from srcs.Gomoku import Gomoku
+from srcs.utils.Colors import *
 import argparse
+import random
 
 def main():
-	parser = argparse.ArgumentParser(description="Train a model using the provided configuration.")
+	parser = argparse.ArgumentParser(description="Play Gomoku.")
 
 	parser.add_argument(
-		'-f', '--file',
+		'-p', '--player',
 		type=str,
-		required=True,
-		help="The configuration file for training the model."
+		default=random.choice(['B', 'W'])
 	)
+
 	parser.add_argument(
-		'-i', '--iterations',
+		'-i', '--ia',
 		type=int,
 		default=1000,
 		help=f"The number of iterations the AI will go through to train itself (default: 1000)."
 	)
 	parser.add_argument(
-		'-lr', '--learning-rate',
-		type=float,
-		default=0.01,
+		'-o', '--opening',
+		type=str,
+		default="standard",
 		help="The learning rate that influences how quickly the model converges (default: 0.01)."
 	)
 	parser.add_argument(
-		'-a', '--animate',
+		'-r', '--ia',
+		default=True,
+		action='store_true',
+		help="Enable animation of the training curves."
+	)
+	parser.add_argument(
+		'-r', '--replay',
 		action='store_true',
 		help="Enable animation of the training curves."
 	)
@@ -37,9 +44,9 @@ def main():
 		config_file = args.file
 		iterations = args.iterations
 		learning_rate = args.learning_rate
-		animate = args.animate
+		replay = args.replay
 
-		linearRegression = LinearRegression()
+		linearRegression = Gomoku()
 		linearRegression.train_model(
 			config_file=config_file,
 			iterations=iterations,
