@@ -7,6 +7,10 @@
 # Swap2 opening
 # https://en.wikipedia.org/wiki/Gomoku#Variants
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from utils.Colors import *
 import string
 import os
