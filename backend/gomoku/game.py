@@ -3,14 +3,10 @@
 from srcs.Gomoku import Gomoku
 from srcs.rules.GomokuSettings import GomokuSettings
 from srcs.utils.Colors import *
-import random
 from my_cli.CLI_OneSelection import CLI_OneSelection
 from my_cli.CLI_MultipleSelection import CLI_MultipleSelection
 
 def main():
-	# gomoku = Gomoku(main_player="W")
-	# gomoku.play()
-
 	cli_mode = CLI_OneSelection("Mode ?")
 	cli_mode.add_option("IA", "1 Player")
 	cli_mode.add_option("noIA", "2 Players")
@@ -69,6 +65,8 @@ def main():
 		error_msg += f"{BHRED}Name: {RED}{type(e).__name__}\n"
 		error_msg += f"{BHRED}Message: {RED}{e}\n"
 		print(error_msg)
+	except KeyboardInterrupt:
+		pass
 
 if __name__ == "__main__":
 	main()
