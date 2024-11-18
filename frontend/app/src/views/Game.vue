@@ -88,6 +88,7 @@ import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
+
 let gameId: number
 
 let timerPlayer1: number
@@ -118,6 +119,7 @@ const createGrid = () => {
   let counter = 0
   document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
+  gridParentDiv.classList.remove('hidden-important')
   for (let i = 0; i < 19; i++) {
     for (let j = 0; j < 19; j++) {
       const gridElement = document.createElement('div')
@@ -448,7 +450,16 @@ const createCountdownForRound = (count: number, timerDivId: string) => {
 }
 
 onMounted(() => {
+  document.getElementById('board').classList.add('hidden-important')
+  document.getElementById('scoreboard').classList.add('hidden-important')
   toggleGeneratorModal()
+});
+
+onUnmounted(() => {
+  clearInterval(timerPlayer1)
+  clearInterval(timerPlayer2)
+  clearInterval(currentRoundTimer)
+  document.getElementById('nav-bar').hidden = false
 });
 
 </script>
