@@ -126,16 +126,18 @@ app.add_middleware(
 	allow_headers=["*"],
 )
 
-@app.get("/")
-async def root():
-	return {
-		"response": 200,
-		"message": "API is working !"
-	}
+# @app.get("/")
+# async def root():
+# 	return {
+# 		"response": 200,
+# 		"message": "API is working !"
+# 	}
 
 @app.post("/game/new")
 async def new_game(body: NewGameModel):
-	pass
+	return {
+		'response': "cool"
+	}
 
 @app.post("/game/{game_id}/move")
 async def play_move(game_id: int, body: MoveModel):
