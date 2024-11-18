@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from handle_alignment import alignment_streaks
+from algorithms.handle_alignment import alignment_streaks
 
 def test_alignment_streaks():
 	"""

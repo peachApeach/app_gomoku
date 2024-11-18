@@ -1,23 +1,17 @@
 import string
 import re
-from little_gomoku_utils import get_actions_range
+from utils.little_gomoku_utils import get_actions_range
 
 def convert_coordinate_to_xy(coordinate: str) -> tuple[int] | None:
-
-	# regex = r"([A-Z]:\d+)|(\d+:[A-Z])"
 	regex = r"(?:(?:(?P<y>[a-zA-Z])(?P<x>\d+))|(?:(?P<x_alt>\d+)(?P<y_alt>[a-zA-Z])))$"
 	match_coordinate = re.match(regex, coordinate)
 	if match_coordinate:
-		# print(match_coordinate)
-		# print(match_coordinate.group("x"))
-		# print(match_coordinate.group("y"))
 		x = match_coordinate.group("x") or match_coordinate.group("x_alt")
 		y = match_coordinate.group("y") or match_coordinate.group("y_alt")
 		if y.islower():
 			y = string.ascii_lowercase.find(y)
 		else:
 			y = string.ascii_uppercase.find(y)
-		# print(f"x:{x}, y:{y}")
 		return (int(x) - 1, int(y))
 	else:
 		# print("Not found.")

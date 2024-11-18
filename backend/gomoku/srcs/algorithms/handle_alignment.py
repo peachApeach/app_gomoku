@@ -1,5 +1,5 @@
 import re
-from gomoku_rules import switch_opponent
+from rules.gomoku_rules import switch_opponent
 
 def type_of_alignment(row: list[str], stone: str):
 	opponent_stone = switch_opponent(stone)
@@ -15,17 +15,6 @@ def type_of_alignment(row: list[str], stone: str):
 		return 'align', row.count(stone)
 
 def alignment_streaks(line: str):
-	"""
-	NEED TO RETURN THIS :
-	'free_four_black',
-	'free_four_white',
-	'four_aligned_black',
-	'four_aligned_white',
-	'free_three_black',
-	'free_three_white',
-	'three_aligned_black',
-	'three_aligned_white',
-	"""
 	all_streaks = {
 		'free_four_black': 0,
 		'free_four_white': 0,
@@ -73,47 +62,35 @@ def alignment_streaks(line: str):
 					all_streaks['three_aligned_black'] += 1
 				elif number == 4:
 					all_streaks['four_aligned_black'] += 1
-
 	return all_streaks
 
 def count_horizontal(board: list[list[str]], i: int):
 	line = ""
 	for j in range(len(board[i])):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_vertical(board: list[list[str]], j: int):
 	line = ""
 	for i in range(len(board)):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
 	return alignment_streaks(line)
 
 def count_diagonal_1(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j < len(board[i]):
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
 		i += 1
 		j += 1
 	return alignment_streaks(line)
-
 
 def count_diagonal_2(board: list[list[str]], i: int, j: int):
 	line = ""
 	while i < len(board) and j >= 0:
 		line += board[i][j]
-		# if board[i][j] == " ":
-		# 	board[i][j] = "??"
 		i += 1
 		j -= 1
 	return alignment_streaks(line)
-
-import copy
 
 def count_all_alignment(board: list[list[str]], i: int, j: int):
 	dict_horizontal = count_horizontal(board, i)
@@ -132,55 +109,18 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 		tmp_i -= 1
 		tmp_j += 1
 	dict_diagonal_2 = count_diagonal_2(board, tmp_i, tmp_j)
-
-	# print({k:
-	#   dict_horizontal.get(k, 0)
-	# + dict_vertical.get(k, 0)
-	# + dict_diagonal_1.get(k, 0)
-	# + dict_diagonal_2.get(k, 0)
-	# for k in set(dict_horizontal)})
-	return {k:
-	  dict_horizontal.get(k, 0)
-	+ dict_vertical.get(k, 0)
-	+ dict_diagonal_1.get(k, 0)
-	+ dict_diagonal_2.get(k, 0)
-	for k in set(dict_horizontal)}
 	return {
-		'free_four_black': 0,
-		'free_four_white': 0,
-
-		'four_aligned_black': 0,
-		'four_aligned_white': 0,
-
-		'free_three_black': 0,
-		'free_three_white': 0,
-
-		'three_aligned_black': 0,
-		'three_aligned_white': 0,
+		k:
+		dict_horizontal.get(k, 0)
+		+ dict_vertical.get(k, 0)
+		+ dict_diagonal_1.get(k, 0)
+		+ dict_diagonal_2.get(k, 0)
+		for k in set(dict_horizontal)
 	}
-	# board[i][j] = "B"
-
-
-	count_horizontal(board, i)
-	count_vertical(board, j)
-	tmp_i = i
-	tmp_j = j
-
-	while tmp_i > 0 and tmp_j > 0:
-		tmp_i -= 1
-		tmp_j -= 1
-	count_diagonal_1(board, tmp_i, tmp_j)
-
-	tmp_i = i
-	tmp_j = j
-	while tmp_i > 0 and tmp_j < len(board[0]):
-		tmp_i -= 1
-		tmp_j += 1
-	count_diagonal_2(board, tmp_i, tmp_j)
 
 if __name__ == "__main__":
-	from Colors import *
-	from MeasureTime import MeasureTime
+	from utils.Colors import *
+	from utils.MeasureTime import MeasureTime
 	from Gomoku import Gomoku
 
 	gomoku = Gomoku()
