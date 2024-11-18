@@ -1,7 +1,6 @@
 import requests
 
-url = 'https://www.w3schools.com/python/demopage.php'
-myobj = {'somekey': 'somevalue'}
+url = 'http://127.0.0.1:8000/game/new'
 
 game_new_json = {
 	"mode": "hotseat",
@@ -9,10 +8,12 @@ game_new_json = {
 	"IA_suggestion": True,
 	"options": {
 		"allowed_capture": True,
-		# "allowed_b"
-	}
+		"allowed_win_by_capture": True,
+		"allowed_double_three": False
+	},
+	"opening": "standard"
 }
 
-x = requests.post(url, json = myobj)
+x = requests.post(url, json = game_new_json)
 
-print(x.text)
+print(x.json())
