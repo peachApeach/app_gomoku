@@ -119,7 +119,7 @@ const createGrid = () => {
   let counter = 0
   document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
-  gridParentDiv.classList.remove('hidden-important')
+  gridParentDiv.innerHTML = ""
   for (let i = 0; i < 19; i++) {
     for (let j = 0; j < 19; j++) {
       const gridElement = document.createElement('div')
@@ -158,6 +158,7 @@ const createGrid = () => {
       counter++
     }
   }
+  gridParentDiv.classList.remove('hidden-important')
 }
 
 const fillGridWithList = (list: any) => {

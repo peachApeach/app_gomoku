@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
-from flask import Flask, request
+from flask import Flask, request, make_response
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse, HTMLResponse
@@ -19,10 +19,10 @@ flask_app = Flask(__name__)
 logging.basicConfig(filename='flask.log', level=logging.DEBUG)
 
 flask_app.config['SESSION_TYPE'] = 'filesystem'
-flask_app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-flask_app.config['SESSION_COOKIE_SECURE'] = True
-flask_app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+flask_app.config['TEMPLATES_AUTO_RELOAD'] = True
+# flask_app.config['SESSION_COOKIE_SECURE'] = True
+# flask_app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 Session(flask_app)
 
@@ -45,11 +45,14 @@ def index():
                 'login': resultat['login']
             }
             flask_app.logger.info('before redirect')
-            return redirect("http://localhost:5173/#/")
+            resp = make_response(redirect('http://localhost:5173/#/'))
+            resp.set_cookie('token', session['token'], secure=False)
+            return resp
+            # return redirect('http://localhost:5173/#/')
             # else:
             #     return render_template('whitelist.html')
-        else:
-            return render_template('login.html', error="Unable to fetch data from API")
+        # else:
+        #     return render_template('login.html', error="Unable to fetch data from API")
     # else:
     #     return render_template('login.html')
 
@@ -90,6 +93,13 @@ def auth_callback():
 def logout():
     session.pop('token', None)
     return redirect(url_for('ranking'))
+
+@flask_app.route('/get-cookie/')
+def get_cookie():
+    if 'token' in session:
+        return 'token'
+    else:
+        return 'notfound'
 
 # Import my package
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'gomoku')))
