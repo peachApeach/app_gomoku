@@ -61,15 +61,17 @@ class Gomoku:
 		self.settings = settings
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
 
+		self.game_history_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "game_history")
 		if self.save_game == True:
 			i = 0
 			while True:
-				if os.path.isfile(f"../game_history/game_{i}.log"):
+				game_history_file = os.path.join(self.game_history_path, f"game_{i}.log")
+				if os.path.isfile(game_history_file):
 					i += 1
 				else:
 					break
 			logging.basicConfig(level=logging.INFO,
-					filename=f"../game_history/game_{i}.log",
+					filename=game_history_file,
 					filemode="w",
 					encoding="utf_8",
 					format=f'GameNumber : {i} - %(message)s'
@@ -324,6 +326,7 @@ class Gomoku:
 				continue
 
 	def opening_swap(self):
+		from algorithms.gomoku_algorithm import minimax
 		if self.ia_against_ia == True:
 			return
 		is_err = False
@@ -374,7 +377,7 @@ class Gomoku:
 				user_choice = input(prompt).upper()
 			else:
 				if self.main_player != self.who_start:
-					user_choice = input("Which color you want to play ? (b/w) -> ")
+					user_choice = input("Which color you want to play ? (b/w) -> ").upper()
 				else:
 					score, move = minimax(convert_to_little_gomoku(self), MAX_DEPTH=2)
 					if score <= 0:
@@ -401,7 +404,7 @@ class Gomoku:
 			self.opening_swap()
 
 	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
-		filename = f"../game_history/game_{n}.log"
+		filename = os.path.join(self.game_history_path, f"game_{n}.log")
 		try:
 			with open(filename, "r") as f:
 				all_steps = f.read().splitlines()
