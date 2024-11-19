@@ -1,6 +1,8 @@
 *__pycache__
 *env
 *venv
+flask_session
+flask.log
 .DS_Store
 .pytest_cache
 flask.log

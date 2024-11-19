@@ -1,5 +1,5 @@
 <template>
-	<div class=" fixed top-0 z-50 w-full">
+	<div id="nav-bar" class="fixed top-0 z-50 w-full">
 		<div id="navBar" class="my-scroll-nav my-scroll-nav-active">
 			<div id="navMenu"
 				class="absolute top-0 h-screen w-full -translate-x-full transition-transform duration-500 md:hidden">
@@ -44,7 +44,7 @@
 						<!-- <h1 id="gomokuText" class="text-outline text-2xl font-black">GomokuGame</h1> -->
 					</div>
 				</div>
-				<ul class="dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-end gap-8 text-lg font-semibold max-md:hidden">
+				<ul class="dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-end gap-10 text-lg font-semibold max-md:hidden">
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
 							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
@@ -66,10 +66,14 @@
 						<span class="animate-underline"></span>
 
 					</li>
-					<a :href="downloadLink" target="_blank"
+					<!-- <a :href="downloadLink" target="_blank"
 						class="border-accent-color text-high-contrast-text hover:bg-accent-color dark:text-d-high-contrast-text group flex flex-row items-center gap-1.5 rounded-full border-2 px-6 py-2 transition-colors">
 						<DownloadSvg svg-class="text-high-contrast-text size-5 group-hover:text-white transition-colors"/>
 						<span class=" font-semibold transition-colors group-hover:text-white">Download</span>
+					</a> -->
+					<a :href="authLink"
+						class="border-accent-color text-high-contrast-text hover:bg-accent-color dark:text-d-high-contrast-text group flex flex-row items-center gap-1.5 rounded-full border-2 px-6 py-2 transition-colors">
+						<span class=" font-semibold transition-colors group-hover:text-white">Login</span>
 					</a>
 				</ul>
 
@@ -91,6 +95,7 @@ import DownloadSvg from '../svg/DownloadSvg.vue';
 const displayMenu = ref(false);
 const router = useRouter();
 const downloadLink = downloadProject;
+const authLink = authUrl;
 
 const toggleMenu = () => {
 
@@ -137,6 +142,21 @@ const routerTo = (link: String, hideMenu = true) => {
 		toggleMenu();
 	}
 	router.push(`${link}`);
+}
+
+const login = async () => {
+	try {
+		const response = await fetch('http://127.0.0.1:8000/auth/login', {
+			method: "GET",
+		});
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const json = await response.json();
+		return json
+	} catch (error: any) {
+		console.error(error.message);
+  }
 }
 
 </script>
