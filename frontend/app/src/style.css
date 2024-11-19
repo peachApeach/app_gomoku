@@ -33,7 +33,7 @@
 
 
 .animate-underline {
-	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-accent-color transition-all group-hover:w-full dark:bg-d-accent-color;
+	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-amber-400 transition-all group-hover:w-full;
 }
 
 .text-outline {

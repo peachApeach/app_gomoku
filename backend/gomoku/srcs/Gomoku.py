@@ -550,16 +550,55 @@ class Gomoku:
 			except Exception:
 				return None
 
-	def apply_move(self, x: int, y: int) -> str | None:
+	def apply_move(self, x: int, y: int) -> dict:
 		from algorithms.gomoku_algorithm import minimax
+		final_dict = {
+			'message': None,
+			'status': 'playing',
+			'IA_duration': None,
+			'IA_suggestion': None
+		}
 		user_placement = convert_xy_to_coordinate(x, y)
 		self.place_stone(user_placement)
 		self.switch_player_turn()
+
+		if terminate_state(self.board, self.black_capture, self.white_capture, self.settings):
+			final_dict['status'] = 'finished'
+
+			if self.settings.allowed_capture:
+				if self.black_capture >= 5 or self.white_capture >= 5:
+					has_winner = True
+					who_win = "B" if self.black_capture >= 5 else "W"
+				else:
+					has_winner, who_win = winner_found(self.board)
+			else:
+				has_winner, who_win = critical_situation(self.board)
+			is_err = False
+			if has_winner:
+				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game !"
+			else:
+				final_dict['message'] = "No one has won. It's a perfect tie !"
+
+
+			return final_dict
+
+
+
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			self.place_stone(ia_placement)
 			self.switch_player_turn()
+		else:
+			if self.get_player_turn() == self.main_player and self.IA == True:
+				final_dict['message'] = "It's your turn !"
+			else:
+				final_dict['message'] = f"It's {'white' if self.get_player_turn() == 'W' else 'black'} turn !"
+
+			return final_dict
+
 
 
 	def timeout(self):

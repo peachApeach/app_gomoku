@@ -273,7 +273,7 @@ async def new_game(body: NewGameModel):
 
 @app.post("/game/{game_id}/move", status_code=status.HTTP_200_OK)
 async def play_move(game_id: str, body: MoveModel):
-	gomoku = all_games.get(game_id)
+	gomoku = all_games[game_id]
 	if gomoku is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
 
@@ -285,19 +285,18 @@ async def play_move(game_id: str, body: MoveModel):
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided coordinates are invalid. Please check the coordinates and try again.")
 
 	try:
-		gomoku.apply_move(x, y)
+		after_move_dict = gomoku.apply_move(x, y)
 	except Exception as e:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 	return {
 		"player_turn": gomoku.player_turn,
-		"IA_suggestion": False,
-		"IA_move": None,
-		"IA_duration": 99,
+		"IA_suggestion": after_move_dict['IA_suggestion'],
+		"IA_duration": after_move_dict['IA_duration'],
 		"board": gomoku.board,
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
-		"error": None,
-		"status": "playing" if terminate_state(gomoku.board, gomoku.black_capture, gomoku.white_capture, gomoku.settings) == False else "finished"
+		"message": after_move_dict['message'],
+		"status": after_move_dict['status']
 	}
 
 @app.post("/game/{game_id}/timeout")

@@ -63,7 +63,7 @@ Response example:
 ```json
 {
    "player_turn": "B",
-   "IA_suggestion": False,
+   "IA_suggestion": null, // {"x": 8, "y": 7}
    "IA_move": {"x": 8, "y": 7},
    "IA_duration": 99,//xp streamez Jolagreen23
    "board": [
@@ -73,7 +73,7 @@ Response example:
    ],
    "black_capture": 2,
    "white_capture": 1,
-   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
+   "message": null,
    "status": "playing"
 }
 ```
