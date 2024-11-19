@@ -533,6 +533,39 @@ class Gomoku:
 		self.display_board(message=message, is_err=is_err)
 
 
+	def run(self):
+		from algorithms.gomoku_algorithm import minimax
+
+		# It's Human Turn
+		if self.get_player_turn() == self.main_player or self.IA == False:
+			return self.board
+		# It's IA Turn
+		else:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			try:
+				self.place_stone(ia_placement)
+				self.switch_player_turn()
+				return self.board
+			except Exception:
+				return None
+
+	def apply_move(self, x: int, y: int) -> str | None:
+		from algorithms.gomoku_algorithm import minimax
+		user_placement = convert_xy_to_coordinate(x, y)
+		self.place_stone(user_placement)
+		self.switch_player_turn()
+		if self.get_player_turn() != self.main_player and self.IA == True:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			self.place_stone(ia_placement)
+			self.switch_player_turn()
+
+
+	def timeout(self):
+		pass
+
+
 if __name__ == "__main__":
 	from algorithms.gomoku_algorithm import minimax
 	SIMULATION = False

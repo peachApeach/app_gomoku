@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, status, HTTPException
 from fastapi.middleware.wsgi import WSGIMiddleware
 from flask import Flask, request, make_response
 from pydantic import BaseModel
@@ -8,14 +8,14 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from flask import Flask, redirect, url_for, request, session, render_template
 import logging
 from flask_session import Session
-import requests
-from fastapi.responses import RedirectResponse, HTMLResponse
-from flask import Flask, redirect, url_for, request, session, render_template
-import logging
-from flask_session import Session
+from gomoku.srcs.Gomoku import Gomoku
+from gomoku.srcs.algorithms.gomoku_state import terminate_state
+from gomoku.srcs.rules.GomokuSettings import GomokuSettings
 import requests
 import sys
 import os
+import time
+import random
 
 load_dotenv()
 
@@ -203,14 +203,12 @@ class NewGameModel(BaseModel):
 
 class MoveModel(BaseModel):
 	player_move: dict[str, int]
-	pass
 
 class TimeoutModel(BaseModel):
 	who_timeout: str
 
 
 app = FastAPI()
-router = APIRouter()
 router = APIRouter()
 
 app.add_middleware(
@@ -228,18 +226,82 @@ app.add_middleware(
 # 		"message": "API is working !"
 # 	}
 
+
+all_games: dict[str, Gomoku] = {}
+
 @app.post("/game/new")
 async def new_game(body: NewGameModel):
+	game_id = str(int(time.time()))
+	while all_games.get(game_id) != None:
+		game_id += str(random.randint(0, 9))
+	print(game_id)
+	IA = True if body.mode == "ia" else False
+	opts = body.options
+
+	allowed_capture = opts.get("allowed_capture")
+	allowed_win_by_capture = opts.get("allowed_win_by_capture")
+	allowed_double_three = opts.get("allowed_double_three")
+
+	if allowed_capture is None or allowed_win_by_capture is None or allowed_double_three is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided options are invalid. Please check the format and try again.")
+
+
+	main_player = body.main_player
+
+	all_games[game_id] = Gomoku(
+		IA=IA,
+		IA_suggestion=body.IA_suggestion,
+		settings=GomokuSettings(
+			allowed_capture=allowed_capture,
+			allowed_win_by_capture=allowed_win_by_capture,
+			allowed_double_three=allowed_double_three
+		),
+		main_player=main_player
+	)
+
+	board = all_games[game_id].run()
+	if board == None:
+		raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry, the IA cannot continue the game, you win by forfeit...")
+
 	return {
-		'response': "cool"
+		"game_id": game_id,
+		"player_turn": all_games[game_id].player_turn,
+		"IA_suggestion": body.IA_suggestion,
+		"board": board,
+		"message": "..."
 	}
 
-@app.post("/game/{game_id}/move")
-async def play_move(game_id: int, body: MoveModel):
-	pass
+@app.post("/game/{game_id}/move", status_code=status.HTTP_200_OK)
+async def play_move(game_id: str, body: MoveModel):
+	gomoku = all_games.get(game_id)
+	if gomoku is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
+
+
+	x = body.player_move.get("x")
+	y = body.player_move.get("y")
+
+	if x is None or y is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided coordinates are invalid. Please check the coordinates and try again.")
+
+	try:
+		gomoku.apply_move(x, y)
+	except Exception as e:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+	return {
+		"player_turn": gomoku.player_turn,
+		"IA_suggestion": False,
+		"IA_move": None,
+		"IA_duration": 99,
+		"board": gomoku.board,
+		"black_capture": gomoku.black_capture,
+		"white_capture": gomoku.white_capture,
+		"error": None,
+		"status": "playing" if terminate_state(gomoku.board, gomoku.black_capture, gomoku.white_capture, gomoku.settings) == False else "finished"
+	}
 
 @app.post("/game/{game_id}/timeout")
-async def timeout(game_id: int, body: TimeoutModel):
+async def timeout(game_id: str, body: TimeoutModel):
 	pass
 
 app.mount("/auth", WSGIMiddleware(flask_app))
