@@ -263,12 +263,19 @@ async def new_game(body: NewGameModel):
 	if board == None:
 		raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry, the IA cannot continue the game, you win by forfeit...")
 
+	gomoku = all_games[game_id]
+	if gomoku.IA == True:
+		message = f"It's your turn !"
+	else:
+		message = f"It's {'white' if gomoku.get_player_turn() == 'W' else 'black'} turn !"
+
+
 	return {
 		"game_id": game_id,
 		"player_turn": all_games[game_id].player_turn,
 		"IA_suggestion": body.IA_suggestion,
 		"board": board,
-		"message": "..."
+		"message": message
 	}
 
 @app.post("/game/{game_id}/move", status_code=status.HTTP_200_OK)

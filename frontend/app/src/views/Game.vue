@@ -18,12 +18,27 @@
           </div>
         </div>
       </div>
-      <div id="message" class="text-center text-lg font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
+      <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid grid-cols-19 grid-rows-19">
       </div>
     </div>
   </main>
+
+
+  <Modal :modal-active="endGameModalActive" @close-modal="toggleEndGameModal">
+    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">End Game</h1>
+    <p class="mb-5 text-center text-xl font-bold text-white">{{ message }}</p>
+    <!-- <div>
+      <p class="text-center text-base font-bold text-white">Black has captured 3 white stones.</p>
+      <p class="text-center text-base font-bold text-white">White has captured 3 black stones.</p>
+    </div> -->
+    <div class="mt-6 flex w-full items-center justify-center">
+      <button type="button" class="mb-2 me-2 rounded-lg bg-yellow-700 px-5 py-2.5 text-base font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-900" @click="replayGame">Replay</button>
+    </div>
+  </Modal>
+
+
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
     <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">
       Paramètres</h1>
@@ -90,6 +105,7 @@ import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
+const endGameModalActive = ref(false)
 
 const message = ref<string | null>(null);
 const isError = ref<boolean>(true);
@@ -113,12 +129,21 @@ let whoStartFirst = 0; // 0 -> white   1 -> black
 const toggleGeneratorModal = () => {
   generatorModalActive.value = !generatorModalActive.value;
 }
+const toggleEndGameModal = () => {
+  endGameModalActive.value = !endGameModalActive.value;
+}
 
 const initGame = () => {
-  toggleGeneratorModal()
+  toggleGeneratorModal();
   createGrid()
   // fillGridWithList(['W'])
   startGame()
+}
+
+const replayGame = () => {
+  toggleEndGameModal();
+  toggleGeneratorModal();
+  // startGame();
 }
 
 const createGrid = () => {
@@ -182,9 +207,9 @@ const fillGridWithList = (list: any) => {
       circleElement.style.backgroundColor = '#000000'
       circleElement.style.opacity = "1"
     }
-    // else if (list[i] == ' '){
-    //   circleElement.style.opacity = "0"
-    // }
+    else if (list[i] == ' '){
+      circleElement.style.opacity = "0"
+    }
   }
 }
 
@@ -207,6 +232,8 @@ const postRequest = async (url: string, payload: any) => {
         throw new Error;
       }
     }
+    isError.value = false;
+    message.value = data.message || '';
     return data;
   } catch (e: any) {
     console.error(e.message);
@@ -327,7 +354,10 @@ const addPown = async (event) => {
   // }
   // Handle response
   if (data.status != 'playing')
+  {
+    fillGridWithList(data.board)
     return handleEndGame()
+  }
   if (data.error != null)
     console.log('Placement error')
   if (data.status != "playing")
@@ -358,7 +388,13 @@ const handleEndGame = () => {
   clearInterval(timerPlayer1)
   clearInterval(timerPlayer2)
   clearInterval(currentRoundTimer)
-  document.removeEventListener('click', addPown)
+  const gridBtn = document.getElementsByClassName('grid-button')
+  for (let i = 0; i < gridBtn.length; i++) {
+    gridBtn[i].removeEventListener('click', addPown)
+  }
+
+
+  toggleEndGameModal();
 
   // scoreboard.classList.add('hidden-important')
   // document.getElementById('nav-bar').hidden = false
@@ -405,26 +441,12 @@ const createCountdownPlayer2 = (count: number, timerDivId: string) => {
 }
 
 const handlePlayerTimeout = () => {
-  // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
   const payload = {
     "player_move": {"x": -1, "y": -1},
     "is_timeout": true,
     "player_timeout": currentRoundTurn,
   }
-  const data = {
-   "player_turn": "W",
-   "IA_suggestion": false,
-   "IA_move": {"x": 8, "y": 7},
-   "IA_duration": 99,//xp streamez Jolagreen23
-   "board": [
-      ["W", "B", " "],
-      [" ", " ", " "]
-   ],
-   "black_capture": 2,
-   "white_capture": 1,
-   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-   "status": "finished"
-  }
+  const data = postRequest("http://127.0.0.1:8000/game//move", payload)
   // Handle response
   if (data.status != 'playing')
     return handleEndGame()
@@ -471,7 +493,8 @@ const createCountdownForRound = (count: number, timerDivId: string) => {
 onMounted(() => {
   document.getElementById('board').classList.add('hidden-important')
   document.getElementById('scoreboard').classList.add('hidden-important')
-  toggleGeneratorModal()
+  toggleGeneratorModal();
+  // toggleEndGameModal();
 });
 
 onUnmounted(() => {
