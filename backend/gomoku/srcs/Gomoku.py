@@ -199,6 +199,7 @@ class Gomoku:
 		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
 
 	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False, allow_suggestion: bool = False):
+		from algorithms.gomoku_algorithm import minimax
 		os.system("clear")
 		if (message != None):
 			print()

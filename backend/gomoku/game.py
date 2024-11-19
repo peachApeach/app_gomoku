@@ -24,6 +24,13 @@ def main():
 		IA = False
 		main_player = "B"
 
+	cli_suggestion = CLI_OneSelection("Would you like AI-suggested movements?")
+	cli_suggestion.add_option("no", "No")
+	cli_suggestion.add_option("yes", "Yes")
+	cli_suggestion.run()
+
+	suggestion = True if cli_suggestion.get_selection() == "yes" else False
+
 	cli_opening = CLI_OneSelection("Which opening you want ?")
 	cli_opening.add_option("standard", "Standard")
 	cli_opening.add_option("pro", "Pro")
@@ -41,8 +48,8 @@ def main():
 	game_opts = cli_game_opts.get_options()
 
 	cli_save_game = CLI_OneSelection("Do you want to save the game ?")
-	cli_save_game.add_option("yes", "Yes")
 	cli_save_game.add_option("no", "No")
+	cli_save_game.add_option("yes", "Yes")
 	cli_save_game.run()
 
 	save_game = True if cli_save_game.get_selection() == "yes" else False
@@ -52,6 +59,7 @@ def main():
 			IA=IA,
 			main_player=main_player,
 			save_game=save_game,
+			IA_suggestion=suggestion,
 			settings=GomokuSettings(
 				allowed_capture=game_opts['allowed_capture'],
 				allowed_win_by_capture=game_opts['allowed_win_by_capture'],
