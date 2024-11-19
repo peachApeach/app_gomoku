@@ -82,4 +82,8 @@ const routerTo = (link: String, hideMenu = true) => {
 	router.push(`${link}`);
 }
 
+const isLoggedIn = () => {
+  
+}
+
 </script>
