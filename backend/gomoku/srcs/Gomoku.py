@@ -198,7 +198,7 @@ class Gomoku:
 		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
 		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
 
-	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False):
+	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False, allow_suggestion: bool = False):
 		os.system("clear")
 		if (message != None):
 			print()
@@ -227,6 +227,9 @@ class Gomoku:
 
 		if last_duration:
 			print(f"{BHWHITE}IA Reflexion Duration :{MAGB} {last_duration} {RESET}")
+		if allow_suggestion and self.IA_suggestion:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			print(f"{BHWHITE}IA Suggestion :{GREENB} {convert_xy_to_coordinate(move[1], move[0])} | {score} {RESET}")
 		print()
 
 	def opening_pro(self):
@@ -510,7 +513,7 @@ class Gomoku:
 		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
-			self.display_board(message=message, last_duration=last_duration, is_err=is_err)
+			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True)
 			last_duration = self.handle_player()
 
 		if self.settings.allowed_capture:
@@ -547,6 +550,7 @@ if __name__ == "__main__":
 			save_game=False,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
+			IA_suggestion=True,
 			IA_MAX_DEPTH=2)
 		gomoku.play(opening="pro")
 
