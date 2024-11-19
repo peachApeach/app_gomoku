@@ -1,0 +1,43 @@
+GameNumber : 17 - Game Info -> Start: W
+GameNumber : 17 - Game Info -> Allowed Capture: True
+GameNumber : 17 - Game Info -> Allowed Win By Capture: True
+GameNumber : 17 - Game Info -> Allowed Double Three: False
+GameNumber : 17 - 5ms          - Player(IA):W -> Move:I9
+GameNumber : 17 - 11620ms      - Player    :B -> Move:h10
+GameNumber : 17 - 5ms          - Player(IA):W -> Move:I10
+GameNumber : 17 - 6464ms       - Player    :B -> Move:i8
+GameNumber : 17 - 33ms         - Player(IA):W -> Move:I11
+GameNumber : 17 - 6244ms       - Player    :B -> Move:i12
+GameNumber : 17 - 15ms         - Player(IA):W -> Move:G10
+GameNumber : 17 - 33316ms      - Player    :B -> Move:h11
+GameNumber : 17 - 47ms         - Player(IA):W -> Move:J13
+GameNumber : 17 - 40079ms      - Player    :B -> Move:i12
+GameNumber : 17 - 36ms         - Player(IA):W -> Move:G9
+GameNumber : 17 - 13025ms      - Player    :B -> Move:g8
+GameNumber : 17 - 40ms         - Player(IA):W -> Move:H9
+GameNumber : 17 - 8516ms       - Player    :B -> Move:g11
+GameNumber : 17 - 43ms         - Player(IA):W -> Move:G9
+GameNumber : 17 - 10801ms      - Player    :B -> Move:f9
+GameNumber : 17 - 57ms         - Player(IA):W -> Move:J9
+GameNumber : 17 - 8915ms       - Player    :B -> Move:k9
+GameNumber : 17 - 37ms         - Player(IA):W -> Move:H11
+GameNumber : 17 - 11608ms      - Player    :B -> Move:j11
+GameNumber : 17 - 33ms         - Player(IA):W -> Move:H11
+GameNumber : 17 - 28547ms      - Player    :B -> Move:i11
+GameNumber : 17 - 49ms         - Player(IA):W -> Move:I9
+GameNumber : 17 - 13604ms      - Player    :B -> Move:k11
+GameNumber : 17 - 66ms         - Player(IA):W -> Move:I10
+GameNumber : 17 - 76315ms      - Player    :B -> Move:j12
+GameNumber : 17 - 100ms        - Player(IA):W -> Move:K8
+GameNumber : 17 - 43449ms      - Player    :B -> Move:g12
+GameNumber : 17 - 76ms         - Player(IA):W -> Move:I13
+GameNumber : 17 - 34905ms      - Player    :B -> Move:l7
+GameNumber : 17 - 41ms         - Player(IA):W -> Move:I11
+GameNumber : 17 - 18914ms      - Player    :B -> Move:i12
+GameNumber : 17 - 93ms         - Player(IA):W -> Move:F12
+GameNumber : 17 - 8288ms       - Player    :B -> Move:g11
+GameNumber : 17 - 72ms         - Player(IA):W -> Move:I11
+GameNumber : 17 - 58125ms      - Player    :B -> Move:j10
+GameNumber : 17 - 90ms         - Player(IA):W -> Move:L10
+GameNumber : 17 - 63435ms      - Player    :B -> Move:k10
+GameNumber : 17 - 46ms         - Player(IA):W -> Move:K11

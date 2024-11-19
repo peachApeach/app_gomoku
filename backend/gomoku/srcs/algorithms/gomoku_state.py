@@ -1,4 +1,4 @@
-from GomokuSettings import GomokuSettings
+from rules.GomokuSettings import GomokuSettings
 
 def win_from_pos(board: list[list[str]], i, j) -> bool:
 	number_to_win = 5
@@ -28,13 +28,24 @@ def win_from_pos(board: list[list[str]], i, j) -> bool:
 		return True
 	except:
 		pass
-	# DIAGONALE
+	# DIAGONALE #1
 	try:
 		for k in range(number_to_win):
 			if stone != board[i + k][j + k]:
 				raise Exception
 		for k in range(number_to_win):
 			if stone_catchable(board, i + k, j + k) != None:
+				raise Exception
+		return True
+	except:
+		pass
+	# DIAGONALE #2
+	try:
+		for k in range(number_to_win):
+			if stone != board[i + k][j - k]:
+				raise Exception
+		for k in range(number_to_win):
+			if stone_catchable(board, i + k, j - k) != None:
 				raise Exception
 		return True
 	except:
@@ -63,7 +74,7 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 		return True
 	except:
 		pass
-	# DIAGONALE
+	# DIAGONALE #1
 	try:
 		for k in range(number_to_win):
 			if stone != board[i + k][j + k]:
@@ -71,9 +82,17 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 		return True
 	except:
 		pass
+	# DIAGONALE #2
+	try:
+		for k in range(number_to_win):
+			if stone != board[i + k][j - k]:
+				raise Exception
+		return True
+	except:
+		pass
 	return False
 
-def critical_situation(board: list[list[str]]) -> bool:
+def critical_situation(board: list[list[str]]) -> tuple[bool, str | None]:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
 			if five_alignments_found(board, i, j) == True:
@@ -89,49 +108,44 @@ def stone_catchable(board: list[list[str]], i, j):
 
 	try: # F
 		if "".join([board[i][j + k] for k in range(-1, 3)]) in possibility:
-			return [(i, j + 1), (i, j + 2)]
+			return True
 	except:
 		pass
 	try: # I
 		if "".join([board[i][j - k] for k in range(-1, 3)]) in possibility:
-			return [(i, j - 1), (i, j - 2)]
+			return True
 	except:
 		pass
 	try: # G
 		if "".join([board[i + k][j] for k in range(-1, 3)]) in possibility:
-			return [(i + 1, j), (i + 2, j)]
+			return True
 	except:
 		pass
 	try: # E
 		if "".join([board[i - k][j] for k in range(-1, 3)]) in possibility:
-			return [(i - 1, j), (i - 2, j)]
+			return True
 	except:
 		pass
 	try: # A
 		if "".join([board[i - k][j - k] for k in range(-1, 3)]) in possibility:
-			return [(i - 1, j - 1), (i - 2, j - 2)]
+			return True
 	except:
 		pass
 	try: # D
 		if "".join([board[i + k][j + k] for k in range(-1, 3)]) in possibility:
-			return [(i + 1, j + 1), (i + 1, j + 2)]
+			return True
 	except:
 		pass
 	try: # C
 		if "".join([board[i - k][j + k] for k in range(-1, 3)]) in possibility:
-			return [(i - 1, j + 1), (i - 1, j + 2)]
+			return True
 	except:
 		pass
 	try: # H
 		if "".join([board[i + k][j - k] for k in range(-1, 3)]) in possibility:
-			return [(i + 1, j - 1), (i + 2, j - 2)]
+			return True
 	except:
 		pass
-	# stone = board[i][j]
-	# opponent_stone = 'B' if stone == 'W' else 'W'
-
-	# print(board[i][j])
-	# pass
 	return None
 
 def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:

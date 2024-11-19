@@ -1,0 +1,20 @@
+GameNumber : 17 - Game Info -> Start: B
+GameNumber : 17 - Game Info -> Allowed Capture: False
+GameNumber : 17 - Game Info -> Allowed Win By Capture: False
+GameNumber : 17 - Game Info -> Allowed Double Three: True
+GameNumber : 17 - 2932ms       - Player    :B -> Move:G8
+GameNumber : 17 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 17 - 2209ms       - Player    :B -> Move:H9
+GameNumber : 17 - 25ms         - Player(IA):W -> Move:I10
+GameNumber : 17 - 21323ms      - Player    :B -> Move:F7
+GameNumber : 17 - 63ms         - Player(IA):W -> Move:E6
+GameNumber : 17 - 12678ms      - Player    :B -> Move:I8
+GameNumber : 17 - 34ms         - Player(IA):W -> Move:I11
+GameNumber : 17 - 3674ms       - Player    :B -> Move:I12
+GameNumber : 17 - 27ms         - Player(IA):W -> Move:G9
+GameNumber : 17 - 16498ms      - Player    :B -> Move:F9
+GameNumber : 17 - 37ms         - Player(IA):W -> Move:F8
+GameNumber : 17 - 13664ms      - Player    :B -> Move:F10
+GameNumber : 17 - 31ms         - Player(IA):W -> Move:H10
+GameNumber : 17 - 4741ms       - Player    :B -> Move:J12
+GameNumber : 17 - 9ms          - Player(IA):W -> Move:E7

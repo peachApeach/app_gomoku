@@ -7,6 +7,7 @@ BLUE = "\033[0;34m"
 MAG = "\033[0;35m"
 CYAN = "\033[0;36m"
 WHITE = "\033[0;37m"
+GRAY = "\033[0;90m"
 
 # Regular bold text
 BBLACK = "\033[1;30m"

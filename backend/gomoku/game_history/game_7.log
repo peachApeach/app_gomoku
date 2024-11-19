@@ -1,0 +1,35 @@
+GameNumber : 7 - Game Info -> Start: B
+GameNumber : 7 - Game Info -> Allowed Capture: True
+GameNumber : 7 - Game Info -> Allowed Win By Capture: True
+GameNumber : 7 - Game Info -> Allowed Double Three: True
+GameNumber : 7 - 2655ms       - Player    :B -> Move:G8
+GameNumber : 7 - 29ms         - Player(IA):W -> Move:I9
+GameNumber : 7 - 1385ms       - Player    :B -> Move:G9
+GameNumber : 7 - 92ms         - Player(IA):W -> Move:G7
+GameNumber : 7 - 4083ms       - Player    :B -> Move:H8
+GameNumber : 7 - 383ms        - Player(IA):W -> Move:G10
+GameNumber : 7 - 8511ms       - Player    :B -> Move:G8
+GameNumber : 7 - 501ms        - Player(IA):W -> Move:I8
+GameNumber : 7 - 12922ms      - Player    :B -> Move:F8
+GameNumber : 7 - 465ms        - Player(IA):W -> Move:H9
+GameNumber : 7 - 10381ms      - Player    :B -> Move:J7
+GameNumber : 7 - 483ms        - Player(IA):W -> Move:G9
+GameNumber : 7 - 8517ms       - Player    :B -> Move:J9
+GameNumber : 7 - 569ms        - Player(IA):W -> Move:I7
+GameNumber : 7 - 12974ms      - Player    :B -> Move:I6
+GameNumber : 7 - 652ms        - Player(IA):W -> Move:I10
+GameNumber : 7 - 5163ms       - Player    :B -> Move:I11
+GameNumber : 7 - 643ms        - Player(IA):W -> Move:H10
+GameNumber : 7 - 9860ms       - Player    :B -> Move:J10
+GameNumber : 7 - 715ms        - Player(IA):W -> Move:F9
+GameNumber : 7 - 7540ms       - Player    :B -> Move:E9
+GameNumber : 7 - 739ms        - Player(IA):W -> Move:F10
+GameNumber : 7 - 4228ms       - Player    :B -> Move:E10
+GameNumber : 7 - 1093ms       - Player(IA):W -> Move:D10
+GameNumber : 7 - 13665ms      - Player    :B -> Move:E9
+GameNumber : 7 - 786ms        - Player(IA):W -> Move:F8
+GameNumber : 7 - 8861ms       - Player    :B -> Move:G8
+GameNumber : 7 - 1051ms       - Player(IA):W -> Move:F11
+GameNumber : 7 - 10596ms      - Player    :B -> Move:F7
+GameNumber : 7 - 1961ms       - Player(IA):W -> Move:F12
+GameNumber : 7 - 49750ms      - Player    :B -> Move:H6

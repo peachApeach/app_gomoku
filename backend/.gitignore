@@ -3,3 +3,5 @@
 *venv
 flask_session
 flask.log
+.DS_Store
+.pytest_cache

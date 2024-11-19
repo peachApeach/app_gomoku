@@ -1,0 +1,14 @@
+GameNumber : 6 - Game Info -> Start: B
+GameNumber : 6 - Game Info -> Allowed Capture: True
+GameNumber : 6 - Game Info -> Allowed Win By Capture: True
+GameNumber : 6 - Game Info -> Allowed Double Three: True
+GameNumber : 6 - 1934ms       - Player    :B -> Move:G8
+GameNumber : 6 - 30ms         - Player(IA):W -> Move:I9
+GameNumber : 6 - 2417ms       - Player    :B -> Move:G9
+GameNumber : 6 - 96ms         - Player(IA):W -> Move:G7
+GameNumber : 6 - 6030ms       - Player    :B -> Move:F8
+GameNumber : 6 - 284ms        - Player(IA):W -> Move:H8
+GameNumber : 6 - 10523ms      - Player    :B -> Move:G10
+GameNumber : 6 - 835ms        - Player(IA):W -> Move:F6
+GameNumber : 6 - 4891ms       - Player    :B -> Move:E5
+GameNumber : 6 - 6510ms       - Player(IA):W -> Move:J10

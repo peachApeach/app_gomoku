@@ -1,0 +1,23 @@
+GameNumber : 26 - Game Info -> Start: B
+GameNumber : 26 - Game Info -> Allowed Capture: False
+GameNumber : 26 - Game Info -> Allowed Win By Capture: False
+GameNumber : 26 - Game Info -> Allowed Double Three: True
+GameNumber : 26 - 5437ms       - Player    :B -> Move:G7
+GameNumber : 26 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 26 - 2840ms       - Player    :B -> Move:G8
+GameNumber : 26 - 13ms         - Player(IA):W -> Move:G9
+GameNumber : 26 - 2007ms       - Player    :B -> Move:G6
+GameNumber : 26 - 83ms         - Player(IA):W -> Move:G5
+GameNumber : 26 - 6114ms       - Player    :B -> Move:F8
+GameNumber : 26 - 25ms         - Player(IA):W -> Move:H9
+GameNumber : 26 - 3876ms       - Player    :B -> Move:F9
+GameNumber : 26 - 25ms         - Player(IA):W -> Move:J9
+GameNumber : 26 - 4899ms       - Player    :B -> Move:K9
+GameNumber : 26 - 20ms         - Player(IA):W -> Move:H7
+GameNumber : 26 - 15208ms      - Player    :B -> Move:H6
+GameNumber : 26 - 59ms         - Player(IA):W -> Move:I5
+GameNumber : 26 - 7426ms       - Player    :B -> Move:F6
+GameNumber : 26 - 48ms         - Player(IA):W -> Move:F5
+GameNumber : 26 - 10821ms      - Player    :B -> Move:E6
+GameNumber : 26 - 9ms          - Player(IA):W -> Move:H5
+GameNumber : 26 - 6491ms       - Player    :B -> Move:I6

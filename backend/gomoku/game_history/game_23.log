@@ -1,0 +1,22 @@
+GameNumber : 23 - Game Info -> Start: B
+GameNumber : 23 - Game Info -> Allowed Capture: True
+GameNumber : 23 - Game Info -> Allowed Win By Capture: True
+GameNumber : 23 - Game Info -> Allowed Double Three: False
+GameNumber : 23 - 6674ms       - Player    :B -> Move:i10
+GameNumber : 23 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 23 - 7281ms       - Player    :B -> Move:i11
+GameNumber : 23 - 43ms         - Player(IA):W -> Move:I12
+GameNumber : 23 - 13178ms      - Player    :B -> Move:i8
+GameNumber : 23 - 12ms         - Player(IA):W -> Move:I11
+GameNumber : 23 - 9097ms       - Player    :B -> Move:i10
+GameNumber : 23 - 85ms         - Player(IA):W -> Move:I13
+GameNumber : 23 - 5992ms       - Player    :B -> Move:i14
+GameNumber : 23 - 16ms         - Player(IA):W -> Move:G11
+GameNumber : 23 - 10828ms      - Player    :B -> Move:h11
+GameNumber : 23 - 37ms         - Player(IA):W -> Move:H10
+GameNumber : 23 - 25280ms      - Player    :B -> Move:g9
+GameNumber : 23 - 50ms         - Player(IA):W -> Move:J8
+GameNumber : 23 - 14154ms      - Player    :B -> Move:j12
+GameNumber : 23 - 9ms          - Player(IA):W -> Move:H10
+GameNumber : 23 - 21387ms      - Player    :B -> Move:i11
+GameNumber : 23 - 8ms          - Player(IA):W -> Move:F12

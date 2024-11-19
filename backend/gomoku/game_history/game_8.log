@@ -1,0 +1,6 @@
+GameNumber : 8 - Game Info -> Start: B
+GameNumber : 8 - Game Info -> Allowed Capture: True
+GameNumber : 8 - Game Info -> Allowed Win By Capture: True
+GameNumber : 8 - Game Info -> Allowed Double Three: True
+GameNumber : 8 - 6125ms       - Player    :B -> Move:G8
+GameNumber : 8 - 30ms         - Player(IA):W -> Move:I9

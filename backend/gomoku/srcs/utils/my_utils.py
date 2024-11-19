@@ -1,4 +1,4 @@
-from Colors import *
+from utils.Colors import *
 
 def print_error(e: Exception):
 	print(f"{BHRED}Error{RESET}")

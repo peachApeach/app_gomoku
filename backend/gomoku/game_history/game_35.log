@@ -1,0 +1,8 @@
+GameNumber : 35 - Game Info -> Start: B
+GameNumber : 35 - Game Info -> Allowed Capture: True
+GameNumber : 35 - Game Info -> Allowed Win By Capture: True
+GameNumber : 35 - Game Info -> Allowed Double Three: True
+GameNumber : 35 - 1526ms       - Player    :B -> Move:I11
+GameNumber : 35 - 4ms          - Player(IA):W -> Move:I9
+GameNumber : 35 - 8761ms       - Player    :B -> Move:i10
+GameNumber : 35 - 41ms         - Player(IA):W -> Move:I12
