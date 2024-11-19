@@ -1,61 +1,63 @@
 <template>
-  <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
+  <main class=" container mt-10 flex size-full flex-row justify-center text-high-contrast-text">
     <div class=" flex w-full flex-col items-center justify-center">
-      <div id="scoreboard" class="flex flex-nowrap items-center gap-32 mb-5 text-low-contrast-text hidden-important">
+      <div id="scoreboard" class="hidden-important mb-5 flex flex-nowrap items-center gap-32 text-low-contrast-text">
         <div id="player1" class="flex items-center gap-8">
-          <div id="player1-timer" class="text-lg px-4 py-2 bg-blue-700 rounded-lg">
-            
+          <div id="player1-timer" class="rounded-lg bg-blue-700 px-4 py-2 text-lg">
+
           </div>
           <h1 class="text-center text-3xl font-bold">Player 1</h1>
         </div>
-        <div id="round-timer" class="text-6xl text-high-contrast-text px-4 py-2 ">
-            
+        <div id="round-timer" class="px-4 py-2 text-6xl text-high-contrast-text ">
+
         </div>
         <div id="player2" class="flex gap-8">
           <h1 class="text-center text-3xl font-bold"></h1>
-          <div id="player2-timer" class="text-lg px-4 py-2 bg-orange-700 rounded-lg">
-            
+          <div id="player2-timer" class="rounded-lg bg-orange-700 px-4 py-2 text-lg">
+
           </div>
         </div>
       </div>
+      <div id="message" class="text-center text-lg font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
+      <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid grid-cols-19 grid-rows-19">
       </div>
     </div>
   </main>
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
-    <h1 class="text-center text-3xl font-bold text-high-contrast-text mb-5">
+    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">
       Paramètres</h1>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="time-per-turn-label" for="time-per-turn" class="block mb-2 text-sm font-medium text-low-contrast-text">Temps par tour</label>
+      <label id="time-per-turn-label" for="time-per-turn" class="mb-2 block text-sm font-medium text-low-contrast-text">Temps par tour</label>
       <div class="relative w-full">
-          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
+          <select name="time-p-turn" id="time-per-turn" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="10">10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
-            <option value="40" selected>40 secondes</option>
-            <option value="-1">Illimite</option>
+            <option value="40">40 secondes</option>
+            <option value="-1" selected>Illimite</option>
           </select>
       </div>
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="min-per-player-label" for="min-per-player" class="block mb-2 text-sm font-medium text-low-contrast-text">Minutes par joueur</label>
+      <label id="min-per-player-label" for="min-per-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Minutes par joueur</label>
       <div class="relative w-full">
-          <select name="min-p-player" id="min-per-player" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
+          <select name="min-p-player" id="min-per-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
-            <option value="5" selected>5 minutes</option>
-            <option value="-1">Illimite</option>
+            <option value="5">5 minutes</option>
+            <option value="-1" selected>Illimite</option>
           </select>
       </div>
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="first-player-label" for="first-player" class="block mb-2 text-sm font-medium text-low-contrast-text">Qui commence en premier ?</label>
+      <label id="first-player-label" for="first-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Qui commence en premier ?</label>
       <div class="relative w-full">
-          <select name="f-player" id="first-player" class="bg-ui-bg border border-gray-600 placeholder-gray-400 text-white text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 block w-1/2 p-2.5">
+          <select name="f-player" id="first-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="-1">Aleatoire</option>
             <option value="0">Je commence en premier</option>
             <option value="1">L'opposant commence en premier</option>
@@ -64,21 +66,21 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="opposant-label" class="block mb-2 text-sm font-medium text-low-contrast-text">Jouer contre qui ?</label>
+      <label id="opposant-label" class="mb-2 block text-sm font-medium text-low-contrast-text">Jouer contre qui ?</label>
       <div class="flex">
-        <div class="flex items-center me-5 px-4 border border-gray-600 rounded-lg dark:border-gray-700">
-          <input id="opposant-ia" type="radio" name="opposant" value="ia" class="w-4 h-4 bg-gray-100 accent-amber-400" checked>
-          <label for="opposant-ia" class="w-full py-3 ms-2 text-sm font-medium text-low-contrast-text"> IA</label>
+        <div class="me-5 flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
+          <input id="opposant-ia" type="radio" name="opposant" value="ia" class="size-4 bg-gray-100 accent-amber-400" checked>
+          <label for="opposant-ia" class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text"> IA</label>
         </div>
-        <div class="flex items-center px-4 border border-gray-600 rounded-lg dark:border-gray-700">
-          <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="w-4 h-4 bg-gray-100 border-gray-300 accent-amber-400">
-          <label class="w-full py-3 ms-2 text-sm font-medium text-low-contrast-text" for="opposant-hotseat"> Local</label>
+        <div class="flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
+          <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="size-4 border-gray-300 bg-gray-100 accent-amber-400">
+          <label class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text" for="opposant-hotseat"> Local</label>
         </div>
       </div>
     </div>
 
     <div class="mt-6 flex w-full items-center justify-center">
-      <button type="button" class="focus:outline-none text-base text-white bg-yellow-700 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2" @click="initGame">PLAY</button>
+      <button type="button" class="mb-2 me-2 rounded-lg bg-yellow-700 px-5 py-2.5 text-base font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-900" @click="initGame">PLAY</button>
     </div>
   </Modal>
 </template>
@@ -88,6 +90,10 @@ import Modal from '../components/modal/Modal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
+
+const message = ref<string | null>(null);
+const isError = ref<boolean>(true);
+// const errorDescription = ref<string | null>(null);
 
 let gameId: number
 
@@ -111,7 +117,7 @@ const toggleGeneratorModal = () => {
 const initGame = () => {
   toggleGeneratorModal()
   createGrid()
-  fillGridWithList(['W'])
+  // fillGridWithList(['W'])
   startGame()
 }
 
@@ -131,7 +137,7 @@ const createGrid = () => {
       gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-10', 'h-10', 'grid-div'])
 
       const hrHorizontal = document.createElement('hr')
-        
+
       const hrVertical = document.createElement('hr')
       if (i == 0)
         hrVertical.classList.add(...['vl-first-line'])
@@ -152,7 +158,7 @@ const createGrid = () => {
 
       gridElement.appendChild(hrVertical)
       gridElement.appendChild(hrHorizontal)
-      
+
       gridElement.appendChild(gridBtn)
       gridParentDiv.appendChild(gridElement)
       counter++
@@ -176,26 +182,37 @@ const fillGridWithList = (list: any) => {
       circleElement.style.backgroundColor = '#000000'
       circleElement.style.opacity = "1"
     }
+    // else if (list[i] == ' '){
+    //   circleElement.style.opacity = "0"
+    // }
   }
 }
 
 const postRequest = async (url: string, payload: any) => {
   try {
+    isError.value = false;
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const response = await fetch(url, {
       method: "POST",
-      body: payload,
+      body: JSON.stringify(payload),
       headers: myHeaders,
     });
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      if (data.detail) {
+        throw new Error(data.detail);
+      } else {
+        throw new Error;
+      }
     }
-    const json = await response.json();
-    return json
-  } catch (error: any) {
-    console.error(error.message);
+    return data;
+  } catch (e: any) {
+    console.error(e.message);
+    isError.value = true;
+    message.value = e.message || 'An unknown error occurred';
+    return null;
   }
 }
 
@@ -219,13 +236,13 @@ const createScoreboard = () => {
   scoreboard.classList.remove('hidden-important')
 }
 
-const startGame = () => {
+const startGame = async () => {
   whoStartFirst = document.getElementById('first-player')?.value
   const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
   if (whoStartFirst == -1) { whoStartFirst = Math.floor(Math.random() * 2) }
   const payload = {
     "mode": gamemode,
-    "who_start": whoStartFirst == 0 ? "W" : "B",
+    "main_player": whoStartFirst == 0 ? "B" : "W",
     "IA_suggestion": true,
     "options": {
       "allowed_capture": true,
@@ -233,23 +250,24 @@ const startGame = () => {
       "allowed_double_three": false
     },
     "opening": "standard",
-    "difficulty": "medium",
     }
 
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
-  // const data = postRequest("http://127.0.0.1:8000/game/new", payload)
-  const data = {
-   "game_id": 1,
-   "player_turn": "B",
-   "IA": true,
-   "IA_suggestion": false,
-   "board": [
-      [' ', ' ', ' '],
-      [' ', ' ', ' '],
-   ]
-  }
+  const data = await postRequest("http://127.0.0.1:8000/game/new", payload);
+  console.log(data);
+  console.log(data.board);
+  // const data = {
+  //  "game_id": 1,
+  //  "player_turn": "B",
+  // //  "IA": true,
+  //  "IA_suggestion": false,
+  //  "board": [
+  //     [' ', ' ', ' '],
+  //     [' ', ' ', ' '],
+  //  ]
+  // }
   fillGridWithList(data.board)
   createScoreboard()
   gameId = data.game_id
@@ -278,7 +296,7 @@ const startGame = () => {
     // send api call
 }
 
-const addPown = (event) => {
+const addPown = async (event) => {
   let pawnId = event.target.id
   if (event.target.localName == 'button')
     pawnId += '-circle'
@@ -290,23 +308,23 @@ const addPown = (event) => {
   }
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
   const payload = {
-    "player_move": {"x": coordinates[0], "y": coordinates[1]}
+    "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
-  // const data = postRequest("http://127.0.0.1:8000/game//move", payload)
-  const data = {
-   "player_turn": "W",
-   "IA_suggestion": false,
-   "IA_move": {"x": 8, "y": 7},
-   "IA_duration": 99,//xp streamez Jolagreen23
-   "board": [
-      ["W", "B", " "],
-      [" ", " ", " "]
-   ],
-   "black_capture": 2,
-   "white_capture": 1,
-   "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-   "status": "playing",
-  }
+  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
+  // const data = {
+  //  "player_turn": "W",
+  //  "IA_suggestion": false,
+  //  "IA_move": {"x": 8, "y": 7},
+  //  "IA_duration": 99,//xp streamez Jolagreen23
+  //  "board": [
+  //     ["W", "B", " "],
+  //     [" ", " ", " "]
+  //  ],
+  //  "black_capture": 2,
+  //  "white_capture": 1,
+  //  "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
+  //  "status": "playing",
+  // }
   // Handle response
   if (data.status != 'playing')
     return handleEndGame()
