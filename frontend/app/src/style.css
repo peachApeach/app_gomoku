@@ -138,5 +138,17 @@ button:hover .circle {
 	display: none !important;
 }
 
+.suggestion {
+	height: 25px;
+	width: 25px;
+	background-color: #969090;
+	top: 50%;
+	left: 50%;
+	opacity: 0.5;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	display: inline-block;
+	z-index: 10;
+}
 
 @tailwind utilities;

@@ -19,6 +19,7 @@
         </div>
       </div>
       <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
+      <div id="ia-duration" class="text-center text-xl text-high-contrast-text ">IA took {{ iaDuration }} to make its decision</div> 
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid grid-cols-19 grid-rows-19">
       </div>
@@ -108,6 +109,7 @@ const generatorModalActive = ref(false)
 const endGameModalActive = ref(false)
 
 const message = ref<string | null>(null);
+const iaDuration = ref<string | null>(null)
 const isError = ref<boolean>(true);
 // const errorDescription = ref<string | null>(null);
 
@@ -125,6 +127,7 @@ let isPausedPlayer2 = true
 
 let whoStartFirst = 0; // 0 -> white   1 -> black
 
+let iaSuggestionDiv;
 
 const toggleGeneratorModal = () => {
   generatorModalActive.value = !generatorModalActive.value;
@@ -192,7 +195,7 @@ const createGrid = () => {
   gridParentDiv.classList.remove('hidden-important')
 }
 
-const fillGridWithList = (list: any) => {
+const fillGridWithList = (list: any, iaSuggestion: any = null) => {
   const board = document.getElementById('board')
   var childrens = board.children;
   list = list.flat()
@@ -209,6 +212,10 @@ const fillGridWithList = (list: any) => {
     }
     else if (list[i] == ' '){
       circleElement.style.opacity = "0"
+    }
+    if (iaSuggestion != null && (iaSuggestion[1] * 19 + iaSuggestion[0]) == i) {
+      circleElement.style.backgroundColor = '#bdbfc3'
+      circleElement.style.opacity = "0.5"
     }
   }
 }
@@ -278,7 +285,6 @@ const startGame = async () => {
     },
     "opening": "standard",
     }
-
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
@@ -295,12 +301,12 @@ const startGame = async () => {
   //     [' ', ' ', ' '],
   //  ]
   // }
-  fillGridWithList(data.board)
+  console.log(data.IA_suggestion)
+  fillGridWithList(data.board, data.IA_suggestion)
   createScoreboard()
   gameId = data.game_id
   currentRoundTurn = data.player_turn
-  console.log(currentRoundTurn)
-  if (data.player_turn == 'B') {
+  if (data.player_turn == 'W') {
     // hover == black
     isPausedPlayer2 = false
     const circleClass = document.getElementsByClassName('circle')
@@ -338,20 +344,7 @@ const addPown = async (event) => {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
-  // const data = {
-  //  "player_turn": "W",
-  //  "IA_suggestion": false,
-  //  "IA_move": {"x": 8, "y": 7},
-  //  "IA_duration": 99,//xp streamez Jolagreen23
-  //  "board": [
-  //     ["W", "B", " "],
-  //     [" ", " ", " "]
-  //  ],
-  //  "black_capture": 2,
-  //  "white_capture": 1,
-  //  "error": null, // si c'est pas nul c'est que y'a une erreur de placement.
-  //  "status": "playing",
-  // }
+  console.log(data)
   // Handle response
   if (data.status != 'playing')
   {
@@ -369,18 +362,19 @@ const addPown = async (event) => {
     createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
   }
   currentRoundTurn = data.player_turn
-  fillGridWithList(data.board)
+  fillGridWithList(data.board, data.IA_suggestion)
+  iaDuration.value = data.IA_duration || ''; 
   if (currentRoundTurn == 'B') {
     // hover == black
     const circleClass = document.getElementsByClassName('circle')
     for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000' }
+    if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#000' }
   }
   else {
     // hover == white
     const circleClass = document.getElementsByClassName('circle')
     for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
+    if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#FFF' }
   }
 }
 
