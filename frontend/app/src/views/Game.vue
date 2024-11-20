@@ -19,16 +19,17 @@
         </div>
       </div>
       <div class="flex w-full flex-col items-center justify-center gap-3">
-
-        <h1 class="text-xl font-bold text-white">Capture</h1>
-        <div class="flex flex-col items-center text-white">
-          <div class="flex flex-row font-medium text-lg">
-              <p>Black - {{ 3 }}</p>
-              <div class=" h-full w-px bg-gray-500 mx-5"></div>
-              <p>{{ 0 }} - White</p>
+        <div class="flex w-full flex-col items-center justify-center gap-1.5">
+          <h1 class="text-xl font-bold text-white">Capture</h1>
+          <div class="flex flex-col items-center text-white">
+            <div class="flex flex-row font-medium text-lg">
+                <p>Black - {{ blackCapture }}</p>
+                <div class=" h-full w-px bg-gray-500 mx-5"></div>
+                <p>{{ whiteCapture }} - White</p>
+            </div>
           </div>
+          <div class="h-px w-1/4 bg-gray-500"></div>
         </div>
-        <div class="h-px w-1/4 bg-gray-500"></div>
         <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
         <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
       </div>
@@ -122,6 +123,10 @@ const endGameModalActive = ref(false)
 
 const message = ref<string | null>(null);
 const iaDuration = ref<string | null>(null)
+
+const blackCapture = ref<number | null>(null);
+const whiteCapture = ref<string | null>(null);
+
 const isError = ref<boolean>(true);
 // const errorDescription = ref<string | null>(null);
 
@@ -329,6 +334,8 @@ const startGame = async () => {
   // console.log(data.IA_suggestion)
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
+  blackCapture.value = data.black_capture;
+  whiteCapture.value = data.white_capture;
   createScoreboard()
   gameId = data.game_id
   currentRoundTurn = data.player_turn
@@ -379,6 +386,8 @@ const addPown = async (event) => {
   if (data.status != 'playing')
   {
     fillGridWithList(data.board)
+    blackCapture.value = data.black_capture;
+    whiteCapture.value = data.white_capture;
     return handleEndGame()
   }
   if (data.error != null)
@@ -396,6 +405,8 @@ const addPown = async (event) => {
   currentRoundTurn = data.player_turn
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
+  blackCapture.value = data.black_capture;
+  whiteCapture.value = data.white_capture;
   // if (currentRoundTurn == 'B') {
   //   // hover == black
   //   const circleClass = document.getElementsByClassName('circle')
