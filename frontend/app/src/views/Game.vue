@@ -1,14 +1,14 @@
 <template>
-  <main class=" container mt-10 flex size-full flex-row justify-center text-high-contrast-text">
+  <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
     <div class=" flex w-full flex-col items-center justify-center">
-      <div id="scoreboard" class="hidden-important mb-5 flex flex-nowrap items-center gap-32 text-low-contrast-text">
+      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-5 flex flex-nowrap items-center gap-32">
         <div id="player1" class="flex items-center gap-8">
           <div id="player1-timer" class="rounded-lg bg-blue-700 px-4 py-2 text-lg">
 
           </div>
           <h1 class="text-center text-3xl font-bold">Player 1</h1>
         </div>
-        <div id="round-timer" class="px-4 py-2 text-6xl text-high-contrast-text ">
+        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-6xl ">
 
         </div>
         <div id="player2" class="flex gap-8">
@@ -19,16 +19,16 @@
         </div>
       </div>
       <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-      <div id="ia-duration" class="text-center text-xl text-high-contrast-text ">IA took {{ iaDuration }} to make its decision</div> 
+      <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
-      <div id="board" class="grid grid-cols-19 grid-rows-19">
+      <div id="board" class="grid-cols-19 grid-rows-19 grid">
       </div>
     </div>
   </main>
 
 
   <Modal :modal-active="endGameModalActive" @close-modal="toggleEndGameModal">
-    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">End Game</h1>
+    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">End Game</h1>
     <p class="mb-5 text-center text-xl font-bold text-white">{{ message }}</p>
     <!-- <div>
       <p class="text-center text-base font-bold text-white">Black has captured 3 white stones.</p>
@@ -41,26 +41,26 @@
 
 
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
-    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">
+    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">
       Paramètres</h1>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="time-per-turn-label" for="time-per-turn" class="mb-2 block text-sm font-medium text-low-contrast-text">Temps par tour</label>
+      <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-medium">Temps par tour</label>
       <div class="relative w-full">
-          <select name="time-p-turn" id="time-per-turn" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="10">10 secondes</option>
+          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+            <option value="10" selected>10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
             <option value="40">40 secondes</option>
-            <option value="-1" selected>Illimite</option>
+            <option value="-1">Illimite</option>
           </select>
       </div>
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="min-per-player-label" for="min-per-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Minutes par joueur</label>
+      <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Minutes par joueur</label>
       <div class="relative w-full">
-          <select name="min-p-player" id="min-per-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
@@ -71,9 +71,9 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="first-player-label" for="first-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Qui commence en premier ?</label>
+      <label id="first-player-label" for="first-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Qui commence en premier ?</label>
       <div class="relative w-full">
-          <select name="f-player" id="first-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="f-player" id="first-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="-1">Aleatoire</option>
             <option value="0">Je commence en premier</option>
             <option value="1">L'opposant commence en premier</option>
@@ -82,15 +82,15 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="opposant-label" class="mb-2 block text-sm font-medium text-low-contrast-text">Jouer contre qui ?</label>
+      <label id="opposant-label" class="text-low-contrast-text mb-2 block text-sm font-medium">Jouer contre qui ?</label>
       <div class="flex">
         <div class="me-5 flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
           <input id="opposant-ia" type="radio" name="opposant" value="ia" class="size-4 bg-gray-100 accent-amber-400" checked>
-          <label for="opposant-ia" class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text"> IA</label>
+          <label for="opposant-ia" class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium"> IA</label>
         </div>
         <div class="flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
           <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="size-4 border-gray-300 bg-gray-100 accent-amber-400">
-          <label class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text" for="opposant-hotseat"> Local</label>
+          <label class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium" for="opposant-hotseat"> Local</label>
         </div>
       </div>
     </div>
@@ -303,6 +303,7 @@ const startGame = async () => {
   // }
   console.log(data.IA_suggestion)
   fillGridWithList(data.board, data.IA_suggestion)
+  iaDuration.value = data.IA_duration;
   createScoreboard()
   gameId = data.game_id
   currentRoundTurn = data.player_turn
@@ -363,7 +364,7 @@ const addPown = async (event) => {
   }
   currentRoundTurn = data.player_turn
   fillGridWithList(data.board, data.IA_suggestion)
-  iaDuration.value = data.IA_duration || ''; 
+  iaDuration.value = data.IA_duration;
   if (currentRoundTurn == 'B') {
     // hover == black
     const circleClass = document.getElementsByClassName('circle')
@@ -472,16 +473,18 @@ const handlePlayerTimeout = () => {
 
 const createCountdownForRound = (count: number, timerDivId: string) => {
   currentRoundTimer = setInterval(function() {
-      count--;
-      if (count < 10)
-        document.getElementById(timerDivId).textContent = '00:0' + count
+      // count--;
+      count -= 0.1;
+      let second = Math.floor(count)
+      if (second < 10)
+        document.getElementById(timerDivId).textContent = '00:0' + second
       else
-        document.getElementById(timerDivId).textContent = '00:' + count
-      if (count === 0) {
+        document.getElementById(timerDivId).textContent = '00:' + second
+      if (second === 0) {
         clearInterval(currentRoundTimer);
         handlePlayerTimeout()
       }
-  }, 1000);
+  }, 100);
 }
 
 onMounted(() => {
