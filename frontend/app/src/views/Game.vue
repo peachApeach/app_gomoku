@@ -18,8 +18,20 @@
           </div>
         </div>
       </div>
-      <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-      <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
+      <div class="flex w-full flex-col items-center justify-center gap-3">
+
+        <h1 class="text-xl font-bold text-white">Capture</h1>
+        <div class="flex flex-col items-center text-white">
+          <div class="flex flex-row font-medium text-lg">
+              <p>Black - {{ 3 }}</p>
+              <div class=" h-full w-px bg-gray-500 mx-5"></div>
+              <p>{{ 0 }} - White</p>
+          </div>
+        </div>
+        <div class="h-px w-1/4 bg-gray-500"></div>
+        <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
+        <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
+      </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid-cols-19 grid-rows-19 grid">
       </div>
