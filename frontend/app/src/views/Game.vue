@@ -51,8 +51,8 @@
             <option value="10">10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
-            <option value="40">40 secondes</option>
-            <option value="-1" selected>Illimite</option>
+            <option value="40" selected>40 secondes</option>
+            <option value="-1">Illimite</option>
           </select>
       </div>
     </div>
@@ -61,10 +61,10 @@
       <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Minutes par joueur</label>
       <div class="relative w-full">
           <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="2" selected>2 minutes</option>
+            <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
-            <option value="5">5 minutes</option>
+            <option value="5" selected>5 minutes</option>
             <option value="-1">Illimite</option>
           </select>
       </div>
@@ -274,11 +274,11 @@ const createScoreboard = () => {
   document.getElementById('player2').children[0].textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
 
   if (minPerPlayer != -1) {
-    createCountdownPlayer1(minPerPlayer * 60, 'player1-timer')
-    createCountdownPlayer2(minPerPlayer * 60, 'player2-timer')
+    createCountdownPlayer1(parseInt(minPerPlayer) * 60, 'player1-timer')
+    createCountdownPlayer2(parseInt(minPerPlayer) * 60, 'player2-timer')
   }
   if (timePerTurn != -1) {
-    createCountdownForRound(timePerTurn, 'round-timer')
+    createCountdownForRound(parseInt(timePerTurn), 'round-timer')
   }
   scoreboard.classList.remove('hidden-important')
 }
@@ -379,7 +379,7 @@ const addPown = async (event) => {
   isPausedPlayer2 = data.isPausedPlayer2;
   if (timePerTurn != -1) {
     clearInterval(currentRoundTimer)
-    createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
+    createCountdownForRound(parseInt(timePerTurn), 'round-timer')
   }
   currentRoundTurn = data.player_turn
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
@@ -421,6 +421,7 @@ const secondsToMinSeconds = (count: number) => {
 }
 
 const createCountdownPlayer1 = (count: number, timerDivId: string) => {
+  // count += 1
   timerPlayer1 = setInterval(function() {
     if (!isPausedPlayer1) {
       count -= 0.1;
@@ -439,6 +440,7 @@ const createCountdownPlayer1 = (count: number, timerDivId: string) => {
 }
 
 const createCountdownPlayer2 = (count: number, timerDivId: string) => {
+  // count += 1
   timerPlayer2 = setInterval(function() {
     if (!isPausedPlayer2) {
       count -= 0.1;
@@ -474,7 +476,7 @@ const handlePlayerTimeout = async () => {
   // isPausedPlayer2 = !isPausedPlayer2
   if (timePerTurn != -1) {
     clearInterval(currentRoundTimer)
-    createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
+    createCountdownForRound(parseInt(timePerTurn), 'round-timer')
   }
   currentRoundTurn = data.player_turn
   // fillGridWithList(data.board)
