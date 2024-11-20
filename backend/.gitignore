@@ -5,3 +5,5 @@ flask_session
 flask.log
 .DS_Store
 .pytest_cache
+flask.log
+flask_session

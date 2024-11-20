@@ -1,18 +1,9 @@
 import re
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rules.gomoku_rules import switch_opponent
-
-def type_of_alignment(row: list[str], stone: str):
-	opponent_stone = switch_opponent(stone)
-	opponent_count = row.count(opponent_stone)
-	if opponent_count > 1:
-		return 'invalid', 0
-	if opponent_count == 1:
-		if row[0] != opponent_stone and row[-1] != opponent_stone:
-			return 'invalid', 0
-	if row[0] == " " and row[-1] == " ":
-		return 'free', row.count(stone)
-	else:
-		return 'align', row.count(stone)
+from algorithms.count_alignment import type_of_alignment
 
 def alignment_streaks(line: str):
 	all_streaks = {
@@ -119,6 +110,10 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 	}
 
 if __name__ == "__main__":
+	print(alignment_streaks("       WWW W       "))
+	exit(1)
+
+
 	from utils.Colors import *
 	from utils.MeasureTime import MeasureTime
 	from Gomoku import Gomoku

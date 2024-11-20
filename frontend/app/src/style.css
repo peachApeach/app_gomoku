@@ -33,7 +33,7 @@
 
 
 .animate-underline {
-	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-accent-color transition-all group-hover:w-full dark:bg-d-accent-color;
+	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-amber-400 transition-all group-hover:w-full;
 }
 
 .text-outline {
@@ -138,5 +138,17 @@ button:hover .circle {
 	display: none !important;
 }
 
+.suggestion {
+	height: 25px;
+	width: 25px;
+	background-color: #969090;
+	top: 50%;
+	left: 50%;
+	opacity: 0.5;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	display: inline-block;
+	z-index: 10;
+}
 
 @tailwind utilities;
