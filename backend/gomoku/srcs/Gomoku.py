@@ -538,15 +538,17 @@ class Gomoku:
 
 		# It's Human Turn
 		if self.get_player_turn() == self.main_player or self.IA == False:
-			return self.board
+			return self.board, None
 		# It's IA Turn
 		else:
+			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			IA_duration = mt.stop(get_str=True, duration_only=True)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			try:
 				self.place_stone(ia_placement)
 				self.switch_player_turn()
-				return self.board
+				return self.board, IA_duration
 			except Exception:
 				return None
 
@@ -592,8 +594,8 @@ class Gomoku:
 			self.place_stone(ia_placement)
 			self.switch_player_turn()
 		else:
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			if self.IA_suggestion:
+				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 				final_dict['IA_suggestion'] = (move[1], move[0])
 
 			if self.get_player_turn() == self.main_player and self.IA == True:

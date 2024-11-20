@@ -10,6 +10,9 @@ import logging
 from flask_session import Session
 from gomoku.srcs.Gomoku import Gomoku
 from gomoku.srcs.algorithms.gomoku_state import terminate_state
+from gomoku.srcs.utils.little_gomoku_utils import convert_to_little_gomoku
+from gomoku.srcs.algorithms.gomoku_algorithm import minimax
+from gomoku.srcs.utils.MeasureTime import MeasureTime
 from gomoku.srcs.rules.GomokuSettings import GomokuSettings
 import requests
 import sys
@@ -259,7 +262,7 @@ async def new_game(body: NewGameModel):
 		main_player=main_player
 	)
 
-	board = all_games[game_id].run()
+	board, IA_duration = all_games[game_id].run()
 	if board == None:
 		raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry, the IA cannot continue the game, you win by forfeit...")
 
@@ -269,11 +272,16 @@ async def new_game(body: NewGameModel):
 	else:
 		message = f"It's {'white' if gomoku.get_player_turn() == 'W' else 'black'} turn !"
 
-
+	if gomoku.IA_suggestion:
+		_, move = minimax(gomoku=convert_to_little_gomoku(gomoku), MAX_DEPTH=gomoku.IA_MAX_DEPTH)
+		IA_suggestion = (move[1], move[0])
+	else:
+		IA_suggestion = None
 	return {
 		"game_id": game_id,
-		"player_turn": all_games[game_id].player_turn,
-		"IA_suggestion": body.IA_suggestion,
+		"player_turn": gomoku.player_turn,
+		"IA_suggestion": IA_suggestion,
+		"IA_duration": IA_duration,
 		"board": board,
 		"message": message
 	}
