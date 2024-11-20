@@ -48,11 +48,11 @@
       <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-medium">Temps par tour</label>
       <div class="relative w-full">
           <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="4" selected>10 secondes</option>
+            <option value="10">10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
             <option value="40">40 secondes</option>
-            <option value="-1">Illimite</option>
+            <option value="-1" selected>Illimite</option>
           </select>
       </div>
     </div>
@@ -61,11 +61,11 @@
       <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Minutes par joueur</label>
       <div class="relative w-full">
           <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="2">2 minutes</option>
+            <option value="2" selected>2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
             <option value="5">5 minutes</option>
-            <option value="-1" selected>Illimite</option>
+            <option value="-1">Illimite</option>
           </select>
       </div>
     </div>
@@ -272,6 +272,7 @@ const createScoreboard = () => {
   document.getElementById('player2-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
   document.getElementById('round-timer').textContent = timePerTurn != -1 ? '00:' + timePerTurn : ''
   document.getElementById('player2').children[0].textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
+
   if (minPerPlayer != -1) {
     createCountdownPlayer1(minPerPlayer * 60, 'player1-timer')
     createCountdownPlayer2(minPerPlayer * 60, 'player2-timer')
@@ -301,8 +302,8 @@ const startGame = async () => {
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
   const data = await postRequest("http://127.0.0.1:8000/game/new", payload);
-  console.log(data);
-  console.log(data.board);
+  // console.log(data);
+  // console.log(data.board);
   // const data = {
   //  "game_id": 1,
   //  "player_turn": "B",
@@ -313,18 +314,20 @@ const startGame = async () => {
   //     [' ', ' ', ' '],
   //  ]
   // }
-  console.log(data.IA_suggestion)
+  // console.log(data.IA_suggestion)
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
   createScoreboard()
   gameId = data.game_id
   currentRoundTurn = data.player_turn
+  isPausedPlayer1 = data.isPausedPlayer1;
+  isPausedPlayer2 = data.isPausedPlayer2;
   // if (data.player_turn == 'W') {
   //   // hover == black
   //   isPausedPlayer2 = false
-  //   const circleClass = document.getElementsByClassName('circle')
-  //   for (var i = 0; i < circleClass.length; i++ )
-  //     circleClass[i].style.backgroundColor = '#000000'
+  //   // const circleClass = document.getElementsByClassName('circle')
+  //   // for (var i = 0; i < circleClass.length; i++ )
+  //   //   circleClass[i].style.backgroundColor = '#000000'
   //   // click add permanent black pawn
   //    // inverse round turn
 
@@ -332,14 +335,14 @@ const startGame = async () => {
   // else {
   //   // hover == white
   //   isPausedPlayer1 = false
-  //   const circleClass = document.getElementsByClassName('circle')
-  //   for (var i = 0; i < circleClass.length; i++ )
-  //     circleClass[i].style.backgroundColor = '#FFFFFF'
-  //   // click add permanent black pawn
+  // //   const circleClass = document.getElementsByClassName('circle')
+  // //   for (var i = 0; i < circleClass.length; i++ )
+  // //     circleClass[i].style.backgroundColor = '#FFFFFF'
+  // //   // click add permanent black pawn
 
   // }
-    // anyway get position of pawn, using i and j, have to add it to id value, separate by '-'
-    // send api call
+  //   // anyway get position of pawn, using i and j, have to add it to id value, separate by '-'
+  //   // send api call
 }
 
 const addPown = async (event) => {
@@ -356,6 +359,8 @@ const addPown = async (event) => {
   const payload = {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
   console.log(data)
   // Handle response
@@ -368,8 +373,10 @@ const addPown = async (event) => {
     console.log('Placement error')
   if (data.status != "playing")
     console.log('Fin')
-  isPausedPlayer1 = !isPausedPlayer1
-  isPausedPlayer2 = !isPausedPlayer2
+  // isPausedPlayer1 = !isPausedPlayer1
+  // isPausedPlayer2 = !isPausedPlayer2
+  isPausedPlayer1 = data.isPausedPlayer1;
+  isPausedPlayer2 = data.isPausedPlayer2;
   if (timePerTurn != -1) {
     clearInterval(currentRoundTimer)
     createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
@@ -416,35 +423,37 @@ const secondsToMinSeconds = (count: number) => {
 const createCountdownPlayer1 = (count: number, timerDivId: string) => {
   timerPlayer1 = setInterval(function() {
     if (!isPausedPlayer1) {
-      count--;
-      const [minutes, seconds] = secondsToMinSeconds(count)
+      count -= 0.1;
+      const [minutes, seconds] = secondsToMinSeconds(Math.floor(count))
       if (seconds < 10)
         document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
       else
         document.getElementById(timerDivId).textContent = minutes + ':' + seconds
       if (count === 0) {
         clearInterval(timerPlayer1);
-        console.log("Time's up!");
+        // console.log("Time's up!");
+        handlePlayerCountdown();
       }
     }
-  }, 1000);
+  }, 100);
 }
 
 const createCountdownPlayer2 = (count: number, timerDivId: string) => {
   timerPlayer2 = setInterval(function() {
     if (!isPausedPlayer2) {
-      count--;
-      const [minutes, seconds] = secondsToMinSeconds(count)
+      count -= 0.1;
+      const [minutes, seconds] = secondsToMinSeconds(Math.floor(count))
       if (seconds < 10)
         document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
       else
         document.getElementById(timerDivId).textContent = minutes + ':' + seconds
       if (count === 0) {
         clearInterval(timerPlayer2);
-        console.log("Time's up!");
+        // console.log("Time's up!");
+        handlePlayerCountdown();
       }
     }
-  }, 1000);
+  }, 100);
 }
 
 const handlePlayerTimeout = async () => {
@@ -452,15 +461,17 @@ const handlePlayerTimeout = async () => {
     "who_timeout": currentRoundTurn,
   }
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/timeout", payload);
-  console.log("TIMEOUT DATA:");
-  console.log(data);
+  // console.log("TIMEOUT DATA:");
+  // console.log(data);
   // Handle response
   if (data.status != 'playing')
     return handleEndGame()
   if (data.error != null)
     console.log('Placement error')
-  isPausedPlayer1 = !isPausedPlayer1
-  isPausedPlayer2 = !isPausedPlayer2
+  isPausedPlayer1 = data.isPausedPlayer1;
+  isPausedPlayer2 = data.isPausedPlayer2;
+  // isPausedPlayer1 = !isPausedPlayer1
+  // isPausedPlayer2 = !isPausedPlayer2
   if (timePerTurn != -1) {
     clearInterval(currentRoundTimer)
     createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
@@ -480,6 +491,16 @@ const handlePlayerTimeout = async () => {
   //   for (var i = 0; i < circleClass.length; i++ )
   //   if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
   // }
+}
+const handlePlayerCountdown = async () => {
+  const payload = {
+    "who_timeout": currentRoundTurn,
+  }
+  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/countdown", payload);
+  if (data.status != 'playing')
+    return handleEndGame()
+  if (data.error != null)
+    console.log('Placement error')
 }
 
 const createCountdownForRound = (count: number, timerDivId: string) => {

@@ -587,6 +587,7 @@ class Gomoku:
 
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			# time.sleep(0.5)
 			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
@@ -629,7 +630,14 @@ class Gomoku:
 			final_dict['message'] = "It's your turn !"
 		return final_dict
 
-
+	def countdown(self, who_timeout: str):
+		final_dict = {
+			'message': None,
+			'status': 'finished'
+		}
+		self.switch_player_turn()
+		final_dict['message'] = f"{'Black' if who_timeout == 'W' else 'White'} won because your time is up !"
+		return final_dict
 
 	def timeout(self, who_timeout: str):
 		from algorithms.gomoku_algorithm import minimax
@@ -643,7 +651,7 @@ class Gomoku:
 		if is_critical == True:
 			if who_timeout != dangerous_player:
 				final_dict['status'] = "finished"
-				final_dict['message'] = f"{'White' if dangerous_player == 'W' else 'Black'} has won the game because you were timeout in critical situation !"
+				final_dict['message'] = f"{'White' if dangerous_player == 'W' else 'Black'} won the game because you were timeout in critical situation !"
 				return final_dict
 
 		self.switch_player_turn()

@@ -266,30 +266,28 @@ async def new_game(body: NewGameModel):
 	if board == None:
 		raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry, the IA cannot continue the game, you win by forfeit...")
 
-	board = [
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," ","W","B","B"," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-		[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	]
+	# board = [
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," ","W","B","B"," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# ]
 	gomoku = all_games[game_id]
-	gomoku.board = board
-	gomoku.player_turn = "W"
 
 	if gomoku.IA == True:
 		message = f"It's your turn !"
@@ -301,9 +299,21 @@ async def new_game(body: NewGameModel):
 		IA_suggestion = (move[1], move[0])
 	else:
 		IA_suggestion = None
+
+
+	isPausedPlayer1 = None
+	isPausedPlayer2 = None
+	if gomoku.IA == True and gomoku.main_player == "W":
+		isPausedPlayer1 = False if gomoku.player_turn == "W" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "B" else True
+	else:
+		isPausedPlayer1 = False if gomoku.player_turn == "B" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "W" else True
 	return {
 		"game_id": game_id,
 		"player_turn": gomoku.player_turn,
+		"isPausedPlayer1": isPausedPlayer1,
+		"isPausedPlayer2": isPausedPlayer2,
 		"IA_suggestion": IA_suggestion,
 		"IA_duration": IA_duration,
 		"board": board,
@@ -329,8 +339,19 @@ async def play_move(game_id: str, body: MoveModel):
 		after_move_dict = gomoku.apply_move(x, y)
 	except Exception as e:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+	isPausedPlayer1 = None
+	isPausedPlayer2 = None
+	if gomoku.IA == True and gomoku.main_player == "W":
+		isPausedPlayer1 = False if gomoku.player_turn == "W" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "B" else True
+	else:
+		isPausedPlayer1 = False if gomoku.player_turn == "B" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "W" else True
 	return {
 		"player_turn": gomoku.player_turn,
+		"isPausedPlayer1": isPausedPlayer1,
+		"isPausedPlayer2": isPausedPlayer2,
 		"IA_suggestion": after_move_dict['IA_suggestion'],
 		"IA_duration": after_move_dict['IA_duration'],
 		"board": gomoku.board,
@@ -350,8 +371,20 @@ async def timeout(game_id: str, body: TimeoutModel):
 	except Exception as e:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
+
+	isPausedPlayer1 = None
+	isPausedPlayer2 = None
+	if gomoku.IA == True and gomoku.main_player == "W":
+		isPausedPlayer1 = False if gomoku.player_turn == "W" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "B" else True
+	else:
+		isPausedPlayer1 = False if gomoku.player_turn == "B" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "W" else True
+
 	return {
 		"player_turn": gomoku.player_turn,
+		"isPausedPlayer1": isPausedPlayer1,
+		"isPausedPlayer2": isPausedPlayer2,
 		"IA_suggestion": timeout_dict['IA_suggestion'],
 		"IA_duration": timeout_dict['IA_duration'],
 		"board": gomoku.board,
@@ -359,6 +392,21 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"white_capture": gomoku.white_capture,
 		"message": timeout_dict['message'],
 		"status": timeout_dict['status']
+	}
+
+@app.post("/game/{game_id}/countdown")
+async def countdown(game_id: str, body: TimeoutModel):
+	gomoku = all_games[game_id]
+	if gomoku is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
+	final_dict = gomoku.countdown(body.who_timeout)
+	return {
+		"player_turn": gomoku.player_turn,
+		"board": gomoku.board,
+		"black_capture": gomoku.black_capture,
+		"white_capture": gomoku.white_capture,
+		"message": final_dict['message'],
+		"status": final_dict['status']
 	}
 
 app.mount("/auth", WSGIMiddleware(flask_app))
