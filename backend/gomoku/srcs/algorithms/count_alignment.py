@@ -1,11 +1,11 @@
 from rules.gomoku_rules import switch_opponent
 
 
-def check_alignment(row: list[str], stone: str, stone_count: int) -> bool:
+def check_alignment(row: str, stone: str, stone_count: int) -> bool:
 	return row.count(stone) == stone_count and row.count(" ") == len(row) - stone_count
 	pass
 
-def type_of_alignment(row: list[str], stone: str):
+def type_of_alignment(row: str, stone: str):
 	opponent_stone = switch_opponent(stone)
 	opponent_count = row.count(opponent_stone)
 	if opponent_count > 1:
@@ -14,7 +14,15 @@ def type_of_alignment(row: list[str], stone: str):
 		if row[0] != opponent_stone and row[-1] != opponent_stone:
 			return 'invalid', 0
 	if row[0] == " " and row[-1] == " ":
-		return 'free', row.count(stone)
+		row_split = row.split(" ")
+		nb_stone = row.count(stone)
+		max_align = 0
+		for item in row_split:
+			if len(item) > max_align:
+				max_align = len(item)
+			if len(item) == nb_stone:
+				return 'free', nb_stone
+		return 'free', max_align
 	else:
 		return 'align', row.count(stone)
 
