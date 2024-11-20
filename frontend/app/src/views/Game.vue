@@ -48,7 +48,7 @@
       <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-medium">Temps par tour</label>
       <div class="relative w-full">
           <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="10" selected>10 secondes</option>
+            <option value="4" selected>10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
             <option value="40">40 secondes</option>
@@ -127,7 +127,6 @@ let isPausedPlayer2 = true
 
 let whoStartFirst = 0; // 0 -> white   1 -> black
 
-let iaSuggestionDiv;
 
 const toggleGeneratorModal = () => {
   generatorModalActive.value = !generatorModalActive.value;
@@ -215,7 +214,7 @@ const fillGridWithList = (list: any, iaSuggestion: any = null) => {
     }
     if (iaSuggestion != null && (iaSuggestion[1] * 19 + iaSuggestion[0]) == i) {
       circleElement.style.backgroundColor = '#bdbfc3'
-      circleElement.style.opacity = "0.5"
+      circleElement.style.opacity = "0.4"
     }
   }
 }
@@ -307,25 +306,25 @@ const startGame = async () => {
   createScoreboard()
   gameId = data.game_id
   currentRoundTurn = data.player_turn
-  if (data.player_turn == 'W') {
-    // hover == black
-    isPausedPlayer2 = false
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-      circleClass[i].style.backgroundColor = '#000000'
-    // click add permanent black pawn
-     // inverse round turn
+  // if (data.player_turn == 'W') {
+  //   // hover == black
+  //   isPausedPlayer2 = false
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //     circleClass[i].style.backgroundColor = '#000000'
+  //   // click add permanent black pawn
+  //    // inverse round turn
 
-  }
-  else {
-    // hover == white
-    isPausedPlayer1 = false
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-      circleClass[i].style.backgroundColor = '#FFFFFF'
-    // click add permanent black pawn
+  // }
+  // else {
+  //   // hover == white
+  //   isPausedPlayer1 = false
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //     circleClass[i].style.backgroundColor = '#FFFFFF'
+  //   // click add permanent black pawn
 
-  }
+  // }
     // anyway get position of pawn, using i and j, have to add it to id value, separate by '-'
     // send api call
 }
@@ -365,18 +364,18 @@ const addPown = async (event) => {
   currentRoundTurn = data.player_turn
   fillGridWithList(data.board, data.IA_suggestion)
   iaDuration.value = data.IA_duration;
-  if (currentRoundTurn == 'B') {
-    // hover == black
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#000' }
-  }
-  else {
-    // hover == white
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#FFF' }
-  }
+  // if (currentRoundTurn == 'B') {
+  //   // hover == black
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //   if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#000' }
+  // }
+  // else {
+  //   // hover == white
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //   if (circleClass[i].style.opacity == "0") { circleClass[i].style.backgroundColor = '#FFF' }
+  // }
 }
 
 const handleEndGame = () => {
@@ -435,20 +434,18 @@ const createCountdownPlayer2 = (count: number, timerDivId: string) => {
   }, 1000);
 }
 
-const handlePlayerTimeout = () => {
+const handlePlayerTimeout = async () => {
   const payload = {
-    "player_move": {"x": -1, "y": -1},
-    "is_timeout": true,
-    "player_timeout": currentRoundTurn,
+    "who_timeout": currentRoundTurn,
   }
-  const data = postRequest("http://127.0.0.1:8000/game//move", payload)
+  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/timeout", payload);
+  console.log("TIMEOUT DATA:");
+  console.log(data);
   // Handle response
   if (data.status != 'playing')
     return handleEndGame()
   if (data.error != null)
     console.log('Placement error')
-  if (data.status != "playing")
-    console.log('Fin')
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
   if (timePerTurn != -1) {
@@ -456,19 +453,20 @@ const handlePlayerTimeout = () => {
     createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
   }
   currentRoundTurn = data.player_turn
-  fillGridWithList(data.board)
-  if (currentRoundTurn == 'B') {
-    // hover == black
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000' }
-  }
-  else {
-    // hover == white
-    const circleClass = document.getElementsByClassName('circle')
-    for (var i = 0; i < circleClass.length; i++ )
-    if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
-  }
+  // fillGridWithList(data.board)
+  fillGridWithList(data.board, data.IA_suggestion)
+  // if (currentRoundTurn == 'B') {
+  //   // hover == black
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //   if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#000' }
+  // }
+  // else {
+  //   // hover == white
+  //   const circleClass = document.getElementsByClassName('circle')
+  //   for (var i = 0; i < circleClass.length; i++ )
+  //   if (circleClass[i].style.opacity != "1") { circleClass[i].style.backgroundColor = '#FFF' }
+  // }
 }
 
 const createCountdownForRound = (count: number, timerDivId: string) => {

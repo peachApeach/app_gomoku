@@ -5,9 +5,9 @@
 				class="fixed left-0 top-0 flex h-screen w-full items-center justify-center bg-black/60 px-8 z-50">
 				<Transition name="modal-inner">
 					<div v-if="modalActive" class="w-[25vw] max-w-screen-sm rounded-2xl bg-ui-bg p-8 dark:bg-d-ui-bg">
-						<div class="flex w-full justify-end">
+						<!-- <div class="flex w-full justify-end">
 							<button @click="$emit('close-modal')"><CloseIcon size="size-6"/></button>
-						</div>
+						</div> -->
 						<slot />
 					</div>
 				</Transition>

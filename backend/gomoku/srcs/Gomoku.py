@@ -618,7 +618,8 @@ class Gomoku:
 			else:
 				has_winner, who_win = critical_situation(self.board)
 			if has_winner:
-				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game !"
+				by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
+				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
 			else:
 				final_dict['message'] = "No one has won. It's a perfect tie !"
 		else:
@@ -630,8 +631,67 @@ class Gomoku:
 
 
 
-	def timeout(self):
-		pass
+	def timeout(self, who_timeout: str):
+		from algorithms.gomoku_algorithm import minimax
+		final_dict = {
+			'message': None,
+			'status': 'playing',
+			'IA_duration': None,
+			'IA_suggestion': None
+		}
+		is_critical, dangerous_player = critical_situation(self.board)
+		if is_critical == True:
+			if who_timeout != dangerous_player:
+				final_dict['status'] = "finished"
+				final_dict['message'] = f"{'White' if dangerous_player == 'W' else 'Black'} has won the game because you were timeout in critical situation !"
+				return final_dict
+
+		self.switch_player_turn()
+
+		if self.get_player_turn() != self.main_player and self.IA == True:
+			mt = MeasureTime(start=True)
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
+			ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			self.place_stone(ia_placement)
+			self.switch_player_turn()
+		else:
+			if self.IA_suggestion:
+				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+				final_dict['IA_suggestion'] = (move[1], move[0])
+
+			if self.get_player_turn() == self.main_player and self.IA == True:
+				final_dict['message'] = "AI took too long to think, It's your turn !"
+			else:
+				final_dict['message'] = f"{'Black' if self.get_player_turn() == 'W' else 'White'} took too long to think, It's {'white' if self.get_player_turn() == 'W' else 'black'} turn !"
+
+			return final_dict
+
+
+		if terminate_state(self.board, self.black_capture, self.white_capture, self.settings):
+			final_dict['status'] = 'finished'
+
+			if self.settings.allowed_capture:
+				if self.black_capture >= 5 or self.white_capture >= 5:
+					has_winner = True
+					who_win = "B" if self.black_capture >= 5 else "W"
+				else:
+					has_winner, who_win = winner_found(self.board)
+			else:
+				has_winner, who_win = critical_situation(self.board)
+			if has_winner:
+				by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
+				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
+			else:
+				final_dict['message'] = "No one has won. It's a perfect tie !"
+		else:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			if self.IA_suggestion:
+				final_dict['IA_suggestion'] = (move[1], move[0])
+			final_dict['message'] = "It's your turn !"
+		return final_dict
+
+
 
 
 if __name__ == "__main__":
