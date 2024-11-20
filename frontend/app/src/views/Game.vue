@@ -194,7 +194,7 @@ const createGrid = () => {
   gridParentDiv.classList.remove('hidden-important')
 }
 
-const fillGridWithList = (list: any, iaSuggestion: any = null) => {
+const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any = null) => {
   const board = document.getElementById('board')
   var childrens = board.children;
   list = list.flat()
@@ -213,8 +213,21 @@ const fillGridWithList = (list: any, iaSuggestion: any = null) => {
       circleElement.style.opacity = "0"
     }
     if (iaSuggestion != null && (iaSuggestion[1] * 19 + iaSuggestion[0]) == i) {
-      circleElement.style.backgroundColor = '#bdbfc3'
-      circleElement.style.opacity = "0.4"
+      if (player_turn != null) {
+        if (player_turn == 'B') {
+          circleElement.style.backgroundColor = '#000'
+          circleElement.style.opacity = "0.5"
+        } else if (player_turn == 'W') {
+          circleElement.style.backgroundColor = '#fff'
+          circleElement.style.opacity = "0.3"
+        } else {
+          circleElement.style.backgroundColor = '#bdbfc3'
+          circleElement.style.opacity = "0.4"
+        }
+      } else {
+        circleElement.style.backgroundColor = '#bdbfc3'
+        circleElement.style.opacity = "0.4"
+      }
     }
   }
 }
@@ -301,7 +314,7 @@ const startGame = async () => {
   //  ]
   // }
   console.log(data.IA_suggestion)
-  fillGridWithList(data.board, data.IA_suggestion)
+  fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
   createScoreboard()
   gameId = data.game_id
@@ -362,7 +375,7 @@ const addPown = async (event) => {
     createCountdownForRound(parseInt(timePerTurn) + 1, 'round-timer')
   }
   currentRoundTurn = data.player_turn
-  fillGridWithList(data.board, data.IA_suggestion)
+  fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
   // if (currentRoundTurn == 'B') {
   //   // hover == black
@@ -454,7 +467,7 @@ const handlePlayerTimeout = async () => {
   }
   currentRoundTurn = data.player_turn
   // fillGridWithList(data.board)
-  fillGridWithList(data.board, data.IA_suggestion)
+  fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   // if (currentRoundTurn == 'B') {
   //   // hover == black
   //   const circleClass = document.getElementsByClassName('circle')
