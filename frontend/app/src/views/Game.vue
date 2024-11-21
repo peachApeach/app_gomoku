@@ -1,40 +1,30 @@
 <template>
   <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
     <div class=" flex w-full flex-col items-center justify-center">
-      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-5 flex flex-nowrap items-center gap-32">
-        <div id="player1" class="flex items-center gap-8">
-          <div id="player1-timer" class="rounded-lg bg-white text-black px-4 py-2 text-lg">
+      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-3 flex flex-nowrap items-center gap-32">
 
-          </div>
+        <div id="player1" class="flex items-center gap-8">
+          <div id="player1-timer" class="rounded-lg px-4 py-2 text-lg" :class="player1Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
           <div class="flex flex-col gap-0">
             <h1 class="text-center text-2xl font-bold">Player 1</h1>
-            <p class="font-medium text-white/60">Captured - {{ blackCapture }}</p>
+            <p class="font-medium text-white/60">Captured - {{ player1Color == 'B' ? blackCapture : whiteCapture }}</p>
           </div>
         </div>
-        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-6xl ">
 
-        </div>
-        <div id="player2" class="flex gap-8">
-          <h1 class="text-center text-3xl font-bold"></h1>
-          <div id="player2-timer" class="rounded-lg bg-black text-white px-4 py-2 text-lg">
+        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-5xl "></div>
 
+        <div id="player2" class="flex items-center gap-8">
+          <div class="flex flex-col gap-0">
+            <h1 id="player2pseudo" class="text-center text-2xl font-bold"></h1>
+            <p class="font-medium text-white/60">Captured - {{ player2Color == 'B' ? blackCapture : whiteCapture }}</p>
           </div>
+
+          <div id="player2-timer" class="rounded-lg px-4 py-2 text-lg" :class="player2Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
         </div>
       </div>
-      <div class="flex w-full flex-col items-center justify-center gap-3">
-        <div v-if="blackCapture != null && whiteCapture != null" class="flex w-full flex-col items-center justify-center gap-1.5">
-          <h1 class="text-xl font-bold text-white">Capture</h1>
-          <div class="flex flex-col items-center text-white">
-            <div class="flex flex-row text-lg font-medium">
-                <p>Black - {{ blackCapture }}</p>
-                <div class=" mx-5 h-full w-px bg-gray-500"></div>
-                <p>{{ whiteCapture }} - White</p>
-            </div>
-          </div>
-          <div class="h-px w-1/4 bg-gray-500"></div>
-        </div>
+      <div class="flex w-full flex-col items-center justify-center gap-0 mb-2">
         <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
+        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-lg ">IA took {{ iaDuration }} to make its decision</div>
       </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid-cols-19 grid-rows-19 bg-board-background board-shadow grid rounded-xl">
@@ -128,7 +118,7 @@ const message = ref<string | null>(null);
 const iaDuration = ref<string | null>(null)
 
 const blackCapture = ref<number | null>(null);
-const whiteCapture = ref<string | null>(null);
+const whiteCapture = ref<number | null>(null);
 
 const isError = ref<boolean>(true);
 // const errorDescription = ref<string | null>(null);
@@ -144,6 +134,9 @@ let currentRoundTurn: string
 
 let isPausedPlayer1 = true
 let isPausedPlayer2 = true
+
+const player1Color = ref<string | null>("B");
+const player2Color = ref<string | null>("W");
 
 let isPownHandling = false
 
@@ -300,7 +293,7 @@ const createScoreboard = () => {
   document.getElementById('player1-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
   document.getElementById('player2-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
   document.getElementById('round-timer').textContent = timePerTurn != -1 ? '00:' + timePerTurn : ''
-  document.getElementById('player2').children[0].textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
+  document.getElementById('player2pseudo').textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
 
   if (minPerPlayer != -1) {
     createCountdownPlayer1(parseInt(minPerPlayer) * 60, 'player1-timer')
@@ -345,6 +338,9 @@ const startGame = async () => {
   //  ]
   // }
   // console.log(data.IA_suggestion)
+  player1Color.value = data.player1_color
+  player2Color.value = data.player2_color
+
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
   blackCapture.value = data.black_capture;
@@ -354,6 +350,7 @@ const startGame = async () => {
   currentRoundTurn = data.player_turn
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
+
   // if (data.player_turn == 'W') {
   //   // hover == black
   //   isPausedPlayer2 = false
@@ -414,6 +411,10 @@ const addPown = async (event) => {
   // isPausedPlayer1 = !isPausedPlayer1
   // isPausedPlayer2 = !isPausedPlayer2
   if (data.before_IA_board) {
+    if (timePerTurn != -1) {
+      clearInterval(currentRoundTimer)
+      createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+    }
     fillGridWithList(data.before_IA_board)
     // console.log(data.before_IA_board);
     // console.log(data.board)
@@ -575,6 +576,9 @@ onMounted(() => {
   toggleGeneratorModal();
 
   // createGrid()
+  // createScoreboard();
+  // blackCapture.value = 3;
+  // whiteCapture.value = 2;
   // fillGridWithList([
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -592,27 +596,6 @@ onMounted(() => {
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// ])
-  // fillGridWithList([
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
