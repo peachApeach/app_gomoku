@@ -30,7 +30,27 @@
 	/* color: #000; */
 }
 
+/* #opposant-ia[type="radio"], #opposant-hotseat[type="radio"]{ */
+	/* visibility: hidden;
+	height: 0;
+	width: 0; */
+  /* } */
 
+.input-radio-opponent {
+	@apply cursor-pointer flex w-full items-center rounded-lg border-2 border-gray-600 px-3 justify-center;
+}
+
+.highlight-radio-opponent {
+	@apply bg-amber-400 border-amber-400;
+}
+.highlight-text-opponent {
+	@apply text-black;
+}
+
+.action-button {
+	@apply rounded-lg transition-all duration-75 bg-amber-400 px-6 py-2 text-lg font-bold text-black hover:bg-amber-500 focus:outline-none focus:ring-4 focus:ring-yellow-900;
+	@apply shadow-xl;
+}
 
 .animate-underline {
 	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-amber-400 transition-all group-hover:w-full;
