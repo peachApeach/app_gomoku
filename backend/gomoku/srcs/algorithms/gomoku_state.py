@@ -92,9 +92,11 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 		pass
 	return False
 
-def critical_situation(board: list[list[str]]) -> tuple[bool, str | None]:
+def critical_situation(board: list[list[str]], observed_stone: str = None) -> tuple[bool, str | None]:
 	for i in range(len(board)):
 		for j in range(len(board[i])):
+			if observed_stone != None and board[i][j] != observed_stone:
+				continue
 			if five_alignments_found(board, i, j) == True:
 				return (True, board[i][j])
 	return (False, None)

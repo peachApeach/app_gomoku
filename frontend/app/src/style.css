@@ -30,7 +30,27 @@
 	/* color: #000; */
 }
 
+/* #opposant-ia[type="radio"], #opposant-hotseat[type="radio"]{ */
+	/* visibility: hidden;
+	height: 0;
+	width: 0; */
+  /* } */
 
+.input-radio-opponent {
+	@apply cursor-pointer flex w-full items-center rounded-lg border-2 border-gray-600 px-3 justify-center;
+}
+
+.highlight-radio-opponent {
+	@apply bg-amber-400 border-amber-400;
+}
+.highlight-text-opponent {
+	@apply text-black;
+}
+
+.action-button {
+	@apply rounded-lg transition-all duration-75 bg-amber-400 px-6 py-2 text-lg font-bold text-black hover:bg-amber-500 focus:outline-none focus:ring-4 focus:ring-yellow-900;
+	@apply shadow-xl;
+}
 
 .animate-underline {
 	@apply absolute -bottom-1 left-0 h-0.5 w-0 bg-amber-400 transition-all group-hover:w-full;
@@ -56,14 +76,18 @@ ul {
 	list-style-position: inside;
 }
 
+.board-line-style {
+	@apply bg-board-line opacity-25;
+	border: 0;
+}
+
 .vl-first-line {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 1px;
 	height: 50%;
-	background-color: white;
-	border: 0;
+
 }
 
 .vl-last-line {
@@ -72,8 +96,6 @@ ul {
 	left: 50%;
 	width: 1px;
 	height: 50%;
-	background-color: white;
-	border: 0;
 }
 
 .vl {
@@ -81,8 +103,6 @@ ul {
 	left: 50%;
 	width: 1px;
 	height: 100%;
-	background-color: white;
-	border: 0;
 }
 
 .hl {
@@ -90,8 +110,6 @@ ul {
 	top: 50%;
 	width: 100%;
 	height: 1px;
-	background-color: white;
-	border: 0;
 }
 
 .hl-first-col {
@@ -100,9 +118,7 @@ ul {
 	top: 50%;
 	width: 50%;
 	height: 1px;
-	width: 100%;
-	background-color: white;
-	border: 0;
+	/* width: 100%; */
 }
 
 .hl-last-col {
@@ -111,22 +127,51 @@ ul {
 	top: 50%;
 	width: 50%;
 	height: 1px;
-	width: 100%;
-	background-color: white;
-	border: 0;
+	/* width: 100%; */
+}
+
+.board-shadow {
+	box-shadow:
+	rgba(0, 0, 0, 0.25) 0px 54px 55px,
+	rgba(0, 0, 0, 0.12) 0px -12px 30px,
+	rgba(0, 0, 0, 0.12) 0px 4px 6px,
+	rgba(0, 0, 0, 0.17) 0px 12px 13px,
+	rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .circle {
-	height: 25px;
-	width: 25px;
-	background-color: #FFF;
+	/* height: 96px;
+	width: 96px; */
+	height: 32px;
+	width: 32px;
+	/* background-color: #ff0000; */
 	top: 50%;
 	left: 50%;
 	opacity: 0;
 	transform: translate(-50%, -50%);
-	border-radius: 50%;
+	/* border-radius: 50%; */
+	/* @apply rounded-full overflow-hidden; */
+	@apply rounded-full;
+	/* border: none; */
 	display: inline-block;
 	z-index: 10;
+
+}
+
+.white-stone-shadow {
+	box-shadow:
+	rgba(0, 0, 0, 0.2) 4px 4px 18px 0px inset,
+	rgba(0, 0, 0, 0.5) -4px -4px 8px 0px inset,
+	rgba(0, 0, 0, 0.3) 4px 4px 6px
+	;
+}
+
+.black-stone-shadow {
+	box-shadow:
+	rgba(0, 0, 0, 0.3) 4px 4px 16px 0px inset,
+	rgba(0, 0, 0, 0.6) -4px -4px 8px 2px inset,
+	rgba(0, 0, 0, 0.3) 4px 4px 6px
+	;
 }
 
 button:hover .circle {

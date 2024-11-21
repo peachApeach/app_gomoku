@@ -40,6 +40,11 @@ export default {
         "low-contrast-text": "#FFFFFF", // 11. Low-contrast text
         "high-contrast-text": "#999999", // 12. High-contrast text
 
+        // "board-background": "#e6971c",
+        "board-background": "#805A48",
+        "board-line": "#040404",
+
+
         "d-app-bg": "#0B032D",
         "d-subtle-bg": "#1E0F45",
         "d-ui-bg": "#2B155D",

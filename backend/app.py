@@ -248,8 +248,10 @@ async def new_game(body: NewGameModel):
 	if allowed_capture is None or allowed_win_by_capture is None or allowed_double_three is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided options are invalid. Please check the format and try again.")
 
-
-	main_player = body.main_player
+	if IA == False:
+		main_player = "B"
+	else:
+		main_player = body.main_player
 
 	all_games[game_id] = Gomoku(
 		IA=IA,
@@ -266,6 +268,7 @@ async def new_game(body: NewGameModel):
 	if board == None:
 		raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry, the IA cannot continue the game, you win by forfeit...")
 
+	gomoku = all_games[game_id]
 	# board = [
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -273,22 +276,22 @@ async def new_game(body: NewGameModel):
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," "," "," ","W"," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," ","W","B"," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," ","W"," ","B","W","W","W","W"," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," ","W","B","B","B","B","W"," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," ","B","B","B","B","B","W"," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," ","W"," "," ","B","B"," "," "," "," "," "," "," "," "],
+	# 	[" "," "," "," "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," ","W","B","B"," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
-	# 	[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 	# ]
-	gomoku = all_games[game_id]
-
+	# gomoku.board = board
+	# gomoku.player_turn = "W"
 	if gomoku.IA == True:
 		message = f"It's your turn !"
 	else:
@@ -319,6 +322,10 @@ async def new_game(body: NewGameModel):
 		"board": board,
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
+		"player1_capture": gomoku.black_capture if gomoku.main_player == 'B' else gomoku.white_capture,
+		"player2_capture": gomoku.black_capture if gomoku.main_player == 'W' else gomoku.white_capture,
+		"player1_color": gomoku.main_player,
+		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": message
 	}
 
@@ -357,8 +364,12 @@ async def play_move(game_id: str, body: MoveModel):
 		"board": gomoku.board,
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
+		"player1_color": gomoku.main_player,
+		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": after_move_dict['message'],
-		"status": after_move_dict['status']
+		"message_after_IA": after_move_dict['message_after_IA'],
+		"status": after_move_dict['status'],
+		"before_IA_board": after_move_dict['before_IA_board'],
 	}
 
 @app.post("/game/{game_id}/timeout")
@@ -390,8 +401,12 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"board": gomoku.board,
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
+		"player1_color": gomoku.main_player,
+		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": timeout_dict['message'],
-		"status": timeout_dict['status']
+		"message_after_IA": timeout_dict['message_after_IA'],
+		"status": timeout_dict['status'],
+		"before_IA_board": timeout_dict['before_IA_board'],
 	}
 
 @app.post("/game/{game_id}/countdown")
@@ -405,6 +420,8 @@ async def countdown(game_id: str, body: TimeoutModel):
 		"board": gomoku.board,
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
+		"player1_color": gomoku.main_player,
+		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": final_dict['message'],
 		"status": final_dict['status']
 	}

@@ -4,7 +4,7 @@
 			<div id="navMenu"
 				class="absolute top-0 h-screen w-full -translate-x-full transition-transform duration-500 md:hidden">
 				<ul
-					class=" flex size-full flex-col items-center justify-center gap-14 bg-app-bg py-4 text-xl font-semibold text-high-contrast-text dark:bg-d-app-bg dark:text-d-high-contrast-text">
+					class=" bg-app-bg text-high-contrast-text dark:bg-d-app-bg dark:text-d-high-contrast-text flex size-full flex-col items-center justify-center gap-14 py-4 text-xl font-semibold">
 
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
@@ -37,14 +37,14 @@
 
 			<div class=" container flex items-center justify-between md:justify-between">
 				<div class="flex w-1/3 justify-center">
-					<div @click="routerTo('/')" class=" flex cursor-pointer flex-row items-center gap-4">
+					<div @click="routerTo('/')" class=" flex cursor-pointer flex-row items-center gap-0">
 						<div class=" size-16 overflow-hidden">
 							<img src="../../assets/images/GomokuLogo.png" alt="" class=" size-full object-cover">
 						</div>
-						<!-- <h1 id="gomokuText" class="text-outline text-2xl font-black">GomokuGame</h1> -->
+						<h1 id="gomokuText" class="text-outline text-2xl font-black">GomokuGame</h1>
 					</div>
 				</div>
-				<ul class="flex w-1/3 flex-row items-center justify-center gap-10 text-lg font-semibold dark:text-d-high-contrast-text max-md:hidden">
+				<ul class="dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-center gap-10 text-lg font-semibold max-md:hidden">
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
 							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
@@ -90,12 +90,12 @@
 import { ref } from 'vue';
 import NavHamburger from '../NavHamburger.vue';
 import { useRouter } from 'vue-router';
-import DownloadSvg from '../svg/DownloadSvg.vue';
+// import DownloadSvg from '../svg/DownloadSvg.vue';
 
 const displayMenu = ref(false);
 const router = useRouter();
-const downloadLink = downloadProject;
-const authLink = authUrl;
+// const downloadLink = downloadProject;
+// const authLink = authUrl;
 
 const toggleMenu = () => {
 
@@ -144,19 +144,19 @@ const routerTo = (link: String, hideMenu = true) => {
 	router.push(`${link}`);
 }
 
-const login = async () => {
-	try {
-		const response = await fetch('http://127.0.0.1:8000/auth/login', {
-			method: "GET",
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-		const json = await response.json();
-		return json
-	} catch (error: any) {
-		console.error(error.message);
-  }
-}
+// const login = async () => {
+// 	try {
+// 		const response = await fetch('http://127.0.0.1:8000/auth/login', {
+// 			method: "GET",
+// 		});
+// 		if (!response.ok) {
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+// 		const json = await response.json();
+// 		return json
+// 	} catch (error: any) {
+// 		console.error(error.message);
+//   }
+// }
 
 </script>

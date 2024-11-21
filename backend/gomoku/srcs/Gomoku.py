@@ -26,6 +26,7 @@ import logging
 import re
 import time
 import random
+import copy
 
 class GomokuError(Exception):
 	pass
@@ -166,7 +167,8 @@ class Gomoku:
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
 				if self.settings.allowed_capture:
-					situation = critical_situation(self.board)
+					opponent_stone = switch_opponent(to_place)
+					situation = critical_situation(self.board, observed_stone=opponent_stone)
 					if situation[0] == True:
 						if situation[1] != to_place:
 							self.board[i][j] = ' '
@@ -557,8 +559,10 @@ class Gomoku:
 		final_dict = {
 			'message': None,
 			'status': 'playing',
+			'message_after_IA': None,
 			'IA_duration': None,
-			'IA_suggestion': None
+			'IA_suggestion': None,
+			'before_IA_board': None
 		}
 		user_placement = convert_xy_to_coordinate(x, y)
 		self.place_stone(user_placement)
@@ -587,6 +591,7 @@ class Gomoku:
 
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			final_dict['before_IA_board'] = copy.deepcopy(self.board)
 			# time.sleep(0.5)
 			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
@@ -627,7 +632,8 @@ class Gomoku:
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			if self.IA_suggestion:
 				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "It's your turn !"
+			final_dict['message'] = "IA is thinking..."
+			final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 	def countdown(self, who_timeout: str):
@@ -644,8 +650,10 @@ class Gomoku:
 		final_dict = {
 			'message': None,
 			'status': 'playing',
+			'message_after_IA': None,
 			'IA_duration': None,
-			'IA_suggestion': None
+			'IA_suggestion': None,
+			'before_IA_board': None
 		}
 		is_critical, dangerous_player = critical_situation(self.board)
 		if is_critical == True:
@@ -657,6 +665,7 @@ class Gomoku:
 		self.switch_player_turn()
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			final_dict['before_IA_board'] = copy.deepcopy(self.board)
 			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
@@ -696,7 +705,8 @@ class Gomoku:
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			if self.IA_suggestion:
 				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "It's your turn !"
+			final_dict['message'] = "IA is thinking..."
+			final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 

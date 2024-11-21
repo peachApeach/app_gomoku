@@ -1,46 +1,40 @@
 <template>
   <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
     <div class=" flex w-full flex-col items-center justify-center">
-      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-5 flex flex-nowrap items-center gap-32">
+      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-3 flex flex-nowrap items-center gap-32">
+
         <div id="player1" class="flex items-center gap-8">
-          <div id="player1-timer" class="rounded-lg bg-blue-700 px-4 py-2 text-lg">
-
+          <div id="player1-timer" class="rounded-lg px-4 py-2 text-lg" :class="player1Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
+          <div class="flex flex-col gap-0">
+            <h1 class="text-center text-2xl font-bold">Player 1</h1>
+            <p class="font-medium text-white/60">Captured - {{ player1Color == 'B' ? blackCapture : whiteCapture }}</p>
           </div>
-          <h1 class="text-center text-3xl font-bold">Player 1</h1>
         </div>
-        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-6xl ">
 
-        </div>
-        <div id="player2" class="flex gap-8">
-          <h1 class="text-center text-3xl font-bold"></h1>
-          <div id="player2-timer" class="rounded-lg bg-orange-700 px-4 py-2 text-lg">
+        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-5xl "></div>
 
+        <div id="player2" class="flex items-center gap-8">
+          <div class="flex flex-col gap-0">
+            <h1 id="player2pseudo" class="text-center text-2xl font-bold"></h1>
+            <p class="font-medium text-white/60">Captured - {{ player2Color == 'B' ? blackCapture : whiteCapture }}</p>
           </div>
+
+          <div id="player2-timer" class="rounded-lg px-4 py-2 text-lg" :class="player2Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
         </div>
       </div>
-      <div class="flex w-full flex-col items-center justify-center gap-3">
-        <div class="flex w-full flex-col items-center justify-center gap-1.5">
-          <h1 class="text-xl font-bold text-white">Capture</h1>
-          <div class="flex flex-col items-center text-white">
-            <div class="flex flex-row font-medium text-lg">
-                <p>Black - {{ blackCapture }}</p>
-                <div class=" h-full w-px bg-gray-500 mx-5"></div>
-                <p>{{ whiteCapture }} - White</p>
-            </div>
-          </div>
-          <div class="h-px w-1/4 bg-gray-500"></div>
-        </div>
+      <div class="mb-2 flex w-full flex-col items-center justify-center gap-0">
         <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-        <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
+        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-lg ">IA took {{ iaDuration }} to make its decision</div>
       </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
-      <div id="board" class="grid-cols-19 grid-rows-19 grid">
+      <div id="board" class="board-shadow grid-cols-19 grid-rows-19 bg-board-background grid rounded-xl">
       </div>
+      <!-- <button type="button" class="mt-6 action-button" @click="toggleEndGameModal">Replay</button> -->
     </div>
   </main>
 
 
-  <Modal :modal-active="endGameModalActive" @close-modal="toggleEndGameModal">
+  <Modal :modal-active="endGameModalActive" @close-modal="toggleEndGameModal" :close-button="true">
     <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">End Game</h1>
     <p class="mb-5 text-center text-xl font-bold text-white">{{ message }}</p>
     <!-- <div>
@@ -48,84 +42,102 @@
       <p class="text-center text-base font-bold text-white">White has captured 3 black stones.</p>
     </div> -->
     <div class="mt-6 flex w-full items-center justify-center">
-      <button type="button" class="mb-2 me-2 rounded-lg bg-yellow-700 px-5 py-2.5 text-base font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-900" @click="replayGame">Replay</button>
+      <button type="button" class="action-button" @click="replayGame">Replay</button>
     </div>
   </Modal>
 
 
-  <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
-    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">
-      Paramètres</h1>
+  <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal" :close-button="true">
+    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">Settings</h1>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-medium">Temps par tour</label>
+      <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-bold">Time per turn</label>
       <div class="relative w-full">
-          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="10">10 secondes</option>
-            <option value="20">20 secondes</option>
-            <option value="30">30 secondes</option>
-            <option value="40" selected>40 secondes</option>
-            <option value="-1">Illimite</option>
+          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-full rounded-lg border-2 border-gray-600 p-2.5 text-sm font-bold text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+            <option value="10">10 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="30">30 seconds</option>
+            <option value="40" selected>40 seconds</option>
+            <option value="-1">Unlimited</option>
           </select>
       </div>
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Minutes par joueur</label>
+      <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-bold">Minutes per player</label>
       <div class="relative w-full">
-          <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-full rounded-lg border-2 border-gray-600 p-2.5 text-sm font-bold text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
             <option value="5" selected>5 minutes</option>
-            <option value="-1">Illimite</option>
+            <option value="-1">Unlimited</option>
           </select>
       </div>
     </div>
 
+
     <div class="flex w-full flex-col items-start py-5">
-      <label id="first-player-label" for="first-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Qui commence en premier ?</label>
+      <label id="opposant-label" class="text-low-contrast-text mb-2 block text-sm font-bold">IA suggestion?</label>
+      <div class="flex w-full">
+        <div @click="eventSwitchIaSuggestion('no')" class="input-radio-opponent me-5" :class="!iaSuggestion ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="!iaSuggestion ? 'highlight-text-opponent' : 'text-white'">No</p>
+        </div>
+        <div @click="eventSwitchIaSuggestion('yes')" class="input-radio-opponent" :class="iaSuggestion ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="iaSuggestion ? 'highlight-text-opponent' : 'text-white'">Yes</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="opposant-label" class="text-low-contrast-text mb-2 block text-sm font-bold">Mode</label>
+      <div class="flex w-full">
+        <div @click="eventSwitchMode('IA')" class="input-radio-opponent me-5" :class="displayModalWhoStart ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="displayModalWhoStart ? 'highlight-text-opponent' : 'text-white'">IA</p>
+          <!-- <input id="opposant-ia" type="radio" name="opposant" value="ia" class="size-4" checked>
+          <label for="opposant-ia" >IA</label> -->
+        </div>
+        <div @click="eventSwitchMode('hotseat')" class="input-radio-opponent" :class="!displayModalWhoStart ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="!displayModalWhoStart ? 'highlight-text-opponent' : 'text-white'">Local</p>
+          <!-- <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="size-4">
+          <label class="  py-3 text-sm font-bold" for="opposant-hotseat" :class="!displayModalWhoStart ? 'highlight-text-opponent' : 'text-white'">Local</label> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
+      <label id="first-player-label" for="first-player" class="text-low-contrast-text mb-2 block text-sm font-bold">Who plays first?</label>
       <div class="relative w-full">
-          <select name="f-player" id="first-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
-            <option value="-1">Aleatoire</option>
-            <option value="0">Je commence en premier</option>
-            <option value="1">L'opposant commence en premier</option>
+          <select name="f-player" id="first-player" class="bg-ui-bg block w-full font-bold rounded-lg border-2 border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500" :disabled="displayModalWhoStart == false">
+            <option value="-1">Random</option>
+            <option value="0">I start first</option>
+            <option value="1">Opponent start first</option>
           </select>
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start py-5">
-      <label id="opposant-label" class="text-low-contrast-text mb-2 block text-sm font-medium">Jouer contre qui ?</label>
-      <div class="flex">
-        <div class="me-5 flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
-          <input id="opposant-ia" type="radio" name="opposant" value="ia" class="size-4 bg-gray-100 accent-amber-400" checked>
-          <label for="opposant-ia" class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium"> IA</label>
-        </div>
-        <div class="flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
-          <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="size-4 border-gray-300 bg-gray-100 accent-amber-400">
-          <label class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium" for="opposant-hotseat"> Local</label>
-        </div>
-      </div>
-    </div>
 
     <div class="mt-6 flex w-full items-center justify-center">
-      <button type="button" class="mb-2 me-2 rounded-lg bg-yellow-700 px-5 py-2.5 text-base font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-900" @click="initGame">PLAY</button>
+      <button type="button" class="action-button mb-2 me-2" @click="initGame">PLAY</button>
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import Modal from '../components/modal/Modal.vue';
+import Modal from '../components/modal/DefaultModal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
 const endGameModalActive = ref(false)
 
+const displayModalWhoStart = ref(true);
+const iaSuggestion = ref(false);
+
 const message = ref<string | null>(null);
 const iaDuration = ref<string | null>(null)
 
 const blackCapture = ref<number | null>(null);
-const whiteCapture = ref<string | null>(null);
+const whiteCapture = ref<number | null>(null);
 
 const isError = ref<boolean>(true);
 // const errorDescription = ref<string | null>(null);
@@ -141,6 +153,11 @@ let currentRoundTurn: string
 
 let isPausedPlayer1 = true
 let isPausedPlayer2 = true
+
+const player1Color = ref<string | null>("B");
+const player2Color = ref<string | null>("W");
+
+let isPownHandling = false
 
 let whoStartFirst = 0; // 0 -> white   1 -> black
 
@@ -166,7 +183,6 @@ const replayGame = () => {
 }
 
 const createGrid = () => {
-  let counter = 0
   document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
   gridParentDiv.innerHTML = ""
@@ -174,15 +190,16 @@ const createGrid = () => {
     for (let j = 0; j < 19; j++) {
       const gridElement = document.createElement('div')
       const gridBtn = document.createElement('button')
-      gridBtn.classList.add(...['relative', 'grid-button', 'w-10', 'h-10'])
+      gridBtn.classList.add(...['relative', 'grid-button', 'w-9', 'h-9'])
       gridBtn.id = i.toString() + '-' + j.toString()
       gridBtn.addEventListener("click", addPown)
       // gridBtn.classList.add(...['relative', 'grid-button', 'border-solid', 'border', 'border-sky-500', 'w-10', 'h-10'])
-      gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-10', 'h-10', 'grid-div'])
+      gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-9', 'h-9', 'grid-div'])
 
       const hrHorizontal = document.createElement('hr')
 
       const hrVertical = document.createElement('hr')
+
       if (i == 0)
         hrVertical.classList.add(...['vl-first-line'])
       else if (i == 18)
@@ -195,6 +212,10 @@ const createGrid = () => {
         hrHorizontal.classList.add(...['hl-last-col'])
       else
         hrHorizontal.classList.add(...['hl'])
+
+      hrHorizontal.classList.add(...['board-line-style'])
+      hrVertical.classList.add(...['board-line-style'])
+
       const hoverCircle = document.createElement('div')
       hoverCircle.classList.add(...['circle', 'absolute', 'group-hover:block'])
       hoverCircle.id = i.toString() + '-' + j.toString() + '-circle'
@@ -205,7 +226,6 @@ const createGrid = () => {
 
       gridElement.appendChild(gridBtn)
       gridParentDiv.appendChild(gridElement)
-      counter++
     }
   }
   gridParentDiv.classList.remove('hidden-important')
@@ -219,11 +239,13 @@ const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any 
     var tableChild = childrens[i];
     var circleElement = tableChild.querySelector('.circle');
     if (list[i] == 'W') {
-      circleElement.style.backgroundColor = '#FFFFFF'
+      circleElement.style.backgroundColor = '#EFEFEF'
+      circleElement.classList.add("white-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == 'B'){
-      circleElement.style.backgroundColor = '#000000'
+      circleElement.style.backgroundColor = '#232323'
+      circleElement.classList.add("black-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == ' '){
@@ -251,7 +273,8 @@ const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any 
 
 const postRequest = async (url: string, payload: any) => {
   try {
-    isError.value = false;
+    // isError.value = false;
+    // message.value = '';
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -283,12 +306,13 @@ const createScoreboard = () => {
   const scoreboard = document.getElementById('scoreboard')
   const minPerPlayer = document.getElementById('min-per-player')?.value
   timePerTurn = document.getElementById('time-per-turn')?.value
-  const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
+  // const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
+  const gamemode = displayModalWhoStart.value == true ? 'ia' : 'hotseat';
 
   document.getElementById('player1-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
   document.getElementById('player2-timer').textContent = minPerPlayer != -1 ? '0' + minPerPlayer + ':00' : 'XX:XX'
   document.getElementById('round-timer').textContent = timePerTurn != -1 ? '00:' + timePerTurn : ''
-  document.getElementById('player2').children[0].textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
+  document.getElementById('player2pseudo').textContent = gamemode == 'ia' ? 'Robot' : 'Player 2'
 
   if (minPerPlayer != -1) {
     createCountdownPlayer1(parseInt(minPerPlayer) * 60, 'player1-timer')
@@ -301,13 +325,15 @@ const createScoreboard = () => {
 }
 
 const startGame = async () => {
+  isPownHandling = false
   whoStartFirst = document.getElementById('first-player')?.value
-  const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
+  // const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
+  const gamemode = displayModalWhoStart.value == true ? 'ia' : 'hotseat';
   if (whoStartFirst == -1) { whoStartFirst = Math.floor(Math.random() * 2) }
   const payload = {
     "mode": gamemode,
     "main_player": whoStartFirst == 0 ? "B" : "W",
-    "IA_suggestion": true,
+    "IA_suggestion": iaSuggestion.value,
     "options": {
       "allowed_capture": true,
       "allowed_win_by_capture": true,
@@ -332,6 +358,9 @@ const startGame = async () => {
   //  ]
   // }
   // console.log(data.IA_suggestion)
+  player1Color.value = data.player1_color
+  player2Color.value = data.player2_color
+
   fillGridWithList(data.board, data.IA_suggestion, data.player_turn)
   iaDuration.value = data.IA_duration;
   blackCapture.value = data.black_capture;
@@ -341,6 +370,7 @@ const startGame = async () => {
   currentRoundTurn = data.player_turn
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
+
   // if (data.player_turn == 'W') {
   //   // hover == black
   //   isPausedPlayer2 = false
@@ -365,37 +395,52 @@ const startGame = async () => {
 }
 
 const addPown = async (event) => {
+  if (isPownHandling == true) {
+    console.log("Pown is pending...")
+    return ;
+  }
+  isPownHandling = true;
   let pawnId = event.target.id
   if (event.target.localName == 'button')
     pawnId += '-circle'
-  console.log(pawnId)
+  // console.log(pawnId)
   const pawnCircle = document.getElementById(pawnId)
   if (pawnCircle.style.opacity == "1") {
-    console.log('already clicked')
+    // console.log('already clicked')
     return
   }
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
   const payload = {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
+  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
+  if (!data) {
+    isPownHandling = false;
+    return ;
+  }
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
-  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
-  console.log(data)
+  // console.log(data)
   // Handle response
   if (data.status != 'playing')
   {
     fillGridWithList(data.board)
     blackCapture.value = data.black_capture;
     whiteCapture.value = data.white_capture;
+    isPownHandling = false;
     return handleEndGame()
   }
   if (data.error != null)
     console.log('Placement error')
-  if (data.status != "playing")
-    console.log('Fin')
-  // isPausedPlayer1 = !isPausedPlayer1
-  // isPausedPlayer2 = !isPausedPlayer2
+  if (data.before_IA_board) {
+    if (timePerTurn != -1) {
+      clearInterval(currentRoundTimer)
+      createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+    }
+    fillGridWithList(data.before_IA_board)
+    await new Promise(r => setTimeout(r, 2000));
+    message.value = data.message_after_IA;
+  }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   if (timePerTurn != -1) {
@@ -407,6 +452,7 @@ const addPown = async (event) => {
   iaDuration.value = data.IA_duration;
   blackCapture.value = data.black_capture;
   whiteCapture.value = data.white_capture;
+  isPownHandling = false;
   // if (currentRoundTurn == 'B') {
   //   // hover == black
   //   const circleClass = document.getElementsByClassName('circle')
@@ -432,6 +478,7 @@ const handleEndGame = () => {
 
 
   toggleEndGameModal();
+  // document.getElementById('nav-bar').hidden = false;
 
   // scoreboard.classList.add('hidden-important')
   // document.getElementById('nav-bar').hidden = false
@@ -490,9 +537,26 @@ const handlePlayerTimeout = async () => {
   // console.log(data);
   // Handle response
   if (data.status != 'playing')
+  {
+    fillGridWithList(data.board)
+    blackCapture.value = data.black_capture;
+    whiteCapture.value = data.white_capture;
+    isPownHandling = false;
     return handleEndGame()
+  }
   if (data.error != null)
-    console.log('Placement error')
+  console.log('Placement error')
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
+  if (data.before_IA_board) {
+    if (timePerTurn != -1) {
+      clearInterval(currentRoundTimer)
+      createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+    }
+    fillGridWithList(data.before_IA_board)
+    await new Promise(r => setTimeout(r, 2000));
+    message.value = data.message_after_IA;
+  }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   // isPausedPlayer1 = !isPausedPlayer1
@@ -544,11 +608,55 @@ const createCountdownForRound = (count: number, timerDivId: string) => {
   }, 100);
 }
 
+const eventSwitchMode = (mode) => {
+  displayModalWhoStart.value = mode
+  if (mode == "hotseat") {
+    displayModalWhoStart.value = false
+  } else {
+    displayModalWhoStart.value = true
+  }
+}
+
+const eventSwitchIaSuggestion = (suggestion) => {
+  if (suggestion == "yes") {
+    iaSuggestion.value = true
+  } else {
+    iaSuggestion.value = false
+  }
+}
+
 onMounted(() => {
   document.getElementById('board').classList.add('hidden-important')
   document.getElementById('scoreboard').classList.add('hidden-important')
   toggleGeneratorModal();
-  // toggleEndGameModal();
+
+  // createGrid()
+  // createScoreboard();
+  // blackCapture.value = 3;
+  // whiteCapture.value = 2;
+  // fillGridWithList([
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","W","B","B"," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// ])
+
+
 });
 
 onUnmounted(() => {
