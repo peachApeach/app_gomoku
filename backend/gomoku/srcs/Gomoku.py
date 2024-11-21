@@ -558,6 +558,7 @@ class Gomoku:
 		final_dict = {
 			'message': None,
 			'status': 'playing',
+			'message_after_IA': None,
 			'IA_duration': None,
 			'IA_suggestion': None,
 			'before_IA_board': None
@@ -630,7 +631,8 @@ class Gomoku:
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			if self.IA_suggestion:
 				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "It's your turn !"
+			final_dict['message'] = "IA is thinking..."
+			final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 	def countdown(self, who_timeout: str):
@@ -647,6 +649,7 @@ class Gomoku:
 		final_dict = {
 			'message': None,
 			'status': 'playing',
+			'message_after_IA': None,
 			'IA_duration': None,
 			'IA_suggestion': None,
 			'before_IA_board': None
@@ -701,7 +704,8 @@ class Gomoku:
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			if self.IA_suggestion:
 				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "It's your turn !"
+			final_dict['message'] = "IA is thinking..."
+			final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 

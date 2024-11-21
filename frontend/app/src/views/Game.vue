@@ -256,7 +256,8 @@ const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any 
 
 const postRequest = async (url: string, payload: any) => {
   try {
-    isError.value = false;
+    // isError.value = false;
+    // message.value = '';
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -277,7 +278,7 @@ const postRequest = async (url: string, payload: any) => {
     message.value = data.message || '';
     return data;
   } catch (e: any) {
-    // console.error(e.message);
+    console.error(e.message);
     isError.value = true;
     message.value = e.message || 'An unknown error occurred';
     return null;
@@ -383,10 +384,10 @@ const addPown = async (event) => {
   let pawnId = event.target.id
   if (event.target.localName == 'button')
     pawnId += '-circle'
-  console.log(pawnId)
+  // console.log(pawnId)
   const pawnCircle = document.getElementById(pawnId)
   if (pawnCircle.style.opacity == "1") {
-    console.log('already clicked')
+    // console.log('already clicked')
     return
   }
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
@@ -396,7 +397,11 @@ const addPown = async (event) => {
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
-  console.log(data)
+  if (!data) {
+    isPownHandling = false;
+    return ;
+  }
+  // console.log(data)
   // Handle response
   if (data.status != 'playing')
   {
@@ -408,18 +413,14 @@ const addPown = async (event) => {
   }
   if (data.error != null)
     console.log('Placement error')
-  // isPausedPlayer1 = !isPausedPlayer1
-  // isPausedPlayer2 = !isPausedPlayer2
   if (data.before_IA_board) {
     if (timePerTurn != -1) {
       clearInterval(currentRoundTimer)
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
     fillGridWithList(data.before_IA_board)
-    // console.log(data.before_IA_board);
-    // console.log(data.board)
-    // console.log("=========================")
     await new Promise(r => setTimeout(r, 2000));
+    message.value = data.message_after_IA;
   }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
@@ -511,14 +512,31 @@ const handlePlayerTimeout = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/timeout", payload);
   // console.log("TIMEOUT DATA:");
   // console.log(data);
   // Handle response
   if (data.status != 'playing')
+  {
+    fillGridWithList(data.board)
+    blackCapture.value = data.black_capture;
+    whiteCapture.value = data.white_capture;
+    isPownHandling = false;
     return handleEndGame()
+  }
   if (data.error != null)
     console.log('Placement error')
+  if (data.before_IA_board) {
+    if (timePerTurn != -1) {
+      clearInterval(currentRoundTimer)
+      createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+    }
+    fillGridWithList(data.before_IA_board)
+    await new Promise(r => setTimeout(r, 2000));
+    message.value = data.message_after_IA;
+  }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   // isPausedPlayer1 = !isPausedPlayer1

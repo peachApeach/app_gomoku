@@ -366,6 +366,7 @@ async def play_move(game_id: str, body: MoveModel):
 		"player1_color": gomoku.main_player,
 		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": after_move_dict['message'],
+		"message_after_IA": after_move_dict['message_after_IA'],
 		"status": after_move_dict['status'],
 		"before_IA_board": after_move_dict['before_IA_board'],
 	}
@@ -402,6 +403,7 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"player1_color": gomoku.main_player,
 		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": timeout_dict['message'],
+		"message_after_IA": timeout_dict['message_after_IA'],
 		"status": timeout_dict['status'],
 		"before_IA_board": timeout_dict['before_IA_board'],
 	}
