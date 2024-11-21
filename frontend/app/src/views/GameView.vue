@@ -413,13 +413,13 @@ const addPown = async (event) => {
   const payload = {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
-  isPausedPlayer1 = !isPausedPlayer1
-  isPausedPlayer2 = !isPausedPlayer2
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
   if (!data) {
     isPownHandling = false;
     return ;
   }
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
   // console.log(data)
   // Handle response
   if (data.status != 'playing')
@@ -532,8 +532,6 @@ const handlePlayerTimeout = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
-  isPausedPlayer1 = !isPausedPlayer1
-  isPausedPlayer2 = !isPausedPlayer2
   const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/timeout", payload);
   // console.log("TIMEOUT DATA:");
   // console.log(data);
@@ -547,7 +545,9 @@ const handlePlayerTimeout = async () => {
     return handleEndGame()
   }
   if (data.error != null)
-    console.log('Placement error')
+  console.log('Placement error')
+  isPausedPlayer1 = !isPausedPlayer1
+  isPausedPlayer2 = !isPausedPlayer2
   if (data.before_IA_board) {
     if (timePerTurn != -1) {
       clearInterval(currentRoundTimer)

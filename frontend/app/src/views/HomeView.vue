@@ -1,14 +1,14 @@
 <template>
-  <main class=" container my-auto flex size-full flex-row items-center justify-center gap-24 text-high-contrast-text">
+  <main class=" text-high-contrast-text container my-auto flex size-full flex-row items-center justify-center gap-24">
 
       <div class=" flex w-full flex-col justify-center gap-7">
-        <h1 class="text-8xl text-amber-400">GOMOKU<span class="font-bold text-high-contrast-text"> GAME</span></h1>
+        <h1 class="text-8xl text-amber-400">GOMOKU<span class="text-high-contrast-text font-bold"> GAME</span></h1>
         <hr class=" h-px border-0 bg-gray-200">
-        <p class=" text-start text-2xl text-low-contrast-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec<br>
-          et sapien a lectus fermentum mattis. Etiam ultricies diam<br>
-          rutrum sapien pharetra tempor. Vivamus eleifend aliquam<br>
-          gravida.</p>
-        <button @click="routerTo('/game')" type="button" class="  mt-3 w-40 rounded-lg bg-amber-400 px-5 py-2.5 text-lg font-medium text-black transition-all hover:bg-amber-300 ">Get started!</button>
+        <p class=" text-low-contrast-text text-start text-2xl font-medium">
+          Challenge yourself with our Gomoku game!<br>
+          Take on our smart AI or settle friendly rivalries with your friends.<br>
+          Are you ready to prove your strategy skills and claim victory?</p>
+        <button @click="routerTo('/game')" type="button" class=" action-button w-40">Get started!</button>
       </div>
 
       <div class=" flex w-full flex-col items-center justify-end gap-6">

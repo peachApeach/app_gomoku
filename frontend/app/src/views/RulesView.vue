@@ -1,19 +1,33 @@
 <template>
-  <main class=" container my-auto flex size-full flex-row items-center justify-center gap-24 text-high-contrast-text">
+  <main class=" text-high-contrast-text container my-auto flex size-full flex-row items-center justify-center gap-24">
     <div class=" flex w-full flex-col justify-center gap-7">
-      <h1 class="text-8xl font-bold">RULES</h1>
+      <h1 class="text-8xl font-bold">Rules</h1>
       <hr class="h-px w-48 border-0 bg-gray-200">
-      <ul class=" list-disc text-start text-2xl text-low-contrast-text">
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec<br>
-        et sapien a lectus fermentum mattis. Etiam ultricies diam<br>
-        rutrum sapien pharetra tempor. Vivamus eleifend aliquam<br>
-        gravida.
+      <ul class=" text-low-contrast-text list-disc text-start text-lg">
+
+        Objective:
+        <li>
+          Align five stones in a row (vertically, horizontally, or diagonally) without being captured, or
+          Capture five pairs of your opponent’s stones.
         </li><br>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec<br>
-        et sapien a lectus fermentum mattis. Etiam ultricies diam<br>
-        rutrum sapien pharetra tempor. Vivamus eleifend aliquam<br>
-        gravida.
-        </li>
+
+        Capturing:
+        <li>
+          You can only capture pairs of opponent’s stones.
+          A pair consists of exactly two stones placed in a row, and they must be flanked by your stones on both sides.
+          Single stones or more than two stones in a row cannot be captured.
+        </li><br>
+
+        Free-Three Rule:
+        <li>
+          A free-three is a sequence of three stones that, if not blocked immediately, creates an indefendable four-stone alignment (i.e., four stones with open ends on both sides).
+          To maintain fairness, forming a double-three (two free-threes at the same time) is considered a forbidden move.
+          Winning Conditions:
+        </li><br>
+
+        Align five stones in a row while respecting the rules above, or
+        Capture five pairs of your opponent’s stones to secure victory.
+
       </ul>
     </div>
 
