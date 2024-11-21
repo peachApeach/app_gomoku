@@ -3,17 +3,20 @@
     <div class=" flex w-full flex-col items-center justify-center">
       <div id="scoreboard" class="hidden-important text-low-contrast-text mb-5 flex flex-nowrap items-center gap-32">
         <div id="player1" class="flex items-center gap-8">
-          <div id="player1-timer" class="rounded-lg bg-blue-700 px-4 py-2 text-lg">
+          <div id="player1-timer" class="rounded-lg bg-white text-black px-4 py-2 text-lg">
 
           </div>
-          <h1 class="text-center text-3xl font-bold">Player 1</h1>
+          <div class="flex flex-col gap-0">
+            <h1 class="text-center text-2xl font-bold">Player 1</h1>
+            <p class="font-medium text-white/60">Captured - {{ blackCapture }}</p>
+          </div>
         </div>
         <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-6xl ">
 
         </div>
         <div id="player2" class="flex gap-8">
           <h1 class="text-center text-3xl font-bold"></h1>
-          <div id="player2-timer" class="rounded-lg bg-orange-700 px-4 py-2 text-lg">
+          <div id="player2-timer" class="rounded-lg bg-black text-white px-4 py-2 text-lg">
 
           </div>
         </div>
@@ -34,7 +37,7 @@
         <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
       </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
-      <div id="board" class="grid-cols-19 grid-rows-19 grid">
+      <div id="board" class="grid-cols-19 grid-rows-19 bg-board-background board-shadow grid rounded-xl">
       </div>
     </div>
   </main>
@@ -142,6 +145,8 @@ let currentRoundTurn: string
 let isPausedPlayer1 = true
 let isPausedPlayer2 = true
 
+let isPownHandling = false
+
 let whoStartFirst = 0; // 0 -> white   1 -> black
 
 
@@ -174,15 +179,16 @@ const createGrid = () => {
     for (let j = 0; j < 19; j++) {
       const gridElement = document.createElement('div')
       const gridBtn = document.createElement('button')
-      gridBtn.classList.add(...['relative', 'grid-button', 'w-10', 'h-10'])
+      gridBtn.classList.add(...['relative', 'grid-button', 'w-9', 'h-9'])
       gridBtn.id = i.toString() + '-' + j.toString()
       gridBtn.addEventListener("click", addPown)
       // gridBtn.classList.add(...['relative', 'grid-button', 'border-solid', 'border', 'border-sky-500', 'w-10', 'h-10'])
-      gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-10', 'h-10', 'grid-div'])
+      gridElement.classList.add(...['relative', 'flex', 'items-center', 'justify-center', 'w-9', 'h-9', 'grid-div'])
 
       const hrHorizontal = document.createElement('hr')
 
       const hrVertical = document.createElement('hr')
+
       if (i == 0)
         hrVertical.classList.add(...['vl-first-line'])
       else if (i == 18)
@@ -195,6 +201,10 @@ const createGrid = () => {
         hrHorizontal.classList.add(...['hl-last-col'])
       else
         hrHorizontal.classList.add(...['hl'])
+
+      hrHorizontal.classList.add(...['board-line-style'])
+      hrVertical.classList.add(...['board-line-style'])
+
       const hoverCircle = document.createElement('div')
       hoverCircle.classList.add(...['circle', 'absolute', 'group-hover:block'])
       hoverCircle.id = i.toString() + '-' + j.toString() + '-circle'
@@ -219,11 +229,13 @@ const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any 
     var tableChild = childrens[i];
     var circleElement = tableChild.querySelector('.circle');
     if (list[i] == 'W') {
-      circleElement.style.backgroundColor = '#FFFFFF'
+      circleElement.style.backgroundColor = '#EFEFEF'
+      circleElement.classList.add("white-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == 'B'){
-      circleElement.style.backgroundColor = '#000000'
+      circleElement.style.backgroundColor = '#232323'
+      circleElement.classList.add("black-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == ' '){
@@ -301,6 +313,7 @@ const createScoreboard = () => {
 }
 
 const startGame = async () => {
+  isPownHandling = false
   whoStartFirst = document.getElementById('first-player')?.value
   const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
   if (whoStartFirst == -1) { whoStartFirst = Math.floor(Math.random() * 2) }
@@ -365,6 +378,11 @@ const startGame = async () => {
 }
 
 const addPown = async (event) => {
+  if (isPownHandling == true) {
+    console.log("Pown is pending...")
+    return ;
+  }
+  isPownHandling = true;
   let pawnId = event.target.id
   if (event.target.localName == 'button')
     pawnId += '-circle'
@@ -388,12 +406,11 @@ const addPown = async (event) => {
     fillGridWithList(data.board)
     blackCapture.value = data.black_capture;
     whiteCapture.value = data.white_capture;
+    isPownHandling = false;
     return handleEndGame()
   }
   if (data.error != null)
     console.log('Placement error')
-  if (data.status != "playing")
-    console.log('Fin')
   // isPausedPlayer1 = !isPausedPlayer1
   // isPausedPlayer2 = !isPausedPlayer2
   if (data.before_IA_board) {
@@ -414,6 +431,7 @@ const addPown = async (event) => {
   iaDuration.value = data.IA_duration;
   blackCapture.value = data.black_capture;
   whiteCapture.value = data.white_capture;
+  isPownHandling = false;
   // if (currentRoundTurn == 'B') {
   //   // hover == black
   //   const circleClass = document.getElementsByClassName('circle')
@@ -555,7 +573,52 @@ onMounted(() => {
   document.getElementById('board').classList.add('hidden-important')
   document.getElementById('scoreboard').classList.add('hidden-important')
   toggleGeneratorModal();
-  // toggleEndGameModal();
+
+  // createGrid()
+  // fillGridWithList([
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","W","B","B"," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," ","W"," ","W"," ","W"," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// ])
+  // fillGridWithList([
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," ","B"," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," ","W"," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// 	[" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
+	// ])
+
+
 });
 
 onUnmounted(() => {
