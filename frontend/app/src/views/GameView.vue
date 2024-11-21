@@ -47,7 +47,7 @@
   </Modal>
 
 
-  <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
+  <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal" :close-button="true">
     <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">Settings</h1>
 
     <div class="flex w-full flex-col items-start py-5">
