@@ -1,7 +1,7 @@
 <template>
-  <main class=" text-high-contrast-text container mt-10 flex size-full flex-row justify-center">
+  <main class=" container mt-10 flex size-full flex-row justify-center text-high-contrast-text">
     <div class=" flex w-full flex-col items-center justify-center">
-      <div id="scoreboard" class="hidden-important text-low-contrast-text mb-3 flex flex-nowrap items-center gap-32">
+      <div id="scoreboard" class="hidden-important mb-3 flex flex-nowrap items-center gap-32 text-low-contrast-text">
 
         <div id="player1" class="flex items-center gap-8">
           <div id="player1-timer" class="rounded-lg px-4 py-2 text-lg" :class="player1Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
@@ -11,7 +11,7 @@
           </div>
         </div>
 
-        <div id="round-timer" class="text-high-contrast-text px-4 py-2 text-5xl "></div>
+        <div id="round-timer" class="px-4 py-2 text-5xl text-high-contrast-text "></div>
 
         <div id="player2" class="flex items-center gap-8">
           <div class="flex flex-col gap-0">
@@ -22,19 +22,19 @@
           <div id="player2-timer" class="rounded-lg px-4 py-2 text-lg" :class="player2Color == 'B' ? 'bg-black text-white' : 'bg-white text-black'"></div>
         </div>
       </div>
-      <div class="flex w-full flex-col items-center justify-center gap-0 mb-2">
+      <div class="mb-2 flex w-full flex-col items-center justify-center gap-0">
         <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-lg ">IA took {{ iaDuration }} to make its decision</div>
+        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-center text-lg text-high-contrast-text ">IA took {{ iaDuration }} to make its decision</div>
       </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
-      <div id="board" class="grid-cols-19 grid-rows-19 bg-board-background board-shadow grid rounded-xl">
+      <div id="board" class="board-shadow grid grid-cols-19 grid-rows-19 rounded-xl bg-board-background">
       </div>
     </div>
   </main>
 
 
   <Modal :modal-active="endGameModalActive" @close-modal="toggleEndGameModal">
-    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">End Game</h1>
+    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">End Game</h1>
     <p class="mb-5 text-center text-xl font-bold text-white">{{ message }}</p>
     <!-- <div>
       <p class="text-center text-base font-bold text-white">Black has captured 3 white stones.</p>
@@ -47,13 +47,13 @@
 
 
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal">
-    <h1 class="text-high-contrast-text mb-5 text-center text-3xl font-bold">
+    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">
       Paramètres</h1>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="time-per-turn-label" for="time-per-turn" class="text-low-contrast-text mb-2 block text-sm font-medium">Temps par tour</label>
+      <label id="time-per-turn-label" for="time-per-turn" class="mb-2 block text-sm font-medium text-low-contrast-text">Temps par tour</label>
       <div class="relative w-full">
-          <select name="time-p-turn" id="time-per-turn" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="time-p-turn" id="time-per-turn" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="10">10 secondes</option>
             <option value="20">20 secondes</option>
             <option value="30">30 secondes</option>
@@ -64,9 +64,9 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="min-per-player-label" for="min-per-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Minutes par joueur</label>
+      <label id="min-per-player-label" for="min-per-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Minutes par joueur</label>
       <div class="relative w-full">
-          <select name="min-p-player" id="min-per-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="min-p-player" id="min-per-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
             <option value="4">4 minutes</option>
@@ -77,9 +77,9 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="first-player-label" for="first-player" class="text-low-contrast-text mb-2 block text-sm font-medium">Qui commence en premier ?</label>
+      <label id="first-player-label" for="first-player" class="mb-2 block text-sm font-medium text-low-contrast-text">Qui commence en premier ?</label>
       <div class="relative w-full">
-          <select name="f-player" id="first-player" class="bg-ui-bg block w-1/2 rounded-lg border border-gray-600 p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
+          <select name="f-player" id="first-player" class="block w-1/2 rounded-lg border border-gray-600 bg-ui-bg p-2.5 text-sm text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
             <option value="-1">Aleatoire</option>
             <option value="0">Je commence en premier</option>
             <option value="1">L'opposant commence en premier</option>
@@ -88,15 +88,15 @@
     </div>
 
     <div class="flex w-full flex-col items-start py-5">
-      <label id="opposant-label" class="text-low-contrast-text mb-2 block text-sm font-medium">Jouer contre qui ?</label>
+      <label id="opposant-label" class="mb-2 block text-sm font-medium text-low-contrast-text">Jouer contre qui ?</label>
       <div class="flex">
         <div class="me-5 flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
           <input id="opposant-ia" type="radio" name="opposant" value="ia" class="size-4 bg-gray-100 accent-amber-400" checked>
-          <label for="opposant-ia" class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium"> IA</label>
+          <label for="opposant-ia" class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text"> IA</label>
         </div>
         <div class="flex items-center rounded-lg border border-gray-600 px-4 dark:border-gray-700">
           <input id="opposant-hotseat" type="radio" name="opposant" value="hotseat" class="size-4 border-gray-300 bg-gray-100 accent-amber-400">
-          <label class="text-low-contrast-text ms-2 w-full py-3 text-sm font-medium" for="opposant-hotseat"> Local</label>
+          <label class="ms-2 w-full py-3 text-sm font-medium text-low-contrast-text" for="opposant-hotseat"> Local</label>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import Modal from '../components/modal/Modal.vue';
+import Modal from '../components/modal/DefaultModal.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
@@ -164,7 +164,6 @@ const replayGame = () => {
 }
 
 const createGrid = () => {
-  let counter = 0
   document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
   gridParentDiv.innerHTML = ""
@@ -208,7 +207,6 @@ const createGrid = () => {
 
       gridElement.appendChild(gridBtn)
       gridParentDiv.appendChild(gridElement)
-      counter++
     }
   }
   gridParentDiv.classList.remove('hidden-important')

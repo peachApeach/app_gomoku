@@ -90,12 +90,12 @@
 import { ref } from 'vue';
 import NavHamburger from '../NavHamburger.vue';
 import { useRouter } from 'vue-router';
-import DownloadSvg from '../svg/DownloadSvg.vue';
+// import DownloadSvg from '../svg/DownloadSvg.vue';
 
 const displayMenu = ref(false);
 const router = useRouter();
-const downloadLink = downloadProject;
-const authLink = authUrl;
+// const downloadLink = downloadProject;
+// const authLink = authUrl;
 
 const toggleMenu = () => {
 
@@ -144,19 +144,19 @@ const routerTo = (link: String, hideMenu = true) => {
 	router.push(`${link}`);
 }
 
-const login = async () => {
-	try {
-		const response = await fetch('http://127.0.0.1:8000/auth/login', {
-			method: "GET",
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-		const json = await response.json();
-		return json
-	} catch (error: any) {
-		console.error(error.message);
-  }
-}
+// const login = async () => {
+// 	try {
+// 		const response = await fetch('http://127.0.0.1:8000/auth/login', {
+// 			method: "GET",
+// 		});
+// 		if (!response.ok) {
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+// 		const json = await response.json();
+// 		return json
+// 	} catch (error: any) {
+// 		console.error(error.message);
+//   }
+// }
 
 </script>

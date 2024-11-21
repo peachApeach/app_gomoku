@@ -78,12 +78,8 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const routerTo = (link: String, hideMenu = true) => {
+const routerTo = (link: String) => {
 	router.push(`${link}`);
-}
-
-const isLoggedIn = () => {
-
 }
 
 </script>
