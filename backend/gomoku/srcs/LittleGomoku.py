@@ -75,35 +75,6 @@ class LittleGomoku:
 	def switch_player_turn(self):
 		self.player_turn = 'B' if self.player_turn == 'W' else 'W'
 
-
-	def is_valid_placement(self, i: int, j: int, stone: str = None) -> bool:
-		if i is None or j is None:
-			raise PlacementError("Some index are undefined.")
-		if i < 0 or i >= self.__board_width or j < 0 or j >= self.__board_height:
-			raise PlacementError("Some index are out of range.")
-
-		if self.board[i][j] == ' ' or stone == ' ':
-			to_place = self.player_turn if stone == None else stone
-			if self.settings.allowed_capture == True:
-				if pair_can_be_capture(self.board, i, j, to_place) != []:
-					return True
-				self.board[i][j] = to_place
-				situation = critical_situation(self.board)
-				if situation[0] == True:
-					if situation[1] != to_place:
-						self.board[i][j] = ' '
-						raise PlacementError("You are in a critical situation.")
-						return False
-				self.board[i][j] = ' '
-			if self.settings.allowed_double_three == False:
-				invalid_free_three = is_creating_db_free_three(self.board, i, j, to_place)
-				if invalid_free_three == True:
-					raise PlacementError("This will create double free-three.")
-				return invalid_free_three == False
-		else:
-			raise PlacementError("Placement already use.")
-		return True
-
 	def place_stone(self, i: int, j: int, stone: str = None):
 
 		if j < 0 or j >= self.__board_width or i < 0 or i >= self.__board_height:
@@ -131,7 +102,8 @@ class LittleGomoku:
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
 				if self.settings.allowed_capture:
-					situation = critical_situation(self.board)
+					opponent_stone = switch_opponent(to_place)
+					situation = critical_situation(self.board, observed_stone=opponent_stone)
 					if situation[0] == True:
 						if situation[1] != to_place:
 							self.board[i][j] = ' '

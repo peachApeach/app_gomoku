@@ -167,7 +167,8 @@ class Gomoku:
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
 				if self.settings.allowed_capture:
-					situation = critical_situation(self.board)
+					opponent_stone = switch_opponent(to_place)
+					situation = critical_situation(self.board, observed_stone=opponent_stone)
 					if situation[0] == True:
 						if situation[1] != to_place:
 							self.board[i][j] = ' '
