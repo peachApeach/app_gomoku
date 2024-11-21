@@ -19,19 +19,19 @@
         </div>
       </div>
       <div class="flex w-full flex-col items-center justify-center gap-3">
-        <div class="flex w-full flex-col items-center justify-center gap-1.5">
+        <div v-if="blackCapture != null && whiteCapture != null" class="flex w-full flex-col items-center justify-center gap-1.5">
           <h1 class="text-xl font-bold text-white">Capture</h1>
           <div class="flex flex-col items-center text-white">
-            <div class="flex flex-row font-medium text-lg">
+            <div class="flex flex-row text-lg font-medium">
                 <p>Black - {{ blackCapture }}</p>
-                <div class=" h-full w-px bg-gray-500 mx-5"></div>
+                <div class=" mx-5 h-full w-px bg-gray-500"></div>
                 <p>{{ whiteCapture }} - White</p>
             </div>
           </div>
           <div class="h-px w-1/4 bg-gray-500"></div>
         </div>
         <div id="message" class="text-center text-xl font-bold" :class="isError ? 'text-red-500' : 'text-white'">&nbsp;{{ message }}</div>
-        <div v-if="iaDuration != null" id="ia-duration" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
+        <div id="ia-duration" :class="iaDuration != null ? 'opacity-100' : 'opacity-0'" class="text-high-contrast-text text-center text-xl ">IA took {{ iaDuration }} to make its decision</div>
       </div>
       <!-- <div id="error_message" class="text-center text-lg font-bold text-red-500">Consequat officia deserunt deserunt officia laboris. Nostrud laborum nisi id aliqua incididunt commodo velit. Cillum anim ad fugiat ex anim consectetur. Reprehenderit sit labore non est reprehenderit adipisicing sunt enim.</div> -->
       <div id="board" class="grid-cols-19 grid-rows-19 grid">
@@ -272,7 +272,7 @@ const postRequest = async (url: string, payload: any) => {
     message.value = data.message || '';
     return data;
   } catch (e: any) {
-    console.error(e.message);
+    // console.error(e.message);
     isError.value = true;
     message.value = e.message || 'An unknown error occurred';
     return null;
@@ -396,6 +396,13 @@ const addPown = async (event) => {
     console.log('Fin')
   // isPausedPlayer1 = !isPausedPlayer1
   // isPausedPlayer2 = !isPausedPlayer2
+  if (data.before_IA_board) {
+    fillGridWithList(data.before_IA_board)
+    // console.log(data.before_IA_board);
+    // console.log(data.board)
+    // console.log("=========================")
+    await new Promise(r => setTimeout(r, 2000));
+  }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   if (timePerTurn != -1) {

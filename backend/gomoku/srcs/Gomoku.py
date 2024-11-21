@@ -26,6 +26,7 @@ import logging
 import re
 import time
 import random
+import copy
 
 class GomokuError(Exception):
 	pass
@@ -558,7 +559,8 @@ class Gomoku:
 			'message': None,
 			'status': 'playing',
 			'IA_duration': None,
-			'IA_suggestion': None
+			'IA_suggestion': None,
+			'before_IA_board': None
 		}
 		user_placement = convert_xy_to_coordinate(x, y)
 		self.place_stone(user_placement)
@@ -587,6 +589,7 @@ class Gomoku:
 
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			final_dict['before_IA_board'] = copy.deepcopy(self.board)
 			# time.sleep(0.5)
 			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
@@ -645,7 +648,8 @@ class Gomoku:
 			'message': None,
 			'status': 'playing',
 			'IA_duration': None,
-			'IA_suggestion': None
+			'IA_suggestion': None,
+			'before_IA_board': None
 		}
 		is_critical, dangerous_player = critical_situation(self.board)
 		if is_critical == True:
@@ -657,6 +661,7 @@ class Gomoku:
 		self.switch_player_turn()
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
+			final_dict['before_IA_board'] = copy.deepcopy(self.board)
 			mt = MeasureTime(start=True)
 			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)

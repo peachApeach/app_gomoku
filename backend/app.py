@@ -358,7 +358,8 @@ async def play_move(game_id: str, body: MoveModel):
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
 		"message": after_move_dict['message'],
-		"status": after_move_dict['status']
+		"status": after_move_dict['status'],
+		"before_IA_board": after_move_dict['before_IA_board'],
 	}
 
 @app.post("/game/{game_id}/timeout")
@@ -391,7 +392,8 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"black_capture": gomoku.black_capture,
 		"white_capture": gomoku.white_capture,
 		"message": timeout_dict['message'],
-		"status": timeout_dict['status']
+		"status": timeout_dict['status'],
+		"before_IA_board": timeout_dict['before_IA_board'],
 	}
 
 @app.post("/game/{game_id}/countdown")
