@@ -36,7 +36,7 @@ Session(flask_app)
 
 CLIENT_ID = os.getenv('UID')
 CLIENT_SECRET = os.getenv('SECRET_TOKEN')
-REDIRECT_URI = 'http://127.0.0.1:8000/auth/callback'
+REDIRECT_URI = 'http://127.0.0.1:4000/auth/callback'
 
 @flask_app.route('/')
 def index():
@@ -115,7 +115,7 @@ Session(flask_app)
 
 CLIENT_ID = os.getenv('UID')
 CLIENT_SECRET = os.getenv('SECRET_TOKEN')
-REDIRECT_URI = 'http://127.0.0.1:8000/auth/callback'
+REDIRECT_URI = 'http://127.0.0.1:4000/auth/callback'
 
 @flask_app.route('/')
 def index():

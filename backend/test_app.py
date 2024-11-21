@@ -2,7 +2,7 @@ import requests
 import time
 import datetime
 
-url_new_game = 'http://127.0.0.1:8000/game/new'
+url_new_game = 'http://127.0.0.1:4000/game/new'
 # url_move = 'http://127.0.0.1:8000/'
 
 game_new_json = {
@@ -24,7 +24,7 @@ print(f"Response :")
 print(game1.json())
 game_id = game1.json()['game_id']
 
-game2 = requests.post(f"http://127.0.0.1:8000/game/{game_id}/move", json={
+game2 = requests.post(f"http://127.0.0.1:4000/game/{game_id}/move", json={
 	"player_move": {"x": 12, "y": 15}
 })
 

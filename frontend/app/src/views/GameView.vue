@@ -344,7 +344,7 @@ const startGame = async () => {
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
-  const data = await postRequest("http://127.0.0.1:8000/game/new", payload);
+  const data = await postRequest("http://127.0.0.1:4000/game/new", payload);
   // console.log(data);
   // console.log(data.board);
   // const data = {
@@ -413,7 +413,7 @@ const addPown = async (event) => {
   const payload = {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
-  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/move", payload)
+  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
   if (!data) {
     isPownHandling = false;
     return ;
@@ -532,7 +532,7 @@ const handlePlayerTimeout = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
-  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/timeout", payload);
+  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/timeout", payload);
   // console.log("TIMEOUT DATA:");
   // console.log(data);
   // Handle response
@@ -585,7 +585,7 @@ const handlePlayerCountdown = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
-  const data = await postRequest("http://127.0.0.1:8000/game/" + gameId + "/countdown", payload);
+  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/countdown", payload);
   if (data.status != 'playing')
     return handleEndGame()
   if (data.error != null)
