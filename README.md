@@ -4,7 +4,7 @@
 
 ## Overview
 
-Gomoku is a strategy board game traditionally played on a Go board with stones of two different colors.
+Gomoku is a classic strategy board game played on a grid, where the goal is to outsmart your opponent by aligning five stones in a row. This web-based version brings Gomoku to life with sleek design, challenging AI, and dynamic gameplay.
 
 ## Try the Project - WebApp
 
