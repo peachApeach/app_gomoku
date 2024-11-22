@@ -241,11 +241,13 @@ const fillGridWithList = (list: any, iaSuggestion: any = null, player_turn: any 
     if (list[i] == 'W') {
       circleElement.style.backgroundColor = '#EFEFEF'
       circleElement.classList.add("white-stone-shadow");
+      circleElement.classList.remove("black-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == 'B'){
       circleElement.style.backgroundColor = '#232323'
       circleElement.classList.add("black-stone-shadow");
+      circleElement.classList.remove("white-stone-shadow");
       circleElement.style.opacity = "1"
     }
     else if (list[i] == ' '){
@@ -406,6 +408,7 @@ const addPown = async (event) => {
   // console.log(pawnId)
   const pawnCircle = document.getElementById(pawnId)
   if (pawnCircle.style.opacity == "1") {
+    isPownHandling = false;
     // console.log('already clicked')
     return
   }
@@ -414,6 +417,7 @@ const addPown = async (event) => {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
   const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
+  console.log(data);
   if (!data) {
     isPownHandling = false;
     return ;
