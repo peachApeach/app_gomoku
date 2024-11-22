@@ -4,7 +4,7 @@
 			<div id="navMenu"
 				class="absolute top-0 h-screen w-full -translate-x-full transition-transform duration-500 md:hidden">
 				<ul
-					class=" bg-app-bg text-high-contrast-text dark:bg-d-app-bg dark:text-d-high-contrast-text flex size-full flex-col items-center justify-center gap-14 py-4 text-xl font-semibold">
+					class=" flex size-full flex-col items-center justify-center gap-14 bg-app-bg py-4 text-xl font-semibold text-high-contrast-text dark:bg-d-app-bg dark:text-d-high-contrast-text">
 
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
@@ -15,14 +15,14 @@
 					</li>
 					<li class="group relative w-max">
 						<p @click="routerTo('/rules')"
-							class="cursor-pointer transition-all group-hover:text-black dark:group-hover:text-white">
+							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
 							Rules</p>
 						<span class="animate-underline"></span>
 
 					</li>
 					<li class="group relative w-max">
 						<p @click="routerTo('/game')"
-							class="cursor-pointer transition-all group-hover:text-black dark:group-hover:text-white">
+							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">
 							Play</p>
 						<span class="animate-underline"></span>
 
@@ -44,7 +44,7 @@
 						<h1 id="gomokuText" class="text-outline text-2xl font-black">GomokuGame</h1>
 					</div>
 				</div>
-				<ul class="dark:text-d-high-contrast-text flex w-1/3 flex-row items-center justify-center gap-10 text-lg font-semibold max-md:hidden">
+				<ul class="flex w-1/3 flex-row items-center justify-center gap-10 text-lg font-semibold dark:text-d-high-contrast-text max-md:hidden">
 					<li class="group relative w-max">
 						<p @click="routerTo('/')"
 							class="cursor-pointer transition-all group-hover:text-white dark:group-hover:text-white">

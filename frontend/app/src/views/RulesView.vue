@@ -1,9 +1,9 @@
 <template>
-  <main class=" text-high-contrast-text container my-auto flex size-full flex-row items-center justify-center gap-24">
+  <main class=" container my-auto flex size-full flex-row items-center justify-center gap-24 text-high-contrast-text">
     <div class=" flex w-full flex-col justify-center gap-7">
       <h1 class="text-8xl font-bold">Rules</h1>
       <hr class="h-px w-48 border-0 bg-gray-200">
-      <ul class=" text-low-contrast-text list-disc text-start text-lg">
+      <ul class=" list-disc text-start text-lg text-low-contrast-text">
 
         Objective:
         <li>
