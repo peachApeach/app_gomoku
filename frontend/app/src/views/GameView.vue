@@ -453,7 +453,7 @@ const addPown = async (event) => {
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
     fillGridWithList(data.before_IA_board)
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 600));
     message.value = data.message_after_IA;
   }
   isPausedPlayer1 = data.isPausedPlayer1;
@@ -570,7 +570,7 @@ const handlePlayerTimeout = async () => {
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
     fillGridWithList(data.before_IA_board)
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 600));
     message.value = data.message_after_IA;
   }
   isPausedPlayer1 = data.isPausedPlayer1;
