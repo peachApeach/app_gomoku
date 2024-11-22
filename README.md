@@ -2,9 +2,32 @@
 
 <img src="/gitimages/miniature.png" alt="Project Overview" width="100%">
 
-## Overview
+## 📄 Overview
 
 Gomoku is a classic strategy board game played on a grid, where the goal is to outsmart your opponent by aligning five stones in a row. This web-based version brings Gomoku to life with sleek design, challenging AI, and dynamic gameplay.
+
+## 📋 Rules
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+- ✅ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+- ✅ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+- ❌ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+## 🤖 How AI works?
+
+Used algorithm : Mini-max
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+
+### Implement Optimization
+
+- ✅ Alpha-Beta Pruning Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+- ✅ Depth Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+- ✅ Action Range Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+## 🎮 Game Design & User Experience
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis neque quis tortor scelerisque ultricies. Nunc nec feugiat eros. Sed viverra est vel sem volutpat, in faucibus mauris pharetra. Pellentesque ac massa et orci aliquam volutpat at ac metus. Duis laoreet pulvinar lectus ut viverra. Ut volutpat aliquam justo et aliquam.
 
 ## Try the Project - WebApp
 
