@@ -1,6 +1,16 @@
 <template>
   <main class=" container mt-10 flex size-full flex-row justify-center text-high-contrast-text">
-    <div class=" flex w-full flex-col items-center justify-center">
+
+    <div v-show="!gridIsCreated" class="flex h-[90vh] w-5/6 flex-col items-center justify-center gap-8 ">
+      <h1 class="text-3xl font-bold text-white">Are You Ready?</h1>
+      <p class="text-center">
+        Challenge your mind and strategy skills in our Gomoku game! Take on the AI or a friend, and see who comes out on top. Will you align five stones or capture five pairs first? The game awaits you!
+      </p>
+      <button type="button" class="action-button replay-button-shadow z-30 mb-4" @click="toggleGeneratorModal">Play Now!</button>
+
+    </div>
+
+    <div v-show="gridIsCreated" class=" flex w-full flex-col items-center justify-center">
       <div id="scoreboard" class="hidden-important mb-3 flex flex-nowrap items-center gap-32 text-low-contrast-text">
 
         <div id="player1" class="flex items-center gap-8">
@@ -121,7 +131,7 @@
 
 
     <div class="mt-6 flex w-full items-center justify-center">
-      <button type="button" class="action-button mb-2 me-2" @click="initGame">PLAY</button>
+      <button type="button" class="action-button mb-2 me-2" @click="initGame">Play</button>
     </div>
   </Modal>
 </template>
@@ -132,6 +142,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
 const endGameModalActive = ref(false)
+
+const gridIsCreated = ref(false)
 
 const displayModalWhoStart = ref(true);
 const iaSuggestion = ref(false);
@@ -188,6 +200,7 @@ const replayGame = () => {
 }
 
 const createGrid = () => {
+  gridIsCreated.value = true
   document.getElementById('nav-bar').hidden = true
   const gridParentDiv = document.getElementById('board')
   gridParentDiv.innerHTML = ""
@@ -428,7 +441,7 @@ const addPown = async (event) => {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
   const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
-  console.log(data);
+  // console.log(data);
   if (!data) {
     isPownHandling = false;
     return ;
@@ -561,7 +574,9 @@ const handlePlayerTimeout = async () => {
     return handleEndGame()
   }
   if (data.error != null)
-  console.log('Placement error')
+  {
+    console.log('Placement error')
+  }
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
   if (data.before_IA_board) {
@@ -644,7 +659,7 @@ const eventSwitchIaSuggestion = (suggestion) => {
 onMounted(() => {
   document.getElementById('board').classList.add('hidden-important')
   document.getElementById('scoreboard').classList.add('hidden-important')
-  toggleGeneratorModal();
+  // toggleGeneratorModal();
 
   // createGrid()
   // createScoreboard();
