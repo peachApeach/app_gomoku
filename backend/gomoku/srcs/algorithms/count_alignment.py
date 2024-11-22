@@ -22,6 +22,8 @@ def type_of_alignment(row: str, stone: str):
 				max_align = len(item)
 			if len(item) == nb_stone:
 				return 'free', nb_stone
+		if max_align == 2 and nb_stone == 3:
+			return 'free', 3
 		return 'free', max_align
 	else:
 		return 'align', row.count(stone)
