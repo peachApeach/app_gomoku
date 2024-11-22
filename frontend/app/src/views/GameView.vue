@@ -529,7 +529,7 @@ const createCountdownPlayer1 = (count: number, timerDivId: string) => {
         document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
       else
         document.getElementById(timerDivId).textContent = minutes + ':' + seconds
-      if (seconds <= 0) {
+      if (minutes <= 0 && seconds <= 0) {
         clearInterval(timerPlayer1);
         // console.log("Time's up!");
         handlePlayerCountdown();
@@ -548,7 +548,7 @@ const createCountdownPlayer2 = (count: number, timerDivId: string) => {
         document.getElementById(timerDivId).textContent = minutes + ':0' + seconds
       else
         document.getElementById(timerDivId).textContent = minutes + ':' + seconds
-      if (seconds <= 0) {
+      if (minutes <= 0 && seconds <= 0) {
         clearInterval(timerPlayer2);
         // console.log("Time's up!");
         handlePlayerCountdown();
