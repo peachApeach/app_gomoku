@@ -4,9 +4,23 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rules.gomoku_rules import switch_opponent
 from algorithms.count_alignment import type_of_alignment
+from algorithms.StreaksRegex import StreaksRegex
+
+def adjust_list(lst: list[str]):
+	for i in range(1, len(lst)):
+		if len(lst[i - 1]) == 0:
+			continue
+		if lst[i - 1][-1] == " ":
+			lst[i] = " " + lst[i]
+	return lst
 
 def alignment_streaks(line: str):
+	streaksRegex = StreaksRegex()
+
 	all_streaks = {
+		'five_aligned_black': 0,
+		'five_aligned_white': 0,
+
 		'free_four_black': 0,
 		'free_four_white': 0,
 
@@ -20,8 +34,9 @@ def alignment_streaks(line: str):
 		'three_aligned_white': 0,
 	}
 
-	white_streaks = re.findall(r"(\s*[W]{2,}\s?[W]*\s?)", line)
+	white_streaks = re.findall(streaksRegex.white_pattern, line)
 	if white_streaks:
+		white_streaks = adjust_list(white_streaks)
 		for streak in white_streaks:
 			if (len(streak)) < 5:
 				continue
@@ -36,12 +51,16 @@ def alignment_streaks(line: str):
 					all_streaks['three_aligned_white'] += 1
 				elif number == 4:
 					all_streaks['four_aligned_white'] += 1
+				elif number == 5:
+					all_streaks['five_aligned_white'] += 1
 
-	black_streaks = re.findall(r"(\s*[B]{2,}\s?[B]*\s?)", line)
+	black_streaks = re.findall(streaksRegex.black_pattern, line)
 	if black_streaks:
+		black_streaks = adjust_list(black_streaks)
 		for streak in black_streaks:
 			if (len(streak)) < 5:
 				continue
+			# print(streak)
 			type_align, number = type_of_alignment(streak, 'B')
 			if type_align == 'free':
 				if number == 3:
@@ -53,6 +72,8 @@ def alignment_streaks(line: str):
 					all_streaks['three_aligned_black'] += 1
 				elif number == 4:
 					all_streaks['four_aligned_black'] += 1
+				elif number == 5:
+					all_streaks['five_aligned_black'] += 1
 	return all_streaks
 
 def count_horizontal(board: list[list[str]], i: int):
@@ -110,7 +131,7 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 	}
 
 if __name__ == "__main__":
-	print(alignment_streaks("       WWW W       "))
+	print(alignment_streaks("  BBBBBWWWW BBBBB       "))
 	exit(1)
 
 
