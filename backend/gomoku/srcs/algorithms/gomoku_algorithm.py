@@ -131,7 +131,7 @@ def super_minimax(
 				# print("Failed to simulate")
 				continue
 			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			if it == 2:
+			if it == 3:
 				break
 
 			if state > value:
@@ -156,7 +156,7 @@ def super_minimax(
 			except:
 				continue
 			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			if it == 2:
+			if it == 3:
 				break
 
 			if state < value:

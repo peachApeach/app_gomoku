@@ -14,6 +14,8 @@ class LittleGomoku:
 
 	def __init__(
 		self, board: list[list[str]], player_turn: str, gomoku_settings: GomokuSettings, max_player: str, min_player: str, black_capture: int, white_capture: int,
+		five_aligned_black: int,
+		five_aligned_white: int,
 		free_three_black: int,
 		free_three_white: int,
 		free_four_black: int,
@@ -48,6 +50,9 @@ class LittleGomoku:
 
 		self.free_four_black = free_four_black
 		self.free_four_white = free_four_white
+
+		self.five_aligned_black = five_aligned_black
+		self.five_aligned_white = five_aligned_white
 
 	def __str__(self) -> str:
 		content = "  "
@@ -152,6 +157,38 @@ class LittleGomoku:
 							slot_useful.append((i, j, count_same * 2 + count_different))
 
 		slot_useful.sort(key=lambda x: x[-1], reverse=True)
+		final_action = [(i[0], i[1]) for i in slot_useful]
+
+		if len(final_action) != 0:
+			return final_action
+		list_empty_slot = [(i, j) for i in range(8, 11) for j in range(8, 11) if self.board[i][j] == " "]
+		return [random.choice(list_empty_slot)]
+
+
+	def super_get_actions(self) -> list[tuple[int]]:
+		from algorithms.gomoku_heuristic_function import game_state
+		slot_useful = []
+		range_i, range_j = get_actions_range(self.board)
+		if range_i is None or range_j is None:
+			range_i = range(8, 11)
+			range_j = range(8, 11)
+
+		for i in range_i:
+			for j in range_j:
+				if self.board[i][j] == " ":
+						count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
+						if count_same > 0 or count_different > 1:
+							try:
+								new_lg = self.simulate_action((i, j))
+								# print(game_state(new_lg))
+								slot_useful.append((i, j, game_state(new_lg)))
+							except:
+								pass
+							# slot_useful.append((i, j, count_same * 2 + count_different))
+
+		list_orientation = False if self.player_turn == self.minimizing_player else True
+		slot_useful.sort(key=lambda x: x[-1], reverse=list_orientation)
+		# print(slot_useful)
 		final_action = [(i[0], i[1]) for i in slot_useful]
 
 		if len(final_action) != 0:

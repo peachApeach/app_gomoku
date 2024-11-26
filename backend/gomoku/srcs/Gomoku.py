@@ -96,8 +96,12 @@ class Gomoku:
 		self.four_aligned_black = 0
 		self.four_aligned_white = 0
 
+
 		self.free_four_black = 0
 		self.free_four_white = 0
+
+		self.five_aligned_black = 0
+		self.five_aligned_white = 0
 
 	def __str__(self) -> str:
 		content = "  "

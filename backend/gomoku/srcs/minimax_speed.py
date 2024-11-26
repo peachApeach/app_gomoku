@@ -1,5 +1,6 @@
 from Gomoku import Gomoku
 from algorithms.gomoku_algorithm import minimax, super_minimax
+from algorithms.gomoku_heuristic_function import game_state
 from utils.MeasureTime import MeasureTime
 from LittleGomoku import LittleGomoku
 import time
@@ -43,14 +44,33 @@ print(littleGomoku.minimizing_player)
 
 # exit(1)
 
-# measureTime = MeasureTime(start=True)
-# minimax(littleGomoku, MAX_DEPTH=4)
-# measureTime.stop()
+t = 3
+
+if t == 0:
+	measureTime = MeasureTime(start=True)
+	minimax(littleGomoku, MAX_DEPTH=4)
+	measureTime.stop()
 
 # time.sleep(0.5)
 
-measureTime = MeasureTime(start=True)
-super_minimax(littleGomoku, MAX_DEPTH=10)
-measureTime.stop()
+elif t == 1:
+	measureTime = MeasureTime(start=True)
+	super_minimax(littleGomoku, MAX_DEPTH=10)
+	measureTime.stop()
 
+elif t == 2:
+	measureTime = MeasureTime(start=True)
+	for i in range(10000):
+		game_state(littleGomoku.simulate_action((0, 0)))
+	measureTime.stop()
 
+elif t == 3:
+	measureTime = MeasureTime(start=True)
+	for i in range(1000):
+		littleGomoku.super_get_actions()
+	measureTime.stop()
+
+# littleGomoku.paint_actions(littleGomoku.get_actions(), True)
+# littleGomoku.player_turn = "B"
+# littleGomoku.super_get_actions()
+# littleGomoku.paint_actions(littleGomoku.super_get_actions(), True)
