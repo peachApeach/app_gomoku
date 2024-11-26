@@ -27,6 +27,8 @@ def convert_to_little_gomoku(gomoku: Gomoku):
 		four_aligned_white=gomoku.four_aligned_white,
 		free_four_black=gomoku.free_four_black,
 		free_four_white=gomoku.free_four_white,
+		five_aligned_black=gomoku.five_aligned_black,
+		five_aligned_white=gomoku.five_aligned_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 
