@@ -1,0 +1,13 @@
+GameNumber : 39 - Game Info -> Start: B
+GameNumber : 39 - Game Info -> Allowed Capture: True
+GameNumber : 39 - Game Info -> Allowed Win By Capture: True
+GameNumber : 39 - Game Info -> Allowed Double Three: False
+GameNumber : 39 - 1869ms       - Player    :B -> Move:J10
+GameNumber : 39 - 3380ms       - Player    :W -> Move:M3
+GameNumber : 39 - 2768ms       - Player    :B -> Move:J11
+GameNumber : 39 - 2814ms       - Player    :W -> Move:M4
+GameNumber : 39 - 1939ms       - Player    :B -> Move:J9
+GameNumber : 39 - 7740ms       - Player    :W -> Move:M5
+GameNumber : 39 - 8653ms       - Player    :B -> Move:J7
+GameNumber : 39 - 7234ms       - Player    :W -> Move:M6
+GameNumber : 39 - 7218ms       - Player    :B -> Move:J8

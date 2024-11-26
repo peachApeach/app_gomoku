@@ -32,10 +32,7 @@ def minimax(
 	# print("=====================")
 
 	if terminate_state(
-		gomoku.board,
-		gomoku.black_capture,
-		gomoku.white_capture,
-		gomoku.settings
+		gomoku
 		):
 		return game_state(gomoku, False), None
 
@@ -105,10 +102,7 @@ def super_minimax(
 	# print("=====================")
 
 	if terminate_state(
-		gomoku.board,
-		gomoku.black_capture,
-		gomoku.white_capture,
-		gomoku.settings
+		gomoku
 		):
 		return game_state(gomoku, False), None
 

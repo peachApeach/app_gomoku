@@ -204,6 +204,9 @@ class Gomoku:
 		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
 		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
 
+		self.five_aligned_black += after_placement_alignment['five_aligned_black'] - before_placement_alignment['five_aligned_black']
+		self.five_aligned_white += after_placement_alignment['five_aligned_white'] - before_placement_alignment['five_aligned_white']
+
 	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False, allow_suggestion: bool = False):
 		from algorithms.gomoku_algorithm import minimax
 		os.system("clear")
@@ -517,10 +520,10 @@ class Gomoku:
 		message = None
 		last_duration = None
 		self.handle_opening(opening)
-		while terminate_state(self.board, self.black_capture, self.white_capture, self.settings) == False:
+		while terminate_state(self) == False:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
-			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True)
+			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True, all_informations=True)
 			last_duration = self.handle_player()
 
 		if self.settings.allowed_capture:
@@ -572,7 +575,7 @@ class Gomoku:
 		self.place_stone(user_placement)
 		self.switch_player_turn()
 
-		if terminate_state(self.board, self.black_capture, self.white_capture, self.settings):
+		if terminate_state(self):
 			final_dict['status'] = 'finished'
 
 			if self.settings.allowed_capture:
@@ -616,7 +619,7 @@ class Gomoku:
 			return final_dict
 
 
-		if terminate_state(self.board, self.black_capture, self.white_capture, self.settings):
+		if terminate_state(self):
 			final_dict['status'] = 'finished'
 
 			if self.settings.allowed_capture:
@@ -689,7 +692,7 @@ class Gomoku:
 			return final_dict
 
 
-		if terminate_state(self.board, self.black_capture, self.white_capture, self.settings):
+		if terminate_state(self):
 			final_dict['status'] = 'finished'
 
 			if self.settings.allowed_capture:
@@ -718,23 +721,23 @@ class Gomoku:
 
 if __name__ == "__main__":
 	from algorithms.gomoku_algorithm import minimax
-	SIMULATION = False
+	SIMULATION = True
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku(ia_against_ia=False)
-		go_simulate.read_a_game(31, -2, live_visualisation=False, live_speed=0.1)
+		go_simulate.read_a_game(39, -1, live_visualisation=False, live_speed=0.1)
 		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		AGAINST_HUMAN = True
 		gomoku = Gomoku(
-			IA=True,
+			IA=False,
 			who_start="B", # Always Black
 			main_player="B",
-			save_game=False,
+			save_game=True,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_suggestion=True,
 			IA_MAX_DEPTH=2)
-		gomoku.play(opening="pro")
+		gomoku.play(opening="standard")
 

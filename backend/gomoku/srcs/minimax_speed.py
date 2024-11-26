@@ -33,6 +33,8 @@ littleGomoku = LittleGomoku(
 	four_aligned_white=gomoku.four_aligned_white,
 	free_four_black=gomoku.free_four_black,
 	free_four_white=gomoku.free_four_white,
+	five_aligned_black=gomoku.five_aligned_black,
+	five_aligned_white=gomoku.five_aligned_white,
 	board_width=gomoku.get_board_width(),
 	board_height=gomoku.get_board_height())
 
@@ -44,7 +46,7 @@ print(littleGomoku.minimizing_player)
 
 # exit(1)
 
-t = 3
+t = 1
 
 if t == 0:
 	measureTime = MeasureTime(start=True)
@@ -55,7 +57,7 @@ if t == 0:
 
 elif t == 1:
 	measureTime = MeasureTime(start=True)
-	super_minimax(littleGomoku, MAX_DEPTH=10)
+	super_minimax(littleGomoku, MAX_DEPTH=4)
 	measureTime.stop()
 
 elif t == 2:

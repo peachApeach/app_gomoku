@@ -34,7 +34,8 @@ def test_terminate_state(gomoku):
 		gomoku.place_stone(f"I{i}", "W", force=True)
 
 	assert winner_found(gomoku.board)[0] == True
-	assert terminate_state(gomoku.board) == True
+	# gomoku.display_board(all_informations=True)
+	assert terminate_state(gomoku) == True
 
 	# DIAGONAL
 	gomoku = Gomoku()
@@ -47,14 +48,14 @@ def test_terminate_state(gomoku):
 		gomoku.place_stone(f"I{i}", "W", force=True)
 
 	assert winner_found(gomoku.board)[0] == True
-	assert terminate_state(gomoku.board) == True
+	assert terminate_state(gomoku) == True
 
 	gomoku = Gomoku(board_size=(4, 4))
 	for i in range(len(gomoku.board)):
 		for j in range(len(gomoku.board[i])):
 			gomoku.board[i][j] = 'B'
 	assert winner_found(gomoku.board)[0] == False
-	assert terminate_state(gomoku.board) == True
+	assert terminate_state(gomoku) == True
 
 
 def test_count_free_three(gomoku):

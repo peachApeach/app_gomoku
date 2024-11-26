@@ -158,20 +158,23 @@ def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:
 
 	return (False, None)
 
-def terminate_state(board: list[list[str]], black_capture: int = 0, white_capture: int = 0, gomoku_settings: GomokuSettings = GomokuSettings()) -> bool:
+# from LittleGomoku import LittleGomoku
+def terminate_state(gomoku) -> bool:
 	# print(gomoku_settings)
-	if gomoku_settings.allowed_win_by_capture == True and (black_capture >= 5 or white_capture >= 5):
+	if gomoku.settings.allowed_win_by_capture == True and (gomoku.black_capture >= 5 or gomoku.white_capture >= 5):
 		return True
-	if gomoku_settings.allowed_capture == True:
-		if winner_found(board)[0] == True:
-			return True
-	else:
-		if critical_situation(board)[0] == True:
-			return True
 
-	for i in range(len(board)):
-		for j in range(len(board[i])):
-			if board[i][j] == ' ':
+	if gomoku.five_aligned_black >= 1 or gomoku.five_aligned_white >= 1:
+		if gomoku.settings.allowed_capture == True:
+			if winner_found(gomoku.board)[0] == True:
+				return True
+		else:
+			if critical_situation(gomoku.board)[0] == True:
+				return True
+
+	for i in range(len(gomoku.board)):
+		for j in range(len(gomoku.board[i])):
+			if gomoku.board[i][j] == ' ':
 				return False
 	return True # Tie
 
@@ -185,7 +188,7 @@ if __name__ == "__main__":
 	gomoku.place_stone("D5", "B")
 	gomoku.place_stone("E5", "B")
 	gomoku.place_stone("F6", "B")
-	print(terminate_state(gomoku.board))
+	print(terminate_state(gomoku))
 	print(critical_situation(gomoku.board))
 	print(stone_catchable(gomoku.board, 3, 3))
 	print(gomoku)

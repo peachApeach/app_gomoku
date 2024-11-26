@@ -1,0 +1,6 @@
+GameNumber : 37 - Game Info -> Start: B
+GameNumber : 37 - Game Info -> Allowed Capture: True
+GameNumber : 37 - Game Info -> Allowed Win By Capture: True
+GameNumber : 37 - Game Info -> Allowed Double Three: False
+GameNumber : 37 - 3254ms       - Player    :B -> Move:J10
+GameNumber : 37 - 1ms          - Player(IA):W -> Move:I9

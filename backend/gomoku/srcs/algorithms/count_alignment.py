@@ -32,7 +32,7 @@ def check_alignment(row: str, stone: str, stone_count: int) -> bool:
 # 		return 'align', stone_count
 
 def type_of_alignment(row: str, stone: str):
-	print(f"'{row}'")
+	# print(f"'{row}'")
 	opponent_stone = switch_opponent(stone)
 	stone_count = row.count(stone)
 
