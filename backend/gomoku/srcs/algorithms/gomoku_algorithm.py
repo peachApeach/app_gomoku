@@ -90,6 +90,86 @@ def minimax(
 		raise GomokuIAError(f"Invalid player turn : {gomoku.player_turn}")
 
 
+def super_minimax(
+	gomoku: LittleGomoku,
+	alpha: float = float("-inf"),
+	beta: float = float("+inf"),
+	actions: list[tuple[int]] = None,
+	DEPTH: int = 0,
+	MAX_DEPTH: int = 1
+):
+	# MAX_DEPTH : 1 : 352ms
+	# MAX_DEPTH : 2 : 17539ms
+	# print("=====================")
+	# print(f"===== DEPTH : {DEPTH} =====")
+	# print("=====================")
+
+	if terminate_state(
+		gomoku.board,
+		gomoku.black_capture,
+		gomoku.white_capture,
+		gomoku.settings
+		):
+		return game_state(gomoku, False), None
+
+	if DEPTH == MAX_DEPTH:
+		return game_state(gomoku, False), None
+
+	it = 0
+
+	if gomoku.player_turn == gomoku.maximizing_player:
+		value = float('-inf')
+		best_action = None
+		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
+		if actions is None:
+			actions = gomoku.get_actions()
+		for action in actions:
+			it += 1
+			try:
+				new_gomoku = gomoku.simulate_action(action)
+			except:
+				# print("Failed to simulate")
+				continue
+			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			if it == 2:
+				break
+
+			if state > value:
+				value = state
+				best_action = action
+
+			alpha = max(alpha, state)
+			if beta <= alpha:# or state >= 5000:# or state == 6:
+				break
+		return value, best_action
+
+	elif gomoku.player_turn == gomoku.minimizing_player:
+		value = float('+inf')
+		best_action = None
+		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
+		if actions is None:
+			actions = gomoku.get_actions()
+		for action in actions:
+			it += 1
+			try:
+				new_gomoku = gomoku.simulate_action(action)
+			except:
+				continue
+			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			if it == 2:
+				break
+
+			if state < value:
+				value = state
+				best_action = action
+			beta = min(beta, state)
+			# print(f"{beta} | {state}")
+			if beta <= alpha:# or state <= -5000: # or state == -6:
+				break
+		return value, best_action
+	else:
+		raise GomokuIAError(f"Invalid player turn : {gomoku.player_turn}")
+
 if __name__ == "__main__":
 	from Gomoku import Gomoku
 	from utils.MeasureTime import MeasureTime
