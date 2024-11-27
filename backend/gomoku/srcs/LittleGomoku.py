@@ -1,4 +1,5 @@
 from rules.GomokuSettings import GomokuSettings
+from GomokuState import GomokuState
 from utils.little_gomoku_utils import get_actions_range, is_useful_placement
 from rules.gomoku_rules import *
 from algorithms.gomoku_state import *
@@ -140,6 +141,9 @@ class LittleGomoku:
 		self.free_four_black += after_placement_alignment['free_four_black'] - before_placement_alignment['free_four_black']
 		self.free_four_white += after_placement_alignment['free_four_white'] - before_placement_alignment['free_four_white']
 
+		self.five_aligned_black += after_placement_alignment['five_aligned_black'] - before_placement_alignment['five_aligned_black']
+		self.five_aligned_white += after_placement_alignment['five_aligned_white'] - before_placement_alignment['five_aligned_white']
+
 
 
 	def get_actions(self) -> list[tuple[int]]:
@@ -165,7 +169,7 @@ class LittleGomoku:
 		return [random.choice(list_empty_slot)]
 
 
-	def super_get_actions(self) -> list[tuple[int]]:
+	def super_get_actions(self) -> list["LittleGomoku"]:
 		from algorithms.gomoku_heuristic_function import game_state
 		slot_useful = []
 		range_i, range_j = get_actions_range(self.board)
@@ -181,19 +185,33 @@ class LittleGomoku:
 							try:
 								new_lg = self.simulate_action((i, j))
 								# print(game_state(new_lg))
-								slot_useful.append((i, j, game_state(new_lg)))
-							except:
+								slot_useful.append((new_lg, (i, j), game_state(new_lg)))
+							except Exception as e:
+								print(self)
+								print(self.five_aligned_white)
+								print(f"ERER 1 : {i}|{j} : {e}")
 								pass
 							# slot_useful.append((i, j, count_same * 2 + count_different))
 
 		list_orientation = False if self.player_turn == self.minimizing_player else True
 		slot_useful.sort(key=lambda x: x[-1], reverse=list_orientation)
 		# print(slot_useful)
-		final_action = [(i[0], i[1]) for i in slot_useful]
+		final_action = [(item[0], item[1]) for item in slot_useful]
 
 		if len(final_action) != 0:
 			return final_action
-		list_empty_slot = [(i, j) for i in range(8, 11) for j in range(8, 11) if self.board[i][j] == " "]
+
+		list_empty_slot = []
+		for i in range(8, 11):
+			for j in range(8, 11):
+				if self.board[i][j] == " ":
+					try:
+						tmp = self.simulate_action((i, j))
+						list_empty_slot.append((tmp, (i, j)))
+					except Exception as e:
+						# print(f"{i}|{j} : {e}")
+						pass
+		print(list_empty_slot)
 		return [random.choice(list_empty_slot)]
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
@@ -201,6 +219,42 @@ class LittleGomoku:
 		new_little_gomoku.place_stone(action[0], action[1])
 		new_little_gomoku.switch_player_turn()
 		return new_little_gomoku
+
+	def do_simulation(self, action: tuple[int]) -> GomokuState:
+		gomokuState = GomokuState(self, action)
+
+		self.place_stone(action[0], action[1])
+		self.switch_player_turn()
+		return gomokuState
+
+
+	def undo_simulation(self, gomokuState: GomokuState):
+		for position in gomokuState.saved_position:
+			if self.board[position[0]][position[1]] != position[2]:
+				self.board[position[0]][position[1]] = position[2]
+			else:
+				break
+
+		self.player_turn = gomokuState.player_turn
+
+		self.black_capture = gomokuState.black_capture
+		self.white_capture = gomokuState.white_capture
+
+		self.three_aligned_black = gomokuState.three_aligned_black
+		self.three_aligned_white = gomokuState.three_aligned_white
+
+		self.four_aligned_black = gomokuState.four_aligned_black
+		self.four_aligned_white = gomokuState.four_aligned_white
+
+		self.free_three_black = gomokuState.free_three_black
+		self.free_three_white = gomokuState.free_three_white
+
+		self.free_four_black = gomokuState.free_four_black
+		self.free_four_white = gomokuState.free_four_white
+
+		self.five_aligned_black = gomokuState.five_aligned_black
+		self.five_aligned_white = gomokuState.five_aligned_white
+
 
 	def paint_actions(self, actions: list[tuple[int]], live_visualisation: bool = False, live_speed: float = 0.25):
 		for action in actions:
@@ -244,6 +298,8 @@ if __name__ == "__main__":
 		four_aligned_white=gomoku.four_aligned_white,
 		free_four_black=gomoku.free_four_black,
 		free_four_white=gomoku.free_four_white,
+		five_aligned_black=gomoku.five_aligned_black,
+		five_aligned_white=gomoku.five_aligned_white,
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 

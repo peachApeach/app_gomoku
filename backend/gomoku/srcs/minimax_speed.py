@@ -46,30 +46,58 @@ print(littleGomoku.minimizing_player)
 
 # exit(1)
 
-t = 1
+t = 2
+
+MAX_DEPTH = 4
 
 if t == 0:
 	measureTime = MeasureTime(start=True)
-	minimax(littleGomoku, MAX_DEPTH=4)
+	minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
 	measureTime.stop()
 
 # time.sleep(0.5)
 
 elif t == 1:
 	measureTime = MeasureTime(start=True)
-	super_minimax(littleGomoku, MAX_DEPTH=4)
+	super_minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
 	measureTime.stop()
 
 elif t == 2:
 	measureTime = MeasureTime(start=True)
 	for i in range(10000):
-		game_state(littleGomoku.simulate_action((0, 0)))
+		littleGomoku.simulate_action((0, 0))
+	measureTime.stop()
+
+elif t == -2:
+	measureTime = MeasureTime(start=True)
+	for i in range(10000):
+		lst_state = littleGomoku.do_simulation((0, 0))
+		littleGomoku.undo_simulation(lst_state)
 	measureTime.stop()
 
 elif t == 3:
 	measureTime = MeasureTime(start=True)
 	for i in range(1000):
 		littleGomoku.super_get_actions()
+	measureTime.stop()
+
+elif t == 4:
+	measureTime = MeasureTime(start=True)
+	for i in range(500):
+		actions = littleGomoku.get_actions()
+		for action in actions:
+			try:
+				littleGomoku.simulate_action(action)
+			except:
+				pass
+	measureTime.stop()
+
+elif t == 5:
+	measureTime = MeasureTime(start=True)
+	for i in range(500):
+		actions = littleGomoku.super_get_actions()
+		for action in actions:
+			pass
 	measureTime.stop()
 
 # littleGomoku.paint_actions(littleGomoku.get_actions(), True)

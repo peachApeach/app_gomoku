@@ -116,17 +116,12 @@ def super_minimax(
 		best_action = None
 		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.get_actions()
-		for action in actions:
+			actions = gomoku.super_get_actions()
+		for new_gomoku, action in actions:
 			it += 1
-			try:
-				new_gomoku = gomoku.simulate_action(action)
-			except:
-				# print("Failed to simulate")
-				continue
 			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			if it == 3:
-				break
+			# if it == 3:
+			# 	break
 
 			if state > value:
 				value = state
@@ -142,16 +137,12 @@ def super_minimax(
 		best_action = None
 		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.get_actions()
-		for action in actions:
+			actions = gomoku.super_get_actions()
+		for new_gomoku, action in actions:
 			it += 1
-			try:
-				new_gomoku = gomoku.simulate_action(action)
-			except:
-				continue
 			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			if it == 3:
-				break
+			# if it == 3:
+			# 	break
 
 			if state < value:
 				value = state
