@@ -183,9 +183,11 @@ class LittleGomoku:
 						count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
 						if count_same > 0 or count_different > 1:
 							try:
-								new_lg = self.simulate_action((i, j))
+								# new_lg = self.simulate_action((i, j))
 								# print(game_state(new_lg))
-								slot_useful.append((new_lg, (i, j), game_state(new_lg)))
+								# gs = self.do_simulation((i, j))
+								slot_useful.append(((i, j), count_same * 2 + count_different))
+								# self.undo_simulation(gs)
 							except Exception as e:
 								print(self)
 								print(self.five_aligned_white)
@@ -193,10 +195,10 @@ class LittleGomoku:
 								pass
 							# slot_useful.append((i, j, count_same * 2 + count_different))
 
-		list_orientation = False if self.player_turn == self.minimizing_player else True
-		slot_useful.sort(key=lambda x: x[-1], reverse=list_orientation)
+		list_orientation = True if self.player_turn == self.minimizing_player else False
+		slot_useful.sort(key=lambda x: x[-1], reverse=True)
 		# print(slot_useful)
-		final_action = [(item[0], item[1]) for item in slot_useful]
+		final_action = [item[0] for item in slot_useful]
 
 		if len(final_action) != 0:
 			return final_action

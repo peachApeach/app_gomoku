@@ -118,7 +118,7 @@ def super_minimax(
 		best_action = None
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.get_actions()
+			actions = gomoku.super_get_actions()
 		for action in actions:
 			it += 1
 			gomoku_state = gomoku.do_simulation(action)
@@ -141,7 +141,7 @@ def super_minimax(
 		best_action = None
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.get_actions()
+			actions = gomoku.super_get_actions()
 		for action in actions:
 			it += 1
 			gomoku_state = gomoku.do_simulation(action)
@@ -160,6 +160,42 @@ def super_minimax(
 		return value, best_action
 	else:
 		raise GomokuIAError(f"Invalid player turn : {gomoku.player_turn}")
+
+def negamax(
+	gomoku: LittleGomoku,
+	alpha: float = float("-inf"),
+	beta: float = float("+inf"),
+	actions: list[tuple[int]] = None,
+	DEPTH: int = 0,
+	MAX_DEPTH: int = 1
+):
+	if terminate_state(gomoku) or DEPTH == MAX_DEPTH:
+		mult = 1 if gomoku.player_turn == gomoku.maximizing_player else -1
+		return mult * game_state(gomoku, False), None
+
+	if actions is None:
+			actions = gomoku.get_actions()
+
+	value = float("-inf")
+	best_action = None
+	for action in actions:
+		try:
+			gomoku_state = gomoku.do_simulation(action)
+			state = -(negamax(gomoku=gomoku, alpha=-beta, beta=-alpha, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)[0])
+			gomoku.undo_simulation(gomoku_state)
+		except:
+			continue
+		print(f"ST : {state}")
+		if state > value:
+			value = state
+			best_action = action
+
+		alpha = max(alpha, state)
+		if beta <= alpha:# or state >= 5000:# or state == 6:
+			break
+	return value, best_action
+
+
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku

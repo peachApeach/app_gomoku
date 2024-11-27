@@ -1,5 +1,5 @@
 from Gomoku import Gomoku
-from algorithms.gomoku_algorithm import minimax, super_minimax
+from algorithms.gomoku_algorithm import minimax, super_minimax, negamax
 from algorithms.gomoku_heuristic_function import game_state
 from utils.MeasureTime import MeasureTime
 from LittleGomoku import LittleGomoku
@@ -61,6 +61,12 @@ if t == 0:
 elif t == 1:
 	measureTime = MeasureTime(start=True)
 	score, move = super_minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
+	print(f"Score : {score} | Move : {move}")
+	measureTime.stop()
+
+elif t == -1:
+	measureTime = MeasureTime(start=True)
+	score, move = negamax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
 	print(f"Score : {score} | Move : {move}")
 	measureTime.stop()
 
