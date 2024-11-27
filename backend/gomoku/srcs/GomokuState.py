@@ -25,13 +25,28 @@ class GomokuState:
 
 	def __save_position(self, gomoku, action: tuple[int]):
 		# Action permettra d'enregistrer les actions que dans le rayon
-		for i in range(len(gomoku.board)):
-			for j in range(len(gomoku.board[i])):
+		radius = 2
+		i = action[0]
+		j = action[1]
+
+		min_i = i - radius if i - radius >= 0 else 0
+		min_j = j - radius if j - radius >= 0 else 0
+
+		max_i = i + 1 + radius if i + 1 + radius <= len(gomoku.board) else len(gomoku.board)
+		max_j = j + 1 + radius if j + 1 + radius <= len(gomoku.board[min_i]) else len(gomoku.board[min_i])
+
+		for i in range(min_i, max_i):
+			for j in range(min_j, max_j):
 				self.saved_position.append((i, j, gomoku.board[i][j]))
+		# for i in range(len(gomoku.board)):
+		# 	for j in range(len(gomoku.board[i])):
+		# 		self.saved_position.append((i, j, gomoku.board[i][j]))
 
 	def apply_on_board(self, gomoku):
 		for position in self.saved_position:
-			gomoku.board[position[0]][position[1]] = position[2]
+			if gomoku.board[position[0]][position[1]] != position[2]:
+				gomoku.board[position[0]][position[1]] = position[2]
+			# gomoku.board[position[0]][position[1]] = "??"
 
 
 if __name__ == "__main__":
@@ -70,8 +85,8 @@ if __name__ == "__main__":
 		board_width=gomoku.get_board_width(),
 		board_height=gomoku.get_board_height())
 
-	gomokuState = GomokuState(littleGomoku, (0, 0))
-	print(littleGomoku)
+	gomokuState = GomokuState(littleGomoku, (5, 10))
+	# print(littleGomoku)
 	# print(gomokuState.saved_position)
 
 	gomoku = Gomoku()

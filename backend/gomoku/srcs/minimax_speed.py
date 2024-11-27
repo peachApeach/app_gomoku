@@ -46,20 +46,22 @@ print(littleGomoku.minimizing_player)
 
 # exit(1)
 
-t = 2
+t = 1
 
 MAX_DEPTH = 4
 
 if t == 0:
 	measureTime = MeasureTime(start=True)
-	minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
+	score, move = minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
+	print(f"Score : {score} | Move : {move}")
 	measureTime.stop()
 
 # time.sleep(0.5)
 
 elif t == 1:
 	measureTime = MeasureTime(start=True)
-	super_minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
+	score, move = super_minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
+	print(f"Score : {score} | Move : {move}")
 	measureTime.stop()
 
 elif t == 2:

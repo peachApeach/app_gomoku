@@ -232,8 +232,6 @@ class LittleGomoku:
 		for position in gomokuState.saved_position:
 			if self.board[position[0]][position[1]] != position[2]:
 				self.board[position[0]][position[1]] = position[2]
-			else:
-				break
 
 		self.player_turn = gomokuState.player_turn
 

@@ -9,10 +9,12 @@ def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
 	# state = game_state(gomoku, True)
 	# if state == 0:
 	# 	return DEPTH + 1
+	if gomoku.five_aligned_black >= 1 or gomoku.five_aligned_white >= 1:
+		return DEPTH + 1
 	if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
 		return DEPTH + 1
-	if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_white >= 1:
-		return DEPTH + 1
+	# if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_white >= 1:
+	# 	return DEPTH + 1
 	else:
 		return MAX_DEPTH
 
@@ -114,12 +116,14 @@ def super_minimax(
 	if gomoku.player_turn == gomoku.maximizing_player:
 		value = float('-inf')
 		best_action = None
-		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
+		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.super_get_actions()
-		for new_gomoku, action in actions:
+			actions = gomoku.get_actions()
+		for action in actions:
 			it += 1
-			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			gomoku_state = gomoku.do_simulation(action)
+			state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			gomoku.undo_simulation(gomoku_state)
 			# if it == 3:
 			# 	break
 
@@ -135,12 +139,14 @@ def super_minimax(
 	elif gomoku.player_turn == gomoku.minimizing_player:
 		value = float('+inf')
 		best_action = None
-		# MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
+		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
 		if actions is None:
-			actions = gomoku.super_get_actions()
-		for new_gomoku, action in actions:
+			actions = gomoku.get_actions()
+		for action in actions:
 			it += 1
-			state, r_action = super_minimax(gomoku=new_gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			gomoku_state = gomoku.do_simulation(action)
+			state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+			gomoku.undo_simulation(gomoku_state)
 			# if it == 3:
 			# 	break
 
