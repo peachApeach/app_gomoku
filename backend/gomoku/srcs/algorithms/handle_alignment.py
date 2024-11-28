@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rules.gomoku_rules import switch_opponent
 from algorithms.count_alignment import type_of_alignment
 from algorithms.StreaksRegex import StreaksRegex
+from algorithms.line_utils import get_line_horizontal, get_line_vertical, get_line_diagonal_1, get_line_diagonal_2
 
 def adjust_list(lst: list[str]):
 	for i in range(1, len(lst)):
@@ -105,6 +106,13 @@ def count_diagonal_2(board: list[list[str]], i: int, j: int):
 	return alignment_streaks(line)
 
 def count_all_alignment(board: list[list[str]], i: int, j: int):
+
+	# dict_horizontal = alignment_streaks(get_line_horizontal(board, i, j, 7))
+	# dict_vertical = alignment_streaks(get_line_vertical(board, i, j, 7))
+	# dict_diagonal_1 = alignment_streaks(get_line_diagonal_1(board, i, j, 7))
+	# dict_diagonal_2 = alignment_streaks(get_line_diagonal_2(board, i, j, 7))
+
+
 	dict_horizontal = count_horizontal(board, i)
 	dict_vertical = count_vertical(board, j)
 	tmp_i = i
@@ -130,9 +138,52 @@ def count_all_alignment(board: list[list[str]], i: int, j: int):
 		for k in set(dict_horizontal)
 	}
 
+def get_score_from_alignment(all_alignment: dict):
+	S_FIVE_ALIGNED = 15000
+	S_FREE_FOUR = 3000
+	S_FOUR_ALIGNED = 1500
+	S_FREE_THREE = 1000
+	S_THREE_ALIGNED = 100
+
+
+	score_white = 0
+	score_black = 0
+
+	########################################
+	# FIVE ALIGNED
+	########################################
+	score_black += all_alignment['five_aligned_black'] * S_FIVE_ALIGNED
+	score_white += all_alignment['five_aligned_white'] * S_FIVE_ALIGNED
+
+	########################################
+	# FREE FOUR
+	########################################
+	score_black += all_alignment['free_four_black'] * S_FREE_FOUR
+	score_white += all_alignment['free_four_white'] * S_FREE_FOUR
+
+	########################################
+	# FOUR ALIGNED
+	########################################
+	score_black += all_alignment['four_aligned_black'] * S_FOUR_ALIGNED
+	score_white += all_alignment['four_aligned_white'] * S_FOUR_ALIGNED
+
+	########################################
+	# FREE THREE
+	########################################
+	score_black += all_alignment['free_three_black'] * S_FREE_THREE
+	score_white += all_alignment['free_three_white'] * S_FREE_THREE
+
+	########################################
+	# THREE ALIGNED
+	########################################
+	score_black += all_alignment['three_aligned_black'] * S_THREE_ALIGNED
+	score_white += all_alignment['three_aligned_white'] * S_THREE_ALIGNED
+
+	return score_black, score_white
+
 if __name__ == "__main__":
-	print(alignment_streaks("  BBBBBWWWW BBBBB       "))
-	exit(1)
+	# print(alignment_streaks("  BBBBBWWWW BBBBB       "))
+	# exit(1)
 
 
 	from utils.Colors import *
@@ -165,9 +216,11 @@ if __name__ == "__main__":
 	gomoku.place_stone("F5", "B")
 	gomoku.place_stone("F6", "B")
 
-	gomoku.place_stone("S19", "B")
 	print(gomoku)
-	count_all_alignment(gomoku.board, 18, 18)
+	# gomoku.place_stone("F8", "B", force=True)
+	all_alignment = count_all_alignment(gomoku.board, 5, 7)
+	print(all_alignment)
+	print(get_score_from_alignment(all_alignment))
 	print(gomoku)
 	exit(1)
 
