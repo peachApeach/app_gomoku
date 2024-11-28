@@ -2,7 +2,7 @@ import sys
 import os
 import re
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from algorithms.StreaksRegex import StreaksRegex
+from algorithms.GomokuRegex import GomokuRegex
 
 # r1 = r"(?:\s?[B]{2,}\s?(?:[B]{1,2}[^B]))"
 # r2 = r"(?:\s?[B]{1,2}\s?(?:[B]{2,}[^B]))"
@@ -16,7 +16,7 @@ from algorithms.StreaksRegex import StreaksRegex
 # r4 = r"(?:\s?[B]{1,2}\s?(?:[B]{2,}(?:(?:\s)|(?:[W]))?))$"
 
 
-pattern = StreaksRegex().black_pattern
+pattern = GomokuRegex().black_streaks
 # mtch = re.findall(rf"{r1}|{r2}", "B BBB BBBB BBBB BBB BB ")
 
 def test_expect_regex():
