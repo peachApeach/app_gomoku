@@ -111,7 +111,6 @@ def super_minimax(
 	if DEPTH == MAX_DEPTH:
 		return game_state(gomoku, False), None
 
-	it = 0
 
 	if gomoku.player_turn == gomoku.maximizing_player:
 		value = float('-inf')
@@ -120,12 +119,12 @@ def super_minimax(
 		if actions is None:
 			actions = gomoku.super_get_actions()
 		for action in actions:
-			it += 1
-			gomoku_state = gomoku.do_simulation(action)
-			state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			gomoku.undo_simulation(gomoku_state)
-			# if it == 3:
-			# 	break
+			try:
+				gomoku_state = gomoku.do_simulation(action)
+				state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+				gomoku.undo_simulation(gomoku_state)
+			except:
+				continue
 
 			if state > value:
 				value = state
@@ -143,12 +142,12 @@ def super_minimax(
 		if actions is None:
 			actions = gomoku.super_get_actions()
 		for action in actions:
-			it += 1
-			gomoku_state = gomoku.do_simulation(action)
-			state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
-			gomoku.undo_simulation(gomoku_state)
-			# if it == 3:
-			# 	break
+			try:
+				gomoku_state = gomoku.do_simulation(action)
+				state, r_action = super_minimax(gomoku=gomoku, alpha=alpha, beta=beta, DEPTH=DEPTH + 1, MAX_DEPTH=MAX_DEPTH)
+				gomoku.undo_simulation(gomoku_state)
+			except:
+				continue
 
 			if state < value:
 				value = state

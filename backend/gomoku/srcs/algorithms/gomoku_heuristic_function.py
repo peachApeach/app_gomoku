@@ -47,16 +47,10 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 
 
 	# Value of thing : (S_ = Score)
-	# 5 stones aligned: 100
-	# 5 stones aligned: 80
 	S_FIVE_ALIGNED = 15000
-	# Free Four: 70
 	S_FREE_FOUR = 3000
-	# 4 stones aligned not obstructed: 60
 	S_FOUR_ALIGNED = 1500
-	# Free Three: 50
 	S_FREE_THREE = 1000
-	# 3 stones aligned: 40
 	S_THREE_ALIGNED = 100
 
 
@@ -87,13 +81,6 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 	########################################
 	# FIVE ALIGNED
 	########################################
-	# five_exists, who_critical = critical_situation(gomoku.board)
-	# if five_exists == True:
-	# 	if who_critical == 'B':
-	# 		score_black += S_FIVE_ALIGNED
-	# 	else:
-	# 		score_white += S_FIVE_ALIGNED
-
 	score_black += gomoku.five_aligned_black * S_FIVE_ALIGNED
 	score_white += gomoku.five_aligned_white * S_FIVE_ALIGNED
 
