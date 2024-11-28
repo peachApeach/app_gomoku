@@ -36,6 +36,7 @@ class LittleGomoku:
 		self.__board_width = board_width
 		self.__board_height = board_height
 
+		self.minimax_node = 0
 		# For heuristic function
 		self.black_capture = black_capture
 		self.white_capture = white_capture

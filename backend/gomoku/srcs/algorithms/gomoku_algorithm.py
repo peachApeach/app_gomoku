@@ -102,7 +102,7 @@ def super_minimax(
 	# print("=====================")
 	# print(f"===== DEPTH : {DEPTH} =====")
 	# print("=====================")
-
+	gomoku.minimax_node += 1
 	if terminate_state(
 		gomoku
 		):

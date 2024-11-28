@@ -61,7 +61,7 @@ if t == 0:
 elif t == 1:
 	measureTime = MeasureTime(start=True)
 	score, move = super_minimax(littleGomoku, MAX_DEPTH=MAX_DEPTH)
-	print(f"Score : {score} | Move : {move}")
+	print(f"Score : {score} | Move : {move} | Total Node Create {littleGomoku.minimax_node}")
 	measureTime.stop()
 
 elif t == -1:
