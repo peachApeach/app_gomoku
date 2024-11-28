@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rules.gomoku_rules import switch_opponent
 from algorithms.count_alignment import type_of_alignment
-from algorithms.StreaksRegex import StreaksRegex
+from algorithms.GomokuRegex import GomokuRegex
 from algorithms.line_utils import get_line_horizontal, get_line_vertical, get_line_diagonal_1, get_line_diagonal_2
 
 def adjust_list(lst: list[str]):
@@ -16,7 +16,7 @@ def adjust_list(lst: list[str]):
 	return lst
 
 def alignment_streaks(line: str):
-	streaksRegex = StreaksRegex()
+	gomokuRegex = GomokuRegex()
 
 	all_streaks = {
 		'five_aligned_black': 0,
@@ -35,7 +35,7 @@ def alignment_streaks(line: str):
 		'three_aligned_white': 0,
 	}
 
-	white_streaks = re.findall(streaksRegex.white_pattern, line)
+	white_streaks = re.findall(gomokuRegex.white_streaks, line)
 	if white_streaks:
 		white_streaks = adjust_list(white_streaks)
 		for streak in white_streaks:
@@ -55,7 +55,7 @@ def alignment_streaks(line: str):
 				elif number == 5:
 					all_streaks['five_aligned_white'] += 1
 
-	black_streaks = re.findall(streaksRegex.black_pattern, line)
+	black_streaks = re.findall(gomokuRegex.black_streaks, line)
 	if black_streaks:
 		black_streaks = adjust_list(black_streaks)
 		for streak in black_streaks:

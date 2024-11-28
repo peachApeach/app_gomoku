@@ -142,7 +142,7 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 
 if __name__ == "2__main__2":
 	from Gomoku import Gomoku
-	from algorithms.gomoku_algorithm import minimax
+	from algorithms.gomoku_algorithm import minimax, super_minimax
 	from utils.MeasureTime import MeasureTime
 
 	gomoku = Gomoku()
@@ -208,7 +208,7 @@ if __name__ == "2__main__2":
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
-	from algorithms.gomoku_algorithm import minimax
+	from algorithms.gomoku_algorithm import minimax, super_minimax
 	from utils.MeasureTime import MeasureTime
 	# gomoku = Gomoku()
 	# gomoku.place_stone("G6", "B")
