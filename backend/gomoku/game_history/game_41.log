@@ -1,0 +1,18 @@
+GameNumber : 41 - Game Info -> Start: B
+GameNumber : 41 - Game Info -> Allowed Capture: True
+GameNumber : 41 - Game Info -> Allowed Win By Capture: True
+GameNumber : 41 - Game Info -> Allowed Double Three: False
+GameNumber : 41 - 16ms         - Player(IA):B -> Move:K11
+GameNumber : 41 - 1ms          - Player(IA):W -> Move:K10
+GameNumber : 41 - 14ms         - Player(IA):B -> Move:I9
+GameNumber : 41 - 14ms         - Player(IA):W -> Move:J10
+GameNumber : 41 - 76ms         - Player(IA):B -> Move:I10
+GameNumber : 41 - 15ms         - Player(IA):W -> Move:I11
+GameNumber : 41 - 6379ms       - Player(IA):B -> Move:I8
+GameNumber : 41 - 85ms         - Player(IA):W -> Move:I7
+GameNumber : 41 - 3790ms       - Player(IA):B -> Move:L10
+GameNumber : 41 - 34ms         - Player(IA):W -> Move:J9
+GameNumber : 41 - 165ms        - Player(IA):B -> Move:I6
+GameNumber : 41 - 43ms         - Player(IA):W -> Move:K9
+GameNumber : 41 - 10630ms      - Player(IA):B -> Move:L9
+GameNumber : 41 - 24ms         - Player(IA):W -> Move:J9

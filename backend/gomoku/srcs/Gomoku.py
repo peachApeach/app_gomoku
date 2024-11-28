@@ -208,7 +208,7 @@ class Gomoku:
 		self.five_aligned_white += after_placement_alignment['five_aligned_white'] - before_placement_alignment['five_aligned_white']
 
 	def display_board(self, message: str | None = None, is_err: bool = False, last_duration: str | None = None, all_informations: bool = False, allow_suggestion: bool = False):
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 		os.system("clear")
 		if (message != None):
 			print()
@@ -339,7 +339,7 @@ class Gomoku:
 				continue
 
 	def opening_swap(self):
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 		if self.ia_against_ia == True:
 			return
 		is_err = False
@@ -460,7 +460,7 @@ class Gomoku:
 
 
 	def handle_player(self) -> list:
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 
 		color = f'{BLACKB}{BHWHITE} (Black) {RESET}' if self.get_player_turn() == 'B' else f'{WHITEB}{BHBLACK} (White) {RESET}'
 		mt = MeasureTime(start=True)
@@ -496,7 +496,14 @@ class Gomoku:
 			last_duration = None
 		# It's IA Turn
 		else:
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			if self.ia_against_ia == True:
+				# Main player == super minimax
+				if self.get_player_turn() == self.main_player:
+					score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10)
+				else:
+					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			else:
+				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			last_duration = mt.stop(get_str=True, duration_only=True)
 			try:
@@ -523,7 +530,7 @@ class Gomoku:
 		while terminate_state(self) == False:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
-			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True, all_informations=True)
+			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True, all_informations=False)
 			last_duration = self.handle_player()
 
 		if self.settings.allowed_capture:
@@ -543,7 +550,7 @@ class Gomoku:
 
 
 	def run(self):
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 
 		# It's Human Turn
 		if self.get_player_turn() == self.main_player or self.IA == False:
@@ -562,7 +569,7 @@ class Gomoku:
 				return None
 
 	def apply_move(self, x: int, y: int) -> dict:
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 		final_dict = {
 			'message': None,
 			'status': 'playing',
@@ -653,7 +660,7 @@ class Gomoku:
 		return final_dict
 
 	def timeout(self, who_timeout: str):
-		from algorithms.gomoku_algorithm import minimax
+		from algorithms.gomoku_algorithm import minimax, super_minimax
 		final_dict = {
 			'message': None,
 			'status': 'playing',
@@ -720,16 +727,17 @@ class Gomoku:
 
 
 if __name__ == "__main__":
-	from algorithms.gomoku_algorithm import minimax
-	SIMULATION = True
+	from algorithms.gomoku_algorithm import minimax, super_minimax
+	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
 		go_simulate = Gomoku(ia_against_ia=False)
-		go_simulate.read_a_game(39, -1, live_visualisation=False, live_speed=0.1)
-		go_simulate.play()
+		go_simulate.read_a_game(28, -6, live_visualisation=False, live_speed=0.1)
+		print(go_simulate)
+		# go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
-		AGAINST_HUMAN = True
+		AGAINST_HUMAN = False
 		gomoku = Gomoku(
 			IA=False,
 			who_start="B", # Always Black
@@ -737,7 +745,7 @@ if __name__ == "__main__":
 			save_game=True,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
-			IA_suggestion=True,
+			IA_suggestion=False,
 			IA_MAX_DEPTH=2)
 		gomoku.play(opening="standard")
 

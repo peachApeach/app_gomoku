@@ -1,5 +1,6 @@
-def get_line_horizontal(board: list[list[str]], params_i: int, params_j: int, radius: int = 4):
+def get_line_horizontal(board: list[list[str]], params_i: int, params_j: int, radius: int = 4, stone: str = None, preshot: bool = False):
 	line = ""
+	placement_player = None
 	min_j = params_j - radius
 	if min_j < 0:
 		min_j = 0
@@ -8,11 +9,16 @@ def get_line_horizontal(board: list[list[str]], params_i: int, params_j: int, ra
 		max_j = len(board[params_i])
 
 	for j in range(min_j, max_j):
-		line += board[params_i][j]
-	return line
+		if preshot == True and stone != None and j == params_j:
+			placement_player = len(line)
+			line += stone
+		else:
+			line += board[params_i][j]
+	return line, placement_player
 
-def get_line_vertical(board: list[list[str]], params_i: int, params_j: int, radius: int = 4):
+def get_line_vertical(board: list[list[str]], params_i: int, params_j: int, radius: int = 4, stone: str = None, preshot: bool = False):
 	line = ""
+	placement_player = None
 	min_i = params_i - radius
 	if min_i < 0:
 		min_i = 0
@@ -21,11 +27,16 @@ def get_line_vertical(board: list[list[str]], params_i: int, params_j: int, radi
 		max_i = len(board)
 
 	for i in range(min_i, max_i):
-		line += board[i][params_j]
-	return line
+		if preshot == True and stone != None and i == params_i:
+			placement_player = len(line)
+			line += stone
+		else:
+			line += board[i][params_j]
+	return line, placement_player
 
-def get_line_diagonal_1(board: list[list[str]], params_i: int, params_j: int, radius: int = 4):
+def get_line_diagonal_1(board: list[list[str]], params_i: int, params_j: int, radius: int = 4, stone: str = None, preshot: bool = False):
 	line = ""
+	placement_player = None
 
 	i_radius = 0
 	min_i = params_i
@@ -45,11 +56,16 @@ def get_line_diagonal_1(board: list[list[str]], params_i: int, params_j: int, ra
 		max_j = len(board[params_i])
 
 	for i, j in zip(range(min_i, max_i), range(min_j, max_j)):
-		line += board[i][j]
-	return line
+		if preshot == True and stone != None and i == params_i and j == params_j:
+			placement_player = len(line)
+			line += stone
+		else:
+			line += board[i][j]
+	return line, placement_player
 
-def get_line_diagonal_2(board: list[list[str]], params_i: int, params_j: int, radius: int = 4):
+def get_line_diagonal_2(board: list[list[str]], params_i: int, params_j: int, radius: int = 4, stone: str = None, preshot: bool = False):
 	line = ""
+	placement_player = None
 
 	i_radius = 0
 	min_i = params_i
@@ -69,5 +85,9 @@ def get_line_diagonal_2(board: list[list[str]], params_i: int, params_j: int, ra
 		max_j = 0
 
 	for i, j in zip(range(min_i, max_i), range(min_j, max_j - 1, -1)):
-		line += board[i][j]
-	return line
+		if preshot == True and stone != None and i == params_i and j == params_j:
+			placement_player = len(line)
+			line += stone
+		else:
+			line += board[i][j]
+	return line, placement_player

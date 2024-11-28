@@ -1,0 +1,38 @@
+GameNumber : 40 - Game Info -> Start: B
+GameNumber : 40 - Game Info -> Allowed Capture: True
+GameNumber : 40 - Game Info -> Allowed Win By Capture: True
+GameNumber : 40 - Game Info -> Allowed Double Three: False
+GameNumber : 40 - 16ms         - Player(IA):B -> Move:I10
+GameNumber : 40 - 28ms         - Player(IA):W -> Move:K9
+GameNumber : 40 - 41ms         - Player(IA):B -> Move:I9
+GameNumber : 40 - 63ms         - Player(IA):W -> Move:I8
+GameNumber : 40 - 100ms        - Player(IA):B -> Move:I11
+GameNumber : 40 - 150ms        - Player(IA):W -> Move:I12
+GameNumber : 40 - 232ms        - Player(IA):B -> Move:I7
+GameNumber : 40 - 396ms        - Player(IA):W -> Move:J10
+GameNumber : 40 - 609ms        - Player(IA):B -> Move:H12
+GameNumber : 40 - 846ms        - Player(IA):W -> Move:G13
+GameNumber : 40 - 568ms        - Player(IA):B -> Move:I11
+GameNumber : 40 - 800ms        - Player(IA):W -> Move:H12
+GameNumber : 40 - 582ms        - Player(IA):B -> Move:F14
+GameNumber : 40 - 925ms        - Player(IA):W -> Move:L8
+GameNumber : 40 - 785ms        - Player(IA):B -> Move:M7
+GameNumber : 40 - 299ms        - Player(IA):W -> Move:I13
+GameNumber : 40 - 219ms        - Player(IA):B -> Move:I14
+GameNumber : 40 - 175ms        - Player(IA):W -> Move:I12
+GameNumber : 40 - 115ms        - Player(IA):B -> Move:H12
+GameNumber : 40 - 174ms        - Player(IA):W -> Move:G13
+GameNumber : 40 - 272ms        - Player(IA):B -> Move:I11
+GameNumber : 40 - 166ms        - Player(IA):W -> Move:H12
+GameNumber : 40 - 65ms         - Player(IA):B -> Move:I13
+GameNumber : 40 - 116ms        - Player(IA):W -> Move:I15
+GameNumber : 40 - 174ms        - Player(IA):B -> Move:I13
+GameNumber : 40 - 372ms        - Player(IA):W -> Move:K10
+GameNumber : 40 - 699ms        - Player(IA):B -> Move:L10
+GameNumber : 40 - 483ms        - Player(IA):W -> Move:J10
+GameNumber : 40 - 821ms        - Player(IA):B -> Move:J9
+GameNumber : 40 - 2351ms       - Player(IA):W -> Move:H9
+GameNumber : 40 - 333ms        - Player(IA):B -> Move:I9
+GameNumber : 40 - 564ms        - Player(IA):W -> Move:J9
+GameNumber : 40 - 1617ms       - Player(IA):B -> Move:L9
+GameNumber : 40 - 171ms        - Player(IA):W -> Move:L11

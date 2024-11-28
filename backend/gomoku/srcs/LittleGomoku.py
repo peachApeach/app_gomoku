@@ -3,7 +3,8 @@ from GomokuState import GomokuState
 from utils.little_gomoku_utils import get_actions_range, is_useful_placement
 from rules.gomoku_rules import *
 from algorithms.gomoku_state import *
-from Gomoku import Gomoku, PlacementError, count_all_alignment
+from Gomoku import Gomoku, PlacementError
+from algorithms.handle_alignment import count_all_alignment, get_score_from_alignment
 from utils.Colors import *
 import string
 import copy
@@ -74,7 +75,7 @@ class LittleGomoku:
 				elif char == ' ':
 					content += f"{BLACKHB}  {RESET} "
 				else:
-					content += f"{REDHB}??{RESET} "
+					content += f"{REDHB}{char}{RESET} "
 			content += "\n\n"
 		return content
 
@@ -170,8 +171,8 @@ class LittleGomoku:
 		return [random.choice(list_empty_slot)]
 
 
-	def super_get_actions(self) -> list["LittleGomoku"]:
-		from algorithms.gomoku_heuristic_function import game_state
+	def super_get_actions(self) -> list[tuple[int]]:
+		from algorithms.action_optimization import prune_action
 		slot_useful = []
 		range_i, range_j = get_actions_range(self.board)
 		if range_i is None or range_j is None:
@@ -183,38 +184,26 @@ class LittleGomoku:
 				if self.board[i][j] == " ":
 						count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
 						if count_same > 0 or count_different > 1:
-							try:
-								# new_lg = self.simulate_action((i, j))
-								# print(game_state(new_lg))
-								# gs = self.do_simulation((i, j))
-								slot_useful.append(((i, j), count_same * 2 + count_different))
-								# self.undo_simulation(gs)
-							except Exception as e:
-								print(self)
-								print(self.five_aligned_white)
-								print(f"ERER 1 : {i}|{j} : {e}")
-								pass
-							# slot_useful.append((i, j, count_same * 2 + count_different))
+							slot_useful.append((i, j, count_same * 2 + count_different))
 
-		list_orientation = True if self.player_turn == self.minimizing_player else False
+		# list_orientation = False if self.player_turn == self.minimizing_player else True
 		slot_useful.sort(key=lambda x: x[-1], reverse=True)
-		# print(slot_useful)
-		final_action = [item[0] for item in slot_useful]
+		final_action = [(item[0], item[1]) for item in slot_useful]
 
 		if len(final_action) != 0:
-			return final_action
+			# return final_action
+			return prune_action(self, final_action)
 
 		list_empty_slot = []
 		for i in range(8, 11):
 			for j in range(8, 11):
 				if self.board[i][j] == " ":
-					try:
-						tmp = self.simulate_action((i, j))
-						list_empty_slot.append((tmp, (i, j)))
-					except Exception as e:
+						# tmp = self.simulate_action((i, j))
+						# list_empty_slot.append((tmp, (i, j)))
+					list_empty_slot.append((i, j))
+					# except Exception as e:
 						# print(f"{i}|{j} : {e}")
-						pass
-		print(list_empty_slot)
+		# print(list_empty_slot)
 		return [random.choice(list_empty_slot)]
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
@@ -257,9 +246,9 @@ class LittleGomoku:
 		self.five_aligned_white = gomokuState.five_aligned_white
 
 
-	def paint_actions(self, actions: list[tuple[int]], live_visualisation: bool = False, live_speed: float = 0.25):
+	def paint_actions(self, actions: list[tuple[int]], char: str = '??', live_visualisation: bool = False, live_speed: float = 0.25):
 		for action in actions:
-			self.board[action[0]][action[1]] = '??'
+			self.board[action[0]][action[1]] = char
 			if live_visualisation == True:
 				os.system('clear')
 				print(self)
@@ -269,7 +258,7 @@ class LittleGomoku:
 
 if __name__ == "__main__":
 	from Gomoku import Gomoku
-	from algorithms.gomoku_algorithm import minimax
+	from algorithms.gomoku_algorithm import minimax, super_minimax
 	from utils.MeasureTime import MeasureTime
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")

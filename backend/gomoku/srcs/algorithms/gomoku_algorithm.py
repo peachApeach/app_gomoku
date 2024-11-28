@@ -11,8 +11,8 @@ def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
 	# 	return DEPTH + 1
 	if gomoku.five_aligned_black >= 1 or gomoku.five_aligned_white >= 1:
 		return DEPTH + 1
-	if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
-		return DEPTH + 1
+	# if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
+	# 	return DEPTH + 1
 	# if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_white >= 1:
 	# 	return DEPTH + 1
 	else:
@@ -95,7 +95,7 @@ def super_minimax(
 	beta: float = float("+inf"),
 	actions: list[tuple[int]] = None,
 	DEPTH: int = 0,
-	MAX_DEPTH: int = 1
+	MAX_DEPTH: int = 4
 ):
 	# MAX_DEPTH : 1 : 352ms
 	# MAX_DEPTH : 2 : 17539ms
@@ -131,7 +131,7 @@ def super_minimax(
 				best_action = action
 
 			alpha = max(alpha, state)
-			if beta <= alpha:# or state >= 5000:# or state == 6:
+			if beta <= alpha:
 				break
 		return value, best_action
 
@@ -153,8 +153,7 @@ def super_minimax(
 				value = state
 				best_action = action
 			beta = min(beta, state)
-			# print(f"{beta} | {state}")
-			if beta <= alpha:# or state <= -5000: # or state == -6:
+			if beta <= alpha:
 				break
 		return value, best_action
 	else:
