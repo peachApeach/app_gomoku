@@ -16,30 +16,33 @@ def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
 			return min(DEPTH + 2, MAX_DEPTH)
 		else:
 			return min(DEPTH + 3, MAX_DEPTH)
+
 	if gomoku.free_four_white >= 1:
 		if gomoku.player_turn == "W":
 			return min(DEPTH + 2, MAX_DEPTH)
 		else:
 			return min(DEPTH + 3, MAX_DEPTH)
 
+	if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_black >= 1:
+		return min(DEPTH + 2, MAX_DEPTH)
+		# if gomoku.player_turn == "B":
+		# 	return min(DEPTH + 1, MAX_DEPTH)
+		# else:
+		# 	return min(DEPTH + 1, MAX_DEPTH)
+
+
 	if gomoku.free_three_black >= 2:
-		return min(DEPTH + 3, MAX_DEPTH)
+		return min(DEPTH + 4, MAX_DEPTH)
 		# if gomoku.player_turn == "B":
 		# 	return DEPTH + 1
 		# else:
 		# 	return DEPTH + 2
 	if gomoku.free_three_white >= 2:
-		return min(DEPTH + 3, MAX_DEPTH)
+		return min(DEPTH + 4, MAX_DEPTH)
 		# if gomoku.player_turn == "W":
 		# 	return DEPTH + 1
 		# else:
 		# 	return DEPTH + 2
-
-
-	# if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
-	# 	return DEPTH + 1
-	# if gomoku.four_aligned_black >= 1 or gomoku.four_aligned_white >= 1:
-	# 	return DEPTH + 1
 	else:
 		return MAX_DEPTH
 
@@ -141,7 +144,7 @@ def super_minimax(
 		value = float('-inf')
 		best_action = None
 		if actions is None:
-			actions = gomoku.super_get_actions()
+			actions = gomoku.ultimate_get_actions()
 		for action in actions:
 			try:
 				gomoku_state = gomoku.do_simulation(action)
@@ -164,7 +167,7 @@ def super_minimax(
 		value = float('+inf')
 		best_action = None
 		if actions is None:
-			actions = gomoku.super_get_actions()
+			actions = gomoku.ultimate_get_actions()
 		for action in actions:
 			try:
 				gomoku_state = gomoku.do_simulation(action)

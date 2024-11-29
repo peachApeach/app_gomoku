@@ -45,6 +45,7 @@ class Gomoku:
 			save_game: bool = False,
 			settings: GomokuSettings = GomokuSettings(),
 			IA_MAX_DEPTH: int = 2,
+			IA_AGAINST_IA_MAX_DEPTH: int = 4,
 			main_player: str = 'B',
 	):
 		self.IA = IA
@@ -54,6 +55,7 @@ class Gomoku:
 		self.save_game = save_game
 		self.ia_against_ia = ia_against_ia
 		self.IA_MAX_DEPTH = IA_MAX_DEPTH
+		self.IA_AGAINST_IA_MAX_DEPTH = IA_AGAINST_IA_MAX_DEPTH
 		self.main_player = main_player
 		self.who_start = who_start
 		self.player_turn = who_start
@@ -121,7 +123,7 @@ class Gomoku:
 				elif char == ' ':
 					content += f"{BLACKHB}  {RESET} "
 				else:
-					content += f"{REDHB}??{RESET} "
+					content += f"{REDHB}{char}{RESET} "
 
 			content += "\n\n"
 		return content
@@ -442,7 +444,7 @@ class Gomoku:
 			elif stop_read < 0:
 				all_steps = all_steps[0:stop_read]
 			else:
-				all_steps = all_steps[stop_read:]
+				all_steps = all_steps[0:stop_read]
 		except Exception as e:
 			print_error(e)
 		for step in all_steps:
@@ -499,7 +501,7 @@ class Gomoku:
 			if self.ia_against_ia == True:
 				# Main player == super minimax
 				if self.get_player_turn() == self.main_player:
-					score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10)
+					score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_AGAINST_IA_MAX_DEPTH)
 				else:
 					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
 			else:
@@ -731,10 +733,10 @@ if __name__ == "__main__":
 	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
-		go_simulate = Gomoku(ia_against_ia=False)
-		go_simulate.read_a_game(28, -6, live_visualisation=False, live_speed=0.1)
-		print(go_simulate)
-		# go_simulate.play()
+		go_simulate = Gomoku(ia_against_ia=True)
+		go_simulate.read_a_game(43, 4, live_visualisation=False, live_speed=0.1)
+		# print(go_simulate)
+		go_simulate.play()
 	else:
 		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
 		AGAINST_HUMAN = False
@@ -746,6 +748,8 @@ if __name__ == "__main__":
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_suggestion=False,
-			IA_MAX_DEPTH=2)
+			IA_MAX_DEPTH=2,
+			IA_AGAINST_IA_MAX_DEPTH=10
+			)
 		gomoku.play(opening="standard")
 
