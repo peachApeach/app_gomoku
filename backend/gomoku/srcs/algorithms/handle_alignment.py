@@ -5,7 +5,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rules.gomoku_rules import switch_opponent
 from algorithms.count_alignment import type_of_alignment
 from algorithms.GomokuRegex import GomokuRegex
-from algorithms.line_utils import get_line_horizontal, get_line_vertical, get_line_diagonal_1, get_line_diagonal_2
 
 def adjust_list(lst: list[str]):
 	for i in range(1, len(lst)):
@@ -182,8 +181,9 @@ def get_score_from_alignment(all_alignment: dict):
 	return score_black, score_white
 
 if __name__ == "__main__":
+	print(type_of_alignment("WWWWB", "W"))
 	# print(alignment_streaks("  BBBBBWWWW BBBBB       "))
-	# exit(1)
+	exit(1)
 
 
 	from utils.Colors import *

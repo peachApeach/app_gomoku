@@ -35,13 +35,20 @@ def type_of_alignment(row: str, stone: str):
 	# print(f"'{row}'")
 	opponent_stone = switch_opponent(stone)
 	stone_count = row.count(stone)
+	opponent_count = row.count(opponent_stone)
 
 	# if opponent_count > 1:
 	# 	return 'invalid', 0
-	# if opponent_count >= 1:
-	# 	if row[0] != opponent_stone and row[-1] != opponent_stone:
-	# 		return 'invalid', 0
+	if opponent_count >= 1:
+		if row[0] != opponent_stone and row[-1] != opponent_stone:
+			return 'invalid', 0
+		if row[0] == opponent_stone:
+			row = row[1:]
+		if row[-1] == opponent_stone:
+			row = row[:-1]
 
+	if (len(row) < 5):
+		return 'invalid', 0
 
 	row_split = row.split(" ")
 	max_align = 0

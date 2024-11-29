@@ -52,7 +52,15 @@ def test_alignment_align_five():
 	assert type_of_alignment("    WWWWWWWWWW    ", "W") == ('align', 5)
 
 
-# def test_alignment_other():
-# 	assert type_of_alignment("    WW", "W") == ('align', 2)
-	# assert type_of_alignment("   WWB", "W") == ('invalid', 0)
+def test_alignment_invalid():
+	# assert type_of_alignment("    WW", "W") == ('align', 2)
+	assert type_of_alignment("   WBW", "W") == ('invalid', 0)
+	assert type_of_alignment("WWWWB", "W") == ('invalid', 0)
+	assert type_of_alignment("BWWWW", "W") == ('invalid', 0)
+	assert type_of_alignment("BWW W", "W") == ('invalid', 0)
+	assert type_of_alignment("WW WB", "W") == ('invalid', 0)
+	assert type_of_alignment("WWWB", "W") == ('invalid', 0)
+	assert type_of_alignment("BWWW ", "W") == ('invalid', 0)
+	assert type_of_alignment("BWWW ", "W") == ('invalid', 0)
+	assert type_of_alignment("WWWW", "W") == ('invalid', 0)
 
