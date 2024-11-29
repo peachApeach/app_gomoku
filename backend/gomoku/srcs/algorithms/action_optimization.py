@@ -10,6 +10,7 @@ from algorithms.handle_alignment import adjust_list
 from algorithms.GomokuRegex import GomokuRegex
 from algorithms.gomoku_heuristic_function import game_state
 from LittleGomoku import LittleGomoku
+from utils.little_gomoku_utils import is_useful_placement
 
 def get_score_from_action(gomoku: LittleGomoku, all_streaks: dict):
 	S_FIVE_ALIGNED = 15000
@@ -70,11 +71,11 @@ def get_score_from_action(gomoku: LittleGomoku, all_streaks: dict):
 		if all_streaks['black_capture'] > 5:
 			score_black += pairs['5']
 		else:
-			score_black += pairs[f'{all_streaks['black_capture']}']
+			score_black += pairs[f"{all_streaks['black_capture']}"]
 		if all_streaks['white_capture'] > 5:
 			score_white += pairs['5']
 		else:
-			score_white += pairs[f'{all_streaks['white_capture']}']
+			score_white += pairs[f"{all_streaks['white_capture']}"]
 
 	if gomoku.maximizing_player == "B":
 		return score_black - score_white
@@ -159,8 +160,25 @@ def get_line_pertinent(gomoku: LittleGomoku, line: str, player_pos: int):
 	remove_player_line = line[:player_pos] + " " + line[player_pos + 1:]
 
 	white_streaks = re.findall(gomokuRegex.white_streaks, line)
+	if white_streaks != []:
+		for streak in white_streaks:
+			if (len(streak)) < 5:
+				continue
+			if type_of_alignment(streak, 'W')[0] != 'invalid':
+				return True
 	black_streaks = re.findall(gomokuRegex.black_streaks, line)
+	if black_streaks != []:
+		for streak in black_streaks:
+			if (len(streak)) < 5:
+				continue
+			if type_of_alignment(streak, 'B')[0] != 'invalid':
+				return True
 	captured = re.findall(gomokuRegex.capture, remove_player_line)
+	if captured != []:
+		return True
+	return False
+
+	return white_streaks != None or black_streaks != None or captured != None
 	# print(white_streaks, black_streaks, captured)
 	return evaluate_pertinent(
 		gomoku=gomoku,
@@ -168,31 +186,26 @@ def get_line_pertinent(gomoku: LittleGomoku, line: str, player_pos: int):
 		white_streaks=white_streaks,
 		stones_catchable=captured)
 
-def useful_alignment_placement(littleGomoku: LittleGomoku, i: int, j: int):
+def useful_alignment_placement(littleGomoku: LittleGomoku, i: int, j: int, stone: str = None, preshot: bool = True):
+	if stone == None:
+		stone = littleGomoku.player_turn
 
-	line_horizontal, player_lh = get_line_horizontal(littleGomoku.board, i, j, stone=littleGomoku.player_turn, preshot=True)
-	line_vertical, player_lv = get_line_vertical(littleGomoku.board, i, j, stone=littleGomoku.player_turn, preshot=True)
-	line_diagonal_1, player_ld1 = get_line_diagonal_1(littleGomoku.board, i, j, stone=littleGomoku.player_turn, preshot=True)
-	line_diagonal_2, player_ld2 = get_line_diagonal_2(littleGomoku.board, i, j, stone=littleGomoku.player_turn, preshot=True)
+	line_horizontal, player_lh = get_line_horizontal(littleGomoku.board, i, j, stone=stone, preshot=preshot)
+	line_vertical, player_lv = get_line_vertical(littleGomoku.board, i, j, stone=stone, preshot=preshot)
+	line_diagonal_1, player_ld1 = get_line_diagonal_1(littleGomoku.board, i, j, stone=stone, preshot=preshot)
+	line_diagonal_2, player_ld2 = get_line_diagonal_2(littleGomoku.board, i, j, stone=stone, preshot=preshot)
 
+	# print(f"'{line_horizontal}'")
+	# print(f"'{line_vertical}'")
+	# print(f"'{line_diagonal_1}'")
+	# print(f"'{line_diagonal_2}'")
 	all_pertinent = [
 		get_line_pertinent(littleGomoku, line_horizontal, player_lh),
 		get_line_pertinent(littleGomoku, line_vertical, player_lv),
 		get_line_pertinent(littleGomoku, line_diagonal_1, player_ld1),
 		get_line_pertinent(littleGomoku, line_diagonal_2, player_ld2)
 	]
-
-	impertinent = 0
-	score = 0
-	# print(all_pertinent)
-	for pertinent in all_pertinent:
-		if pertinent == None:
-			impertinent += 1
-			continue
-		else:
-			score += pertinent
-
-	return score if impertinent != len(all_pertinent) else None
+	return any(all_pertinent)
 
 	# print("=" * 20)
 	# print(f"'{line_horizontal}'")
@@ -217,18 +230,29 @@ def _prune_action(board: list[list[str]], actions: list[tuple[int]], stone: str 
 def prune_action(littleGomoku: LittleGomoku, actions: list[tuple[int]]):
 	sort_new_actions = []
 	for action in actions:
-		if useful_alignment_placement(littleGomoku=littleGomoku, i=action[0], j=action[1]) != None:
+
+		if useful_alignment_placement(littleGomoku=littleGomoku, i=action[0], j=action[1]) == True:
+			# print(f"Useful : {action[0]}, {action[1]}")
+			try:
+				count_same, count_different = is_useful_placement(littleGomoku.board, action[0], action[1], littleGomoku.player_turn)
+				gs = littleGomoku.do_simulation(action)
+				sort_new_actions.append((action, game_state(littleGomoku) + (count_same + count_different) * 0.1))
+				littleGomoku.undo_simulation(gs)
+			except:
+				pass
+	if len(sort_new_actions) == 0 and len(actions) >= 1:
+		for action in actions:
 			try:
 				gs = littleGomoku.do_simulation(action)
 				sort_new_actions.append((action, game_state(littleGomoku)))
 				littleGomoku.undo_simulation(gs)
 			except:
 				pass
-	if len(sort_new_actions) == 0 and len(actions) >= 1:
-		return actions
+		max_action = len(sort_new_actions) if len(sort_new_actions) < 5 else 5
+		sort_new_actions = sort_new_actions[:max_action]
+
 	list_orientation = False if littleGomoku.player_turn == littleGomoku.minimizing_player else True
 	sort_new_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
-	# print(sort_new_actions)
 	return [item[0] for item in sort_new_actions]
 
 if __name__ == "__main__":
@@ -236,20 +260,56 @@ if __name__ == "__main__":
 	from algorithms.gomoku_algorithm import super_minimax, minimax
 	from utils.little_gomoku_utils import convert_to_little_gomoku
 	from utils.MeasureTime import MeasureTime
+	from utils.gomoku_utils import convert_xy_to_coordinate
+
+	go_simulate = Gomoku(main_player="B", ia_against_ia=True, IA_MAX_DEPTH=2, IA_AGAINST_IA_MAX_DEPTH=4)
+	go_simulate.read_a_game(51, 4, live_visualisation=False, live_speed=0.1)
+
+	littleGomoku = convert_to_little_gomoku(gomoku=go_simulate)
+
+	# if True:
+	# 	mt = MeasureTime(True)
+	# 	score, move = super_minimax(littleGomoku, MAX_DEPTH=6)
+	# 	littleGomoku.board[move[0]][move[1]] = 'XX'
+	# 	print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
+	# 	mt.stop()
+
+
+	# print(game_state(littleGomoku))
+	# print(littleGomoku.black_capture)
+	# print(littleGomoku.white_capture)
+	# print(useful_alignment_placement(littleGomoku, 12, 8))
+	# littleGomoku.paint_actions(prune_action(littleGomoku, littleGomoku.get_actions()), live_visualisation=True)
+	littleGomoku.paint_actions(littleGomoku.ultimate_get_actions(), live_visualisation=False)
+	# print(littleGomoku.ultimate_get_actions())
+
+	print(go_simulate)
+	print(game_state(littleGomoku))
+	print(littleGomoku.player_turn)
+	print(littleGomoku.maximizing_player)
+	print(littleGomoku.minimizing_player)
+
+	# go_simulate.play()
+
+if __name__ == "__main__2":
+	from Gomoku import Gomoku
+	from algorithms.gomoku_algorithm import super_minimax, minimax
+	from utils.little_gomoku_utils import convert_to_little_gomoku
+	from utils.MeasureTime import MeasureTime
 	gomoku = Gomoku()
 	gomoku.place_stone("G6", "B")
-	gomoku.place_stone("H7", "W")
-	gomoku.place_stone("J3", "B")
-	gomoku.place_stone("H8", "W")
-	gomoku.place_stone("J8", "B")
-	gomoku.place_stone("H9", "W")
-	gomoku.place_stone("J10", "B")
-	gomoku.place_stone("R17", "W")
-	gomoku.place_stone("R18", "B")
-	gomoku.switch_player_turn()
+	# gomoku.place_stone("H7", "W")
+	# gomoku.place_stone("J3", "B")
+	# gomoku.place_stone("H8", "W")
+	# gomoku.place_stone("J8", "B")
+	# gomoku.place_stone("H9", "W")
+	# gomoku.place_stone("J10", "B")
+	# gomoku.place_stone("R17", "W")
+	# gomoku.place_stone("R18", "B")
+	# gomoku.switch_player_turn()
 
-	gomoku.place_stone("H6", "W")
-	gomoku.switch_player_turn()
+	# gomoku.place_stone("H6", "W")
+	# gomoku.switch_player_turn()
 	# gomoku.place_stone("J9", "B")
 	# gomoku.switch_player_turn()
 	print(gomoku.player_turn)
@@ -259,12 +319,16 @@ if __name__ == "__main__":
 	mt = MeasureTime(True)
 	littleGomoku = convert_to_little_gomoku(gomoku=gomoku)
 
-	score, move = super_minimax(littleGomoku, MAX_DEPTH=10)
-	print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
+	if True:
+		score, move = super_minimax(littleGomoku, MAX_DEPTH=6)
+		littleGomoku.board[move[0]][move[1]] = 'XX'
+		print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
 	mt.stop()
 
-	# littleGomoku.paint_actions(prune_action(littleGomoku, littleGomoku.get_actions()), live_visualisation=True)
-	# littleGomoku.paint_actions(littleGomoku.super_get_actions(), live_visualisation=True)
+	# littleGomoku.paint_actions(littleGomoku.get_actions(), live_visualisation=True)
+	# print(useful_alignment_placement(littleGomoku, 5, 8))
+
+	# littleGomoku.paint_actions(prune_action(littleGomoku, littleGomoku.get_actions()), live_visualisation=False)
 	print(littleGomoku)
 
 
