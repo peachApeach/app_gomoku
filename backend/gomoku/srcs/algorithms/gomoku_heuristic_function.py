@@ -63,17 +63,6 @@ def game_state(gomoku: LittleGomoku, advantage_next_player: bool = False) -> int
 		'4': 2500,
 		'5': 15000
 	}
-	# # 5 pairs catched: 100
-	# S_5_PAIR_CAPTURED = 50
-	# # 4 pairs catched: 40
-	# S_4_PAIR_CAPTURED = 50
-	# # 3 pairs catched: 30
-	# S_3_PAIR_CAPTURED = 50
-	# # 2 pairs catched: 20
-	# S_2_PAIR_CAPTURED = 50
-	# # 1 pairs catched: 10
-	# S_1_PAIR_CAPTURED = 50
-
 
 	score_white = 0
 	score_black = 0
