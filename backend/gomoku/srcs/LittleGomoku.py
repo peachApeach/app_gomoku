@@ -11,6 +11,8 @@ import copy
 import time
 import os
 import random
+from threading import Thread
+import multiprocessing
 
 class LittleGomoku:
 
@@ -205,6 +207,90 @@ class LittleGomoku:
 						# print(f"{i}|{j} : {e}")
 		# print(list_empty_slot)
 		return [random.choice(list_empty_slot)]
+
+
+	def ultimate_get_actions(self) -> list[tuple[int]]:
+		# from algorithms.__action_optimization import update_action_efficient
+		from algorithms.action_optimization import useful_alignment_placement
+		from algorithms.gomoku_heuristic_function import game_state
+		actions = []
+
+		range_i, range_j = get_actions_range(self.board)
+		if range_i is None or range_j is None:
+			range_i = range(8, 11)
+			range_j = range(8, 11)
+
+
+		# Step 1: We remove isolated stone
+		# Step 2: Check efficient of the action and add efficient in all_actions
+		mid_efficient_actions = []
+		ultra_efficient_actions = []
+		for i in range_i:
+			for j in range_j:
+				if self.board[i][j] == " ":
+					# Step2.1: Check stone around
+					count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
+					if count_same > 0 or count_different > 1:
+						# Step2.2: Alignment pertinence
+						if useful_alignment_placement(littleGomoku=self, i=i, j=j, stone=self.player_turn):
+							try:
+								old_game_state = game_state(self)
+								gs = self.do_simulation((i, j))
+								new_game_state = game_state(self)
+								self.undo_simulation(gs)
+								from utils.gomoku_utils import convert_xy_to_coordinate
+								print(convert_xy_to_coordinate(j, i), new_game_state)
+								if old_game_state != new_game_state:
+									ultra_efficient_actions.append(((i, j), new_game_state + (count_same * 2 + count_different) * 0.1))
+								else:
+									mid_efficient_actions.append(((i, j), (count_same * 2 + count_different) * 0.1))
+							except Exception as e:
+								print(e)
+								pass
+						else:
+							mid_efficient_actions.append(((i, j), (count_same * 2 + count_different) * 0.1))
+
+					if count_different > 0 or count_same > 1:
+						if useful_alignment_placement(littleGomoku=self, i=i, j=j, stone=switch_opponent(self.player_turn)):
+							try:
+								old_game_state = game_state(self)
+								gs = self.do_simulation((i, j))
+								new_game_state = game_state(self)
+								self.undo_simulation(gs)
+								if old_game_state != new_game_state:
+									ultra_efficient_actions.append(((i, j), -new_game_state + (count_same + count_different * 2) * 0.1))
+								else:
+									mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
+							except Exception as e:
+								pass
+						else:
+							mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
+
+		# Step 4: Sort by efficient
+		list_orientation = False if self.player_turn == self.minimizing_player else True
+
+		mid_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+		ultra_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+
+		if ultra_efficient_actions != []:
+			all_actions = ultra_efficient_actions
+		elif mid_efficient_actions != []:
+
+			all_actions = mid_efficient_actions
+		else:
+			list_empty_slot = []
+			for i in range(8, 11):
+				for j in range(8, 11):
+					if self.board[i][j] == " ":
+						list_empty_slot.append((i, j))
+			return [random.choice(list_empty_slot)]
+
+		# Step 5: Clean and return
+		actions = list(dict.fromkeys([action_efficient[0] for action_efficient in all_actions]))
+		# actions = [action_efficient[0] for action_efficient in all_actions]
+		# print("Step 4: ", actions)
+
+		return actions
 
 	def simulate_action(self, action: tuple[int]) -> "LittleGomoku":
 		new_little_gomoku = copy.deepcopy(self)

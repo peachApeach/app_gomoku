@@ -54,8 +54,8 @@ if t == 0:
 
 elif t == 0.5:
 	measureTime = MeasureTime(start=True)
-	for i in range(12000):
-		littleGomoku.super_get_actions()
+	for i in range(1000):
+		littleGomoku.ultimate_get_actions()
 	measureTime.stop()
 
 elif t == 1:
