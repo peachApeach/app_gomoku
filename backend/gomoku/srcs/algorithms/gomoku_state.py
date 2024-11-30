@@ -1,4 +1,5 @@
 from rules.GomokuSettings import GomokuSettings
+from utils.little_gomoku_utils import get_actions_range
 
 def win_from_pos(board: list[list[str]], i, j) -> bool:
 	number_to_win = 5
@@ -93,8 +94,11 @@ def five_alignments_found(board: list[list[str]], i, j) -> bool:
 	return False
 
 def critical_situation(board: list[list[str]], observed_stone: str = None) -> tuple[bool, str | None]:
-	for i in range(len(board)):
-		for j in range(len(board[i])):
+	range_i, range_j = get_actions_range(board)
+	if range_i == None or range_j == None:
+		return (False, None)
+	for i in range_i:
+		for j in range_j:
 			if observed_stone != None and board[i][j] != observed_stone:
 				continue
 			if five_alignments_found(board, i, j) == True:
@@ -151,8 +155,11 @@ def stone_catchable(board: list[list[str]], i, j):
 	return None
 
 def winner_found(board: list[list[str]]) -> tuple[bool, str | None]:
-	for i in range(len(board)):
-		for j in range(len(board[i])):
+	range_i, range_j = get_actions_range(board)
+	if range_i == None or range_j == None:
+		return (False, None)
+	for i in range_i:
+		for j in range_j:
 			if win_from_pos(board, i, j) == True:
 				return (True, board[i][j])
 

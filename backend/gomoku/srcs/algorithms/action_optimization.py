@@ -263,16 +263,16 @@ if __name__ == "__main__":
 	from utils.gomoku_utils import convert_xy_to_coordinate
 
 	go_simulate = Gomoku(main_player="B", ia_against_ia=True, IA_MAX_DEPTH=2, IA_AGAINST_IA_MAX_DEPTH=4)
-	go_simulate.read_a_game(51, 4, live_visualisation=False, live_speed=0.1)
+	go_simulate.read_a_game(51, 5, live_visualisation=False, live_speed=0.1)
 
 	littleGomoku = convert_to_little_gomoku(gomoku=go_simulate)
 
-	# if True:
-	# 	mt = MeasureTime(True)
-	# 	score, move = super_minimax(littleGomoku, MAX_DEPTH=6)
-	# 	littleGomoku.board[move[0]][move[1]] = 'XX'
-	# 	print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
-	# 	mt.stop()
+	if True:
+		mt = MeasureTime(True)
+		score, move = super_minimax(littleGomoku, MAX_DEPTH=10)
+		littleGomoku.board[move[0]][move[1]] = 'XX'
+		print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
+		mt.stop()
 
 
 	# print(game_state(littleGomoku))
