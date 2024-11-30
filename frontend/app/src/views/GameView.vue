@@ -130,6 +130,22 @@
     </div>
 
 
+    <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
+      <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Difficulty <span class=" font-light text-gray-600">(Response time < {{ iaDifficultyResponseTime }})</span> </label>
+      <div class="flex w-full">
+        <button @click="eventSwitchDifficulty('easy')" :disabled="displayModalWhoStart == false" class="input-radio-opponent me-5" :class="iaDifficulty == 'easy' ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'easy' ? 'highlight-text-opponent' : 'text-white'">Easy</p>
+        </button>
+        <button @click="eventSwitchDifficulty('medium')" :disabled="displayModalWhoStart == false" class="input-radio-opponent me-5" :class="iaDifficulty == 'medium' ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'medium' ? 'highlight-text-opponent' : 'text-white'">Medium</p>
+        </button>
+        <button @click="eventSwitchDifficulty('hard')" :disabled="displayModalWhoStart == false" class="input-radio-opponent" :class="iaDifficulty == 'hard' ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'hard' ? 'highlight-text-opponent' : 'text-white'">Hard</p>
+        </button>
+      </div>
+    </div>
+
+
     <div class="mt-6 flex w-full items-center justify-center">
       <button type="button" class="action-button mb-2 me-2" @click="initGame">Play</button>
     </div>
@@ -147,6 +163,10 @@ const gridIsCreated = ref(false)
 
 const displayModalWhoStart = ref(true);
 const iaSuggestion = ref(false);
+
+const iaDifficulty = ref<string>("easy");
+const iaDifficultyResponseTime = ref<string>("500ms");
+
 const gameIsEnd = ref(false);
 
 const message = ref<string | null>(null);
@@ -366,6 +386,7 @@ const startGame = async () => {
       "allowed_double_three": false
     },
     "opening": "standard",
+    "difficulty": iaDifficulty.value
     }
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
@@ -639,8 +660,7 @@ const createCountdownForRound = (count: number, timerDivId: string) => {
   }, 100);
 }
 
-const eventSwitchMode = (mode) => {
-  displayModalWhoStart.value = mode
+const eventSwitchMode = (mode: string) => {
   if (mode == "hotseat") {
     displayModalWhoStart.value = false
   } else {
@@ -648,11 +668,22 @@ const eventSwitchMode = (mode) => {
   }
 }
 
-const eventSwitchIaSuggestion = (suggestion) => {
+const eventSwitchIaSuggestion = (suggestion: string) => {
   if (suggestion == "yes") {
     iaSuggestion.value = true
   } else {
     iaSuggestion.value = false
+  }
+}
+
+const eventSwitchDifficulty = (difficulty: string) => {
+  iaDifficulty.value = difficulty
+  if (difficulty == "easy") {
+    iaDifficultyResponseTime.value = "500ms"
+  } else if (difficulty == "medium") {
+    iaDifficultyResponseTime.value = "5s"
+  } else if (difficulty == "hard") {
+    iaDifficultyResponseTime.value = "10s"
   }
 }
 

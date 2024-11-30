@@ -40,6 +40,10 @@
 	@apply cursor-pointer flex w-full items-center rounded-lg border-2 border-gray-600 px-3 justify-center;
 }
 
+.input-radio-opponent:disabled {
+	@apply cursor-default;
+}
+
 .highlight-radio-opponent {
 	@apply bg-amber-400 border-amber-400;
 }
