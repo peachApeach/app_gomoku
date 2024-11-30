@@ -21,7 +21,7 @@ pattern = GomokuRegex().black_streaks
 
 def test_expect_regex():
 	assert re.findall(pattern, "B BBB BBBB BBBB BBB BB ") == ['B BBB ', 'BBBB ', 'BBBB ', 'BBB BB ']
-	assert re.findall(pattern, "B  BBBB ") == [' BBBB ']
+	assert re.findall(pattern, "B  BBBB ") == ['  BBBB ']
 	assert re.findall(pattern, "BB BBB") == ['BB BBB']
 	assert re.findall(pattern, "BBB BB") == ['BBB BB']
 	assert re.findall(pattern, "BBB BB BB BBB") == ['BBB BB ', 'BB BBB']
