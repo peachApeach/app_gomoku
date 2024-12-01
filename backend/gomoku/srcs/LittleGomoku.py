@@ -59,6 +59,10 @@ class LittleGomoku:
 		self.five_aligned_black = five_aligned_black
 		self.five_aligned_white = five_aligned_white
 
+		self.minimax_start = None
+		self.minimax_timeout = 5
+
+
 	def __str__(self) -> str:
 		content = "  "
 		for i in range(1, self.__board_width + 1):
@@ -209,7 +213,7 @@ class LittleGomoku:
 		return [random.choice(list_empty_slot)]
 
 
-	def ultimate_get_actions(self) -> list[tuple[int]]:
+	def ultimate_get_actions(self, IN_RECURSIVE_ACTION: bool = False) -> list[tuple[int]]:
 		# from algorithms.__action_optimization import update_action_efficient
 		from algorithms.action_optimization import useful_alignment_placement
 		from algorithms.gomoku_heuristic_function import game_state
@@ -219,33 +223,38 @@ class LittleGomoku:
 		if range_i is None or range_j is None:
 			range_i = range(8, 11)
 			range_j = range(8, 11)
+		# return [(i, j) for i in range_i for j in range_j if self.board[i][j] == " "]
 
 
 		# Step 1: We remove isolated stone
 		# Step 2: Check efficient of the action and add efficient in all_actions
 		mid_efficient_actions = []
 		ultra_efficient_actions = []
+		opps_mid_efficient_actions = []
+		opps_ultra_efficient_actions = []
 		for i in range_i:
 			for j in range_j:
 				if self.board[i][j] == " ":
 					# Step2.1: Check stone around
 					count_same, count_different = is_useful_placement(self.board, i, j, self.player_turn, 2)
 					if count_same > 0 or count_different > 1:
+						from utils.gomoku_utils import convert_xy_to_coordinate
+						# print(convert_xy_to_coordinate(j, i))
 						# Step2.2: Alignment pertinence
 						if useful_alignment_placement(littleGomoku=self, i=i, j=j, stone=self.player_turn):
+							# print("HERE : ", convert_xy_to_coordinate(j, i))
 							try:
 								old_game_state = game_state(self)
 								gs = self.do_simulation((i, j))
 								new_game_state = game_state(self)
 								self.undo_simulation(gs)
-								from utils.gomoku_utils import convert_xy_to_coordinate
-								print(convert_xy_to_coordinate(j, i), new_game_state)
+								# from utils.gomoku_utils import convert_xy_to_coordinate
+								# print("MINE", convert_xy_to_coordinate(j, i), new_game_state)
 								if old_game_state != new_game_state:
 									ultra_efficient_actions.append(((i, j), new_game_state + (count_same * 2 + count_different) * 0.1))
 								else:
 									mid_efficient_actions.append(((i, j), (count_same * 2 + count_different) * 0.1))
 							except Exception as e:
-								print(e)
 								pass
 						else:
 							mid_efficient_actions.append(((i, j), (count_same * 2 + count_different) * 0.1))
@@ -254,17 +263,19 @@ class LittleGomoku:
 						if useful_alignment_placement(littleGomoku=self, i=i, j=j, stone=switch_opponent(self.player_turn)):
 							try:
 								old_game_state = game_state(self)
-								gs = self.do_simulation((i, j))
+								gs = self.do_simulation(action=(i, j), opponent_pov=True)
 								new_game_state = game_state(self)
 								self.undo_simulation(gs)
+								from utils.gomoku_utils import convert_xy_to_coordinate
+								# print(convert_xy_to_coordinate(j, i), -new_game_state)
 								if old_game_state != new_game_state:
-									ultra_efficient_actions.append(((i, j), -new_game_state + (count_same + count_different * 2) * 0.1))
+									opps_ultra_efficient_actions.append(((i, j), -new_game_state + (count_same + count_different * 2) * 0.1))
 								else:
-									mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
+									opps_mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
 							except Exception as e:
 								pass
 						else:
-							mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
+							opps_mid_efficient_actions.append(((i, j), (count_same + count_different * 2) * 0.1))
 
 		# Step 4: Sort by efficient
 		list_orientation = False if self.player_turn == self.minimizing_player else True
@@ -272,18 +283,33 @@ class LittleGomoku:
 		mid_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
 		ultra_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
 
+		# opps_mid_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+		# opps_ultra_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+
+		mid_efficient_actions += opps_mid_efficient_actions
+		ultra_efficient_actions += opps_ultra_efficient_actions
+
+		mid_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+		ultra_efficient_actions.sort(key=lambda x: x[-1], reverse=list_orientation)
+		# print(ultra_efficient_actions)
 		if ultra_efficient_actions != []:
 			all_actions = ultra_efficient_actions
 		elif mid_efficient_actions != []:
-
-			all_actions = mid_efficient_actions
+			if IN_RECURSIVE_ACTION == False:
+				for action, _ in mid_efficient_actions:
+					gs = self.do_simulation(action=action)
+					final_action = self.ultimate_get_actions(IN_RECURSIVE_ACTION=True)
+					self.undo_simulation(gs)
+					return final_action
+			else:
+				all_actions = mid_efficient_actions
 		else:
 			list_empty_slot = []
 			for i in range(8, 11):
 				for j in range(8, 11):
 					if self.board[i][j] == " ":
 						list_empty_slot.append((i, j))
-			return [random.choice(list_empty_slot)]
+			return list_empty_slot
 
 		# Step 5: Clean and return
 		actions = list(dict.fromkeys([action_efficient[0] for action_efficient in all_actions]))
@@ -298,10 +324,17 @@ class LittleGomoku:
 		new_little_gomoku.switch_player_turn()
 		return new_little_gomoku
 
-	def do_simulation(self, action: tuple[int]) -> GomokuState:
+	def do_simulation(self, action: tuple[int], opponent_pov: bool = False) -> GomokuState:
 		gomokuState = GomokuState(self, action)
+		if opponent_pov == True:
+			self.switch_player_turn()
 
-		self.place_stone(action[0], action[1])
+		try:
+			self.place_stone(action[0], action[1])
+		except Exception as e:
+			if opponent_pov == True:
+				self.switch_player_turn()
+			raise e
 		self.switch_player_turn()
 		return gomokuState
 
@@ -330,6 +363,16 @@ class LittleGomoku:
 
 		self.five_aligned_black = gomokuState.five_aligned_black
 		self.five_aligned_white = gomokuState.five_aligned_white
+
+	def set_minimax_timeout(self, seconds: int = 5):
+		self.minimax_start = time.time()
+		self.minimax_timeout = seconds
+
+	def is_minimax_timeout(self):
+		current_time = time.time()
+		if current_time - self.minimax_start > self.minimax_timeout:
+			return True
+		return False
 
 
 	def paint_actions(self, actions: list[tuple[int]], char: str = '??', live_visualisation: bool = False, live_speed: float = 0.25):
