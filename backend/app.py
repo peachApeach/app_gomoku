@@ -191,18 +191,13 @@ def get_cookie():
 # Import my package
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'gomoku')))
 
-class Item(BaseModel):
-	name: str
-	description: str | None = None
-	price: float
-	tax: float | None = None
-
 class NewGameModel(BaseModel):
 	mode: str
 	main_player: str
 	IA_suggestion: bool
 	options: dict[str, bool]
 	opening: str
+	difficulty: str
 
 class MoveModel(BaseModel):
 	player_move: dict[str, int]
@@ -261,7 +256,8 @@ async def new_game(body: NewGameModel):
 			allowed_win_by_capture=allowed_win_by_capture,
 			allowed_double_three=allowed_double_three
 		),
-		main_player=main_player
+		main_player=main_player,
+		IA_DIFFICULTY=body.difficulty
 	)
 
 	board, IA_duration = all_games[game_id].run()
@@ -326,8 +322,45 @@ async def new_game(body: NewGameModel):
 		"player2_capture": gomoku.black_capture if gomoku.main_player == 'W' else gomoku.white_capture,
 		"player1_color": gomoku.main_player,
 		"player2_color": "W" if gomoku.main_player == "B" else "B",
-		"message": message
+		"message": message,
+		"difficulty": gomoku.IA_DIFFICULTY
 	}
+
+
+@app.post("/game/{game_id}/IA_response", status_code=status.HTTP_200_OK)
+async def IA_response(game_id: str):
+	gomoku = all_games[game_id]
+	if gomoku is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
+
+	try:
+		after_move_dict = gomoku.handle_ia_response()
+	except Exception as e:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+	isPausedPlayer1 = None
+	isPausedPlayer2 = None
+	if gomoku.IA == True and gomoku.main_player == "W":
+		isPausedPlayer1 = False if gomoku.player_turn == "W" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "B" else True
+	else:
+		isPausedPlayer1 = False if gomoku.player_turn == "B" else True
+		isPausedPlayer2 = False if gomoku.player_turn == "W" else True
+	return {
+		"player_turn": gomoku.player_turn,
+		"isPausedPlayer1": isPausedPlayer1,
+		"isPausedPlayer2": isPausedPlayer2,
+		"IA_suggestion": after_move_dict['IA_suggestion'],
+		"IA_duration": after_move_dict['IA_duration'],
+		"board": gomoku.board,
+		"black_capture": gomoku.black_capture,
+		"white_capture": gomoku.white_capture,
+		"player1_color": gomoku.main_player,
+		"player2_color": "W" if gomoku.main_player == "B" else "B",
+		"message": after_move_dict['message'],
+		"status": after_move_dict['status'],
+	}
+
 
 @app.post("/game/{game_id}/move", status_code=status.HTTP_200_OK)
 async def play_move(game_id: str, body: MoveModel):
@@ -367,9 +400,8 @@ async def play_move(game_id: str, body: MoveModel):
 		"player1_color": gomoku.main_player,
 		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": after_move_dict['message'],
-		"message_after_IA": after_move_dict['message_after_IA'],
 		"status": after_move_dict['status'],
-		"before_IA_board": after_move_dict['before_IA_board'],
+		"IA_response": after_move_dict['IA_response'],
 	}
 
 @app.post("/game/{game_id}/timeout")
@@ -404,9 +436,8 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"player1_color": gomoku.main_player,
 		"player2_color": "W" if gomoku.main_player == "B" else "B",
 		"message": timeout_dict['message'],
-		"message_after_IA": timeout_dict['message_after_IA'],
 		"status": timeout_dict['status'],
-		"before_IA_board": timeout_dict['before_IA_board'],
+		"IA_response": timeout_dict['IA_response'],
 	}
 
 @app.post("/game/{game_id}/countdown")

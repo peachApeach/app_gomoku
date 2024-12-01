@@ -47,6 +47,7 @@ class Gomoku:
 			IA_TIMEOUT: int = 5,
 			IA_MAX_DEPTH: int = 2,
 			IA_AGAINST_IA_MAX_DEPTH: int = 4,
+			IA_DIFFICULTY: str = "easy",
 			main_player: str = 'B',
 	):
 		self.IA = IA
@@ -65,6 +66,9 @@ class Gomoku:
 		self.minimizing_player = 'W' if who_start == 'B' else 'B'
 		self.settings = settings
 		self.board = [[" " for _ in range(self.__board_width)] for __ in range(self.__board_height)]
+		self.IA_DIFFICULTY = IA_DIFFICULTY
+
+
 
 		self.game_history_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "game_history")
 		if self.save_game == True:
@@ -549,7 +553,7 @@ class Gomoku:
 		while terminate_state(self) == False:
 			is_err = False
 			message = f"Is {'black' if self.get_player_turn() == 'B' else 'white'} player turn."
-			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=True, all_informations=False)
+			self.display_board(message=message, last_duration=last_duration, is_err=is_err, allow_suggestion=self.IA_suggestion, all_informations=False)
 			last_duration = self.handle_player()
 
 		if self.settings.allowed_capture:
@@ -577,7 +581,21 @@ class Gomoku:
 		# It's IA Turn
 		else:
 			mt = MeasureTime(start=True)
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			# try:
+			# 	if self.IA_DIFFICULTY == 'easy':
+			# 		score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+			# 	elif self.IA_DIFFICULTY == 'medium':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=6, TIMEOUT=4)
+			# 	elif self.IA_DIFFICULTY == 'hard':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=9)
+			# 	else:
+			# 		move = None
+			# except:
+			# 	score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+			# if move == None:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
 			IA_duration = mt.stop(get_str=True, duration_only=True)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			try:
@@ -587,6 +605,70 @@ class Gomoku:
 			except Exception:
 				return None
 
+	def handle_ia_response(self) -> dict:
+		from algorithms.gomoku_algorithm import minimax, super_minimax
+		final_dict = {
+			'message': None,
+			'status': 'playing',
+			'message_after_IA': None,
+			'IA_duration': None,
+			'IA_suggestion': None,
+			# 'before_IA_board': None
+		}
+
+		# final_dict['before_IA_board'] = copy.deepcopy(self.board)
+		# time.sleep(0.5)
+		mt = MeasureTime(start=True)
+		# score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+		try:
+			if self.IA_DIFFICULTY == 'easy':
+				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+			elif self.IA_DIFFICULTY == 'medium':
+				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=6, TIMEOUT=5)
+			elif self.IA_DIFFICULTY == 'hard':
+				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=8)
+			else:
+				move = None
+		except:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+		if move == None:
+			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+
+		final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
+		ia_placement = convert_xy_to_coordinate(move[1], move[0])
+		self.place_stone(ia_placement)
+		self.switch_player_turn()
+
+
+
+		if terminate_state(self):
+			final_dict['status'] = 'finished'
+
+			if self.settings.allowed_capture:
+				if self.black_capture >= 5 or self.white_capture >= 5:
+					has_winner = True
+					who_win = "B" if self.black_capture >= 5 else "W"
+				else:
+					has_winner, who_win = winner_found(self.board)
+			else:
+				has_winner, who_win = critical_situation(self.board)
+			if has_winner:
+				by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
+				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
+			else:
+				final_dict['message'] = "No one has won. It's a perfect tie !"
+		else:
+			if self.IA_suggestion:
+				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+				final_dict['IA_suggestion'] = (move[1], move[0])
+			# final_dict['message'] = "IA is thinking..."
+			# final_dict['message_after_IA'] = "It's your turn !"
+			final_dict['message'] = "It's your turn !"
+
+		return final_dict
+
 	def apply_move(self, x: int, y: int) -> dict:
 		from algorithms.gomoku_algorithm import minimax, super_minimax
 		final_dict = {
@@ -595,7 +677,8 @@ class Gomoku:
 			'message_after_IA': None,
 			'IA_duration': None,
 			'IA_suggestion': None,
-			'before_IA_board': None
+			'before_IA_board': None,
+			'IA_response': None
 		}
 		user_placement = convert_xy_to_coordinate(x, y)
 		self.place_stone(user_placement)
@@ -624,14 +707,33 @@ class Gomoku:
 
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
-			final_dict['before_IA_board'] = copy.deepcopy(self.board)
-			# time.sleep(0.5)
-			mt = MeasureTime(start=True)
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
-			ia_placement = convert_xy_to_coordinate(move[1], move[0])
-			self.place_stone(ia_placement)
-			self.switch_player_turn()
+			final_dict['IA_response'] = True
+			final_dict['message'] = "IA is thinking..."
+
+			# final_dict['before_IA_board'] = copy.deepcopy(self.board)
+			# # time.sleep(0.5)
+			# mt = MeasureTime(start=True)
+			# # score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			# try:
+			# 	if self.IA_DIFFICULTY == 'easy':
+			# 		score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+			# 	elif self.IA_DIFFICULTY == 'medium':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=6, TIMEOUT=4)
+			# 	elif self.IA_DIFFICULTY == 'hard':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=9)
+			# 	else:
+			# 		move = None
+			# except:
+			# 	score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+			# if move == None:
+			# 	score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+
+			# final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
+			# ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			# self.place_stone(ia_placement)
+			# self.switch_player_turn()
 		else:
 			if self.IA_suggestion:
 				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
@@ -645,28 +747,28 @@ class Gomoku:
 			return final_dict
 
 
-		if terminate_state(self):
-			final_dict['status'] = 'finished'
+		# if terminate_state(self):
+		# 	final_dict['status'] = 'finished'
 
-			if self.settings.allowed_capture:
-				if self.black_capture >= 5 or self.white_capture >= 5:
-					has_winner = True
-					who_win = "B" if self.black_capture >= 5 else "W"
-				else:
-					has_winner, who_win = winner_found(self.board)
-			else:
-				has_winner, who_win = critical_situation(self.board)
-			if has_winner:
-				by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
-				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
-			else:
-				final_dict['message'] = "No one has won. It's a perfect tie !"
-		else:
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-			if self.IA_suggestion:
-				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "IA is thinking..."
-			final_dict['message_after_IA'] = "It's your turn !"
+		# 	if self.settings.allowed_capture:
+		# 		if self.black_capture >= 5 or self.white_capture >= 5:
+		# 			has_winner = True
+		# 			who_win = "B" if self.black_capture >= 5 else "W"
+		# 		else:
+		# 			has_winner, who_win = winner_found(self.board)
+		# 	else:
+		# 		has_winner, who_win = critical_situation(self.board)
+		# 	if has_winner:
+		# 		by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
+		# 		final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
+		# 	else:
+		# 		final_dict['message'] = "No one has won. It's a perfect tie !"
+		# else:
+		# 	if self.IA_suggestion:
+		# 		score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+		# 		final_dict['IA_suggestion'] = (move[1], move[0])
+		# 	final_dict['message'] = "IA is thinking..."
+		# 	final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 	def countdown(self, who_timeout: str):
@@ -698,13 +800,29 @@ class Gomoku:
 		self.switch_player_turn()
 
 		if self.get_player_turn() != self.main_player and self.IA == True:
-			final_dict['before_IA_board'] = copy.deepcopy(self.board)
-			mt = MeasureTime(start=True)
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-			final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
-			ia_placement = convert_xy_to_coordinate(move[1], move[0])
-			self.place_stone(ia_placement)
-			self.switch_player_turn()
+			final_dict['IA_response'] = True
+			final_dict['message'] = "IA is thinking..."
+			# final_dict['before_IA_board'] = copy.deepcopy(self.board)
+			# mt = MeasureTime(start=True)
+			# # score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+			# try:
+			# 	if self.IA_DIFFICULTY == 'easy':
+			# 		score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+			# 	elif self.IA_DIFFICULTY == 'medium':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=6, TIMEOUT=4)
+			# 	elif self.IA_DIFFICULTY == 'hard':
+			# 		score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=9)
+			# 	else:
+			# 		move = None
+			# except:
+			# 	score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+
+			# if move == None:
+			# 	score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
+			# final_dict['IA_duration'] = mt.stop(get_str=True, duration_only=True)
+			# ia_placement = convert_xy_to_coordinate(move[1], move[0])
+			# self.place_stone(ia_placement)
+			# self.switch_player_turn()
 		else:
 			if self.IA_suggestion:
 				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
@@ -718,28 +836,28 @@ class Gomoku:
 			return final_dict
 
 
-		if terminate_state(self):
-			final_dict['status'] = 'finished'
+		# if terminate_state(self):
+		# 	final_dict['status'] = 'finished'
 
-			if self.settings.allowed_capture:
-				if self.black_capture >= 5 or self.white_capture >= 5:
-					has_winner = True
-					who_win = "B" if self.black_capture >= 5 else "W"
-				else:
-					has_winner, who_win = winner_found(self.board)
-			else:
-				has_winner, who_win = critical_situation(self.board)
-			if has_winner:
-				by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
-				final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
-			else:
-				final_dict['message'] = "No one has won. It's a perfect tie !"
-		else:
-			score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
-			if self.IA_suggestion:
-				final_dict['IA_suggestion'] = (move[1], move[0])
-			final_dict['message'] = "IA is thinking..."
-			final_dict['message_after_IA'] = "It's your turn !"
+		# 	if self.settings.allowed_capture:
+		# 		if self.black_capture >= 5 or self.white_capture >= 5:
+		# 			has_winner = True
+		# 			who_win = "B" if self.black_capture >= 5 else "W"
+		# 		else:
+		# 			has_winner, who_win = winner_found(self.board)
+		# 	else:
+		# 		has_winner, who_win = critical_situation(self.board)
+		# 	if has_winner:
+		# 		by_captured_msg = "by capture " if self.black_capture >= 5 or self.white_capture >= 5 else ""
+		# 		final_dict['message'] = f"{'White' if who_win == 'W' else 'Black'} has won the game {by_captured_msg}!"
+		# 	else:
+		# 		final_dict['message'] = "No one has won. It's a perfect tie !"
+		# else:
+		# 	if self.IA_suggestion:
+		# 		score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+		# 		final_dict['IA_suggestion'] = (move[1], move[0])
+		# 	final_dict['message'] = "IA is thinking..."
+		# 	final_dict['message_after_IA'] = "It's your turn !"
 		return final_dict
 
 
@@ -764,14 +882,14 @@ if __name__ == "__main__":
 		gomoku = Gomoku(
 			IA=False,
 			who_start="B", # Always Black
-			main_player="W",
+			main_player="B",
 			save_game=True,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_suggestion=False,
 			IA_MAX_DEPTH=2,
 			IA_AGAINST_IA_MAX_DEPTH=10,
-			IA_TIMEOUT=6
+			IA_TIMEOUT=8
 			)
 		gomoku.play(opening="standard")
 

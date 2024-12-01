@@ -2,7 +2,7 @@
 	<Teleport to="body">
 		<Transition name="modal-outer">
 			<div v-show="modalActive"
-				class="fixed left-0 top-0 z-50 flex size-full min-h-screen items-center justify-center overflow-scroll bg-black/60 px-8">
+				class="fixed left-0 top-0 z-50 flex size-full min-h-screen items-center justify-center overflow-auto bg-black/60 px-8">
 				<Transition name="modal-inner">
 					<div v-if="modalActive" class=" h-fit w-4/6 min-w-72 max-w-screen-sm rounded-2xl bg-ui-bg p-8 dark:bg-d-ui-bg">
 						<div v-if="closeButton" class="flex w-full justify-end">

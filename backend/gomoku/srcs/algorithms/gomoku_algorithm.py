@@ -16,35 +16,44 @@ def old_get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
 	else:
 		return MAX_DEPTH
 
+# def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
+
+# 	if gomoku.five_aligned_black >= 1 or gomoku.five_aligned_white >= 1:
+# 		return min(DEPTH + 1, MAX_DEPTH)
+
+# 	# We stop the stop the DEPTH if this situation exists because we not need to go down.
+# 	if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
+# 		return DEPTH + 1
+
+# # if gomoku.player_turn == "B":
+# 	if gomoku.four_aligned_black >= 1:
+# 		return min(DEPTH + 1, MAX_DEPTH)
+# 	if gomoku.free_three_black >= 2:
+# 		return min(DEPTH + 3, MAX_DEPTH)
+
+# # if gomoku.player_turn == "W":
+# 	if gomoku.four_aligned_white >= 1:
+# 		return min(DEPTH + 1, MAX_DEPTH)
+# 	if gomoku.free_three_white >= 2:
+# 		return min(DEPTH + 3, MAX_DEPTH)
+
+# 	return MAX_DEPTH
+
 def get_max_depth(gomoku: LittleGomoku, DEPTH: int, MAX_DEPTH: int):
-
-	if gomoku.five_aligned_black >= 1 or gomoku.five_aligned_white >= 1:
-		return min(DEPTH + 1, MAX_DEPTH)
-
-	# We stop the stop the DEPTH if this situation exists because we not need to go down.
-	if gomoku.free_four_black >= 1 or gomoku.free_four_white >= 1:
-		return DEPTH + 1
-
-# if gomoku.player_turn == "B":
-	if gomoku.four_aligned_black >= 1:
-		return min(DEPTH + 1, MAX_DEPTH)
-	if gomoku.free_three_black >= 2:
-		return min(DEPTH + 3, MAX_DEPTH)
-
-# if gomoku.player_turn == "W":
-	if gomoku.four_aligned_white >= 1:
-		return min(DEPTH + 1, MAX_DEPTH)
-	if gomoku.free_three_white >= 2:
-		return min(DEPTH + 3, MAX_DEPTH)
-
+	# if DEPTH > 2:
+	if gomoku.player_turn == gomoku.maximizing_player:
+		if game_state(gomoku) > 0:
+			return min(DEPTH + 2, MAX_DEPTH)
+	else:
+		if game_state(gomoku) < 0:
+			return min(DEPTH + 2, MAX_DEPTH)
 	return MAX_DEPTH
 
 def get_nb_actions(DEPTH: int, actions):
+	# return (len(actions))
 	if DEPTH > 2:
-		return 3
-	if DEPTH > 4:
-		return 1
-	return len(actions)
+		return 4
+	return min(8, len(actions))
 
 # MARCHE TRÈS BIEN AVEC MAX_DEPTH=2
 def minimax(
@@ -155,7 +164,7 @@ def super_minimax(
 		if actions is None:
 			actions = gomoku.ultimate_get_actions()
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
-		# for action, i in zip(actions, range(get_nb_actions(DEPTH, actions))):
+		# for action, _ in zip(actions, range(get_nb_actions(DEPTH, actions))):
 		for action in actions:
 			try:
 				gomoku_state = gomoku.do_simulation(action)
@@ -164,8 +173,6 @@ def super_minimax(
 				gomoku.undo_simulation(gomoku_state)
 			except:
 				continue
-			if state == None:
-				break
 			if state > value:
 				value = state
 				best_action = action
@@ -186,7 +193,7 @@ def super_minimax(
 			actions = gomoku.ultimate_get_actions()
 
 		MAX_DEPTH = get_max_depth(gomoku, DEPTH, MAX_DEPTH)
-		# for action, i in zip(actions, range(get_nb_actions(DEPTH, actions))):
+		# for action, _ in zip(actions, range(get_nb_actions(DEPTH, actions))):
 		for action in actions:
 			try:
 				gomoku_state = gomoku.do_simulation(action)

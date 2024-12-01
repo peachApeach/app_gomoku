@@ -61,9 +61,9 @@
 
 
   <Modal :modal-active="generatorModalActive" @close-modal="toggleGeneratorModal" :close-button="true">
-    <h1 class="mb-5 text-center text-3xl font-bold text-high-contrast-text">Settings</h1>
+    <h1 class="mb-2 text-center text-3xl font-bold text-high-contrast-text">Settings</h1>
 
-    <div class="flex w-full flex-col items-start py-5">
+    <div class="flex w-full flex-col items-start py-3">
       <label id="time-per-turn-label" for="time-per-turn" class="mb-2 block text-sm font-bold text-low-contrast-text">Time per turn</label>
       <div class="relative w-full">
           <select name="time-p-turn" id="time-per-turn" class="block w-full rounded-lg border-2 border-gray-600 bg-ui-bg p-2.5 text-sm font-bold text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start py-5">
+    <div class="flex w-full flex-col items-start py-3">
       <label id="min-per-player-label" for="min-per-player" class="mb-2 block text-sm font-bold text-low-contrast-text">Minutes per player</label>
       <div class="relative w-full">
           <select name="min-p-player" id="min-per-player" class="block w-full rounded-lg border-2 border-gray-600 bg-ui-bg p-2.5 text-sm font-bold text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500">
@@ -90,7 +90,7 @@
     </div>
 
 
-    <div class="flex w-full flex-col items-start py-5">
+    <div class="flex w-full flex-col items-start py-3">
       <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">IA suggestion?</label>
       <div class="flex w-full">
         <div @click="eventSwitchIaSuggestion('no')" class="input-radio-opponent me-5" :class="!iaSuggestion ? 'highlight-radio-opponent' : ''">
@@ -102,7 +102,7 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start py-5">
+    <div class="flex w-full flex-col items-start py-3">
       <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Mode</label>
       <div class="flex w-full">
         <div @click="eventSwitchMode('IA')" class="input-radio-opponent me-5" :class="displayModalWhoStart ? 'highlight-radio-opponent' : ''">
@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
+    <div class="flex w-full flex-col items-start py-3" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
       <label id="first-player-label" for="first-player" class="mb-2 block text-sm font-bold text-low-contrast-text">Who plays first?</label>
       <div class="relative w-full">
           <select name="f-player" id="first-player" class="block w-full rounded-lg border-2 border-gray-600 bg-ui-bg p-2.5 text-sm font-bold text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500" :disabled="displayModalWhoStart == false">
@@ -131,16 +131,16 @@
 
 
     <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
-      <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Difficulty <span class=" font-light text-gray-600">(Response time < {{ iaDifficultyResponseTime }})</span> </label>
+      <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Algorithm Depth <span class=" font-light text-gray-600">(Response time < {{ iaDifficultyResponseTime }})</span> </label>
       <div class="flex w-full">
         <button @click="eventSwitchDifficulty('easy')" :disabled="displayModalWhoStart == false" class="input-radio-opponent me-5" :class="iaDifficulty == 'easy' ? 'highlight-radio-opponent' : ''">
-          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'easy' ? 'highlight-text-opponent' : 'text-white'">Easy</p>
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'easy' ? 'highlight-text-opponent' : 'text-white'">2</p>
         </button>
         <button @click="eventSwitchDifficulty('medium')" :disabled="displayModalWhoStart == false" class="input-radio-opponent me-5" :class="iaDifficulty == 'medium' ? 'highlight-radio-opponent' : ''">
-          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'medium' ? 'highlight-text-opponent' : 'text-white'">Medium</p>
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'medium' ? 'highlight-text-opponent' : 'text-white'">6</p>
         </button>
         <button @click="eventSwitchDifficulty('hard')" :disabled="displayModalWhoStart == false" class="input-radio-opponent" :class="iaDifficulty == 'hard' ? 'highlight-radio-opponent' : ''">
-          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'hard' ? 'highlight-text-opponent' : 'text-white'">Hard</p>
+          <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'hard' ? 'highlight-text-opponent' : 'text-white'">10</p>
         </button>
       </div>
     </div>
@@ -392,6 +392,8 @@ const startGame = async () => {
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
   const data = await postRequest("http://127.0.0.1:4000/game/new", payload);
+  // console.log(iaDifficulty.value);
+  // console.log(data);
   // console.log(data);
   // console.log(data.board);
   // const data = {
@@ -454,23 +456,19 @@ const addPown = async (event) => {
   const pawnCircle = document.getElementById(pawnId)
   if (pawnCircle.style.opacity == "1") {
     isPownHandling = false;
-    // console.log('already clicked')
     return
   }
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
   const payload = {
     "player_move": {"x": coordinates[1], "y": coordinates[0]}
   }
-  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
-  // console.log(data);
+  let data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
   if (!data) {
     isPownHandling = false;
     return ;
   }
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
-  // console.log(data)
-  // Handle response
   if (data.status != 'playing')
   {
     fillGridWithList(data.board)
@@ -481,15 +479,41 @@ const addPown = async (event) => {
   }
   if (data.error != null)
     console.log('Placement error')
-  if (data.before_IA_board) {
+
+  fillGridWithList(data.board);
+  if (data.IA_response) {
     if (timePerTurn != -1) {
       clearInterval(currentRoundTimer)
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
-    fillGridWithList(data.before_IA_board)
-    await new Promise(r => setTimeout(r, 600));
-    message.value = data.message_after_IA;
+    data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    if (!data) {
+      isPownHandling = false;
+      return ;
+    }
+    // fillGridWithList(data.before_IA_board)
+    if (iaDifficulty.value == 'easy') {
+      await new Promise(r => setTimeout(r, 600));
+    }
+    if (data.status != 'playing')
+    {
+      fillGridWithList(data.board)
+      blackCapture.value = data.black_capture;
+      whiteCapture.value = data.white_capture;
+      isPownHandling = false;
+      return handleEndGame()
+    }
+    message.value = data.message;
   }
+  // if (data.before_IA_board) {
+  //   if (timePerTurn != -1) {
+  //     clearInterval(currentRoundTimer)
+  //     createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+  //   }
+  //   fillGridWithList(data.before_IA_board)
+  //   await new Promise(r => setTimeout(r, 600));
+  //   message.value = data.message_after_IA;
+  // }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   if (timePerTurn != -1) {
@@ -582,7 +606,7 @@ const handlePlayerTimeout = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
-  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/timeout", payload);
+  let data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/timeout", payload);
   // console.log("TIMEOUT DATA:");
   // console.log(data);
   // Handle response
@@ -600,15 +624,40 @@ const handlePlayerTimeout = async () => {
   }
   isPausedPlayer1 = !isPausedPlayer1
   isPausedPlayer2 = !isPausedPlayer2
-  if (data.before_IA_board) {
+  fillGridWithList(data.board);
+  if (data.IA_response) {
     if (timePerTurn != -1) {
       clearInterval(currentRoundTimer)
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
-    fillGridWithList(data.before_IA_board)
-    await new Promise(r => setTimeout(r, 600));
-    message.value = data.message_after_IA;
+    data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    if (!data) {
+      isPownHandling = false;
+      return ;
+    }
+    // fillGridWithList(data.before_IA_board)
+    if (iaDifficulty.value == 'easy') {
+      await new Promise(r => setTimeout(r, 600));
+    }
+    if (data.status != 'playing')
+    {
+      fillGridWithList(data.board)
+      blackCapture.value = data.black_capture;
+      whiteCapture.value = data.white_capture;
+      isPownHandling = false;
+      return handleEndGame()
+    }
+    message.value = data.message;
   }
+  // if (data.before_IA_board) {
+  //   if (timePerTurn != -1) {
+  //     clearInterval(currentRoundTimer)
+  //     createCountdownForRound(parseInt(timePerTurn), 'round-timer')
+  //   }
+  //   fillGridWithList(data.before_IA_board)
+  //   await new Promise(r => setTimeout(r, 600));
+  //   message.value = data.message_after_IA;
+  // }
   isPausedPlayer1 = data.isPausedPlayer1;
   isPausedPlayer2 = data.isPausedPlayer2;
   // isPausedPlayer1 = !isPausedPlayer1
@@ -681,9 +730,9 @@ const eventSwitchDifficulty = (difficulty: string) => {
   if (difficulty == "easy") {
     iaDifficultyResponseTime.value = "500ms"
   } else if (difficulty == "medium") {
-    iaDifficultyResponseTime.value = "5s"
+    iaDifficultyResponseTime.value = "6s"
   } else if (difficulty == "hard") {
-    iaDifficultyResponseTime.value = "10s"
+    iaDifficultyResponseTime.value = "9s"
   }
 }
 

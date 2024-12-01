@@ -1,0 +1,36 @@
+GameNumber : 78 - Game Info -> Start: B
+GameNumber : 78 - Game Info -> Allowed Capture: True
+GameNumber : 78 - Game Info -> Allowed Win By Capture: True
+GameNumber : 78 - Game Info -> Allowed Double Three: False
+GameNumber : 78 - 8006ms       - Player(IA):B -> Move:I9
+GameNumber : 78 - 1ms          - Player(IA):W -> Move:J10
+GameNumber : 78 - 8000ms       - Player(IA):B -> Move:I7
+GameNumber : 78 - 17ms         - Player(IA):W -> Move:I8
+GameNumber : 78 - 8003ms       - Player(IA):B -> Move:F10
+GameNumber : 78 - 17ms         - Player(IA):W -> Move:H8
+GameNumber : 78 - 8008ms       - Player(IA):B -> Move:J8
+GameNumber : 78 - 40ms         - Player(IA):W -> Move:G8
+GameNumber : 78 - 8006ms       - Player(IA):B -> Move:F8
+GameNumber : 78 - 36ms         - Player(IA):W -> Move:H9
+GameNumber : 78 - 8015ms       - Player(IA):B -> Move:H7
+GameNumber : 78 - 40ms         - Player(IA):W -> Move:I10
+GameNumber : 78 - 8002ms       - Player(IA):B -> Move:H10
+GameNumber : 78 - 96ms         - Player(IA):W -> Move:K7
+GameNumber : 78 - 8007ms       - Player(IA):B -> Move:H9
+GameNumber : 78 - 30ms         - Player(IA):W -> Move:H8
+GameNumber : 78 - 8022ms       - Player(IA):B -> Move:L10
+GameNumber : 78 - 50ms         - Player(IA):W -> Move:K9
+GameNumber : 78 - 8010ms       - Player(IA):B -> Move:K10
+GameNumber : 78 - 99ms         - Player(IA):W -> Move:H11
+GameNumber : 78 - 8007ms       - Player(IA):B -> Move:J10
+GameNumber : 78 - 65ms         - Player(IA):W -> Move:I10
+GameNumber : 78 - 8004ms       - Player(IA):B -> Move:J9
+GameNumber : 78 - 65ms         - Player(IA):W -> Move:J11
+GameNumber : 78 - 1178ms       - Player(IA):B -> Move:J7
+GameNumber : 78 - 169ms        - Player(IA):W -> Move:H9
+GameNumber : 78 - 2678ms       - Player(IA):B -> Move:G10
+GameNumber : 78 - 11ms         - Player(IA):W -> Move:H9
+GameNumber : 78 - 1382ms       - Player(IA):B -> Move:I8
+GameNumber : 78 - 11ms         - Player(IA):W -> Move:G8
+GameNumber : 78 - 8008ms       - Player(IA):B -> Move:F7
+GameNumber : 78 - 11ms         - Player(IA):W -> Move:K12
