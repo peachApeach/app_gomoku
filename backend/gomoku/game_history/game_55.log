@@ -1,0 +1,36 @@
+GameNumber : 55 - Game Info -> Start: B
+GameNumber : 55 - Game Info -> Allowed Capture: True
+GameNumber : 55 - Game Info -> Allowed Win By Capture: True
+GameNumber : 55 - Game Info -> Allowed Double Three: False
+GameNumber : 55 - 1008ms       - Player(IA):B -> Move:I11
+GameNumber : 55 - 7ms          - Player(IA):W -> Move:K11
+GameNumber : 55 - 1013ms       - Player(IA):B -> Move:I9
+GameNumber : 55 - 19ms         - Player(IA):W -> Move:I10
+GameNumber : 55 - 1036ms       - Player(IA):B -> Move:J9
+GameNumber : 55 - 65ms         - Player(IA):W -> Move:K9
+GameNumber : 55 - 1026ms       - Player(IA):B -> Move:K10
+GameNumber : 55 - 67ms         - Player(IA):W -> Move:H9
+GameNumber : 55 - 1019ms       - Player(IA):B -> Move:I9
+GameNumber : 55 - 56ms         - Player(IA):W -> Move:J11
+GameNumber : 55 - 1042ms       - Player(IA):B -> Move:K12
+GameNumber : 55 - 137ms        - Player(IA):W -> Move:L11
+GameNumber : 55 - 1062ms       - Player(IA):B -> Move:M11
+GameNumber : 55 - 478ms        - Player(IA):W -> Move:J10
+GameNumber : 55 - 1027ms       - Player(IA):B -> Move:G8
+GameNumber : 55 - 66ms         - Player(IA):W -> Move:J9
+GameNumber : 55 - 1042ms       - Player(IA):B -> Move:J12
+GameNumber : 55 - 122ms        - Player(IA):W -> Move:H11
+GameNumber : 55 - 1054ms       - Player(IA):B -> Move:K8
+GameNumber : 55 - 162ms        - Player(IA):W -> Move:J8
+GameNumber : 55 - 1047ms       - Player(IA):B -> Move:J7
+GameNumber : 55 - 178ms        - Player(IA):W -> Move:I7
+GameNumber : 55 - 1043ms       - Player(IA):B -> Move:H6
+GameNumber : 55 - 188ms        - Player(IA):W -> Move:G12
+GameNumber : 55 - 1047ms       - Player(IA):B -> Move:F13
+GameNumber : 55 - 93ms         - Player(IA):W -> Move:H10
+GameNumber : 55 - 1077ms       - Player(IA):B -> Move:H8
+GameNumber : 55 - 186ms        - Player(IA):W -> Move:H12
+GameNumber : 55 - 1059ms       - Player(IA):B -> Move:H13
+GameNumber : 55 - 244ms        - Player(IA):W -> Move:G10
+GameNumber : 55 - 1073ms       - Player(IA):B -> Move:F10
+GameNumber : 55 - 142ms        - Player(IA):W -> Move:I12

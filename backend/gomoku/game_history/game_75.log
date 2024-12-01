@@ -1,0 +1,46 @@
+GameNumber : 75 - Game Info -> Start: B
+GameNumber : 75 - Game Info -> Allowed Capture: True
+GameNumber : 75 - Game Info -> Allowed Win By Capture: True
+GameNumber : 75 - Game Info -> Allowed Double Three: False
+GameNumber : 75 - 1ms          - Player(IA):B -> Move:I9
+GameNumber : 75 - 6000ms       - Player(IA):W -> Move:I11
+GameNumber : 75 - 16ms         - Player(IA):B -> Move:J9
+GameNumber : 75 - 6010ms       - Player(IA):W -> Move:G9
+GameNumber : 75 - 59ms         - Player(IA):B -> Move:H10
+GameNumber : 75 - 6018ms       - Player(IA):W -> Move:F12
+GameNumber : 75 - 88ms         - Player(IA):B -> Move:H11
+GameNumber : 75 - 6014ms       - Player(IA):W -> Move:H9
+GameNumber : 75 - 41ms         - Player(IA):B -> Move:I10
+GameNumber : 75 - 6007ms       - Player(IA):W -> Move:K8
+GameNumber : 75 - 50ms         - Player(IA):B -> Move:J10
+GameNumber : 75 - 6001ms       - Player(IA):W -> Move:K10
+GameNumber : 75 - 97ms         - Player(IA):B -> Move:K11
+GameNumber : 75 - 6022ms       - Player(IA):W -> Move:L12
+GameNumber : 75 - 103ms        - Player(IA):B -> Move:J11
+GameNumber : 75 - 6011ms       - Player(IA):W -> Move:J8
+GameNumber : 75 - 123ms        - Player(IA):B -> Move:I8
+GameNumber : 75 - 6027ms       - Player(IA):W -> Move:F13
+GameNumber : 75 - 166ms        - Player(IA):B -> Move:H8
+GameNumber : 75 - 35ms         - Player(IA):W -> Move:G7
+GameNumber : 75 - 134ms        - Player(IA):B -> Move:J12
+GameNumber : 75 - 39ms         - Player(IA):W -> Move:J13
+GameNumber : 75 - 146ms        - Player(IA):B -> Move:L10
+GameNumber : 75 - 6031ms       - Player(IA):W -> Move:M9
+GameNumber : 75 - 201ms        - Player(IA):B -> Move:I7
+GameNumber : 75 - 40ms         - Player(IA):W -> Move:I6
+GameNumber : 75 - 204ms        - Player(IA):B -> Move:I13
+GameNumber : 75 - 41ms         - Player(IA):W -> Move:H14
+GameNumber : 75 - 330ms        - Player(IA):B -> Move:F9
+GameNumber : 75 - 6033ms       - Player(IA):W -> Move:H9
+GameNumber : 75 - 262ms        - Player(IA):B -> Move:G10
+GameNumber : 75 - 49ms         - Player(IA):W -> Move:F10
+GameNumber : 75 - 372ms        - Player(IA):B -> Move:E8
+GameNumber : 75 - 44ms         - Player(IA):W -> Move:D7
+GameNumber : 75 - 205ms        - Player(IA):B -> Move:I12
+GameNumber : 75 - 40ms         - Player(IA):W -> Move:K9
+GameNumber : 75 - 194ms        - Player(IA):B -> Move:G8
+GameNumber : 75 - 39ms         - Player(IA):W -> Move:I9
+GameNumber : 75 - 230ms        - Player(IA):B -> Move:K11
+GameNumber : 75 - 45ms         - Player(IA):W -> Move:H12
+GameNumber : 75 - 257ms        - Player(IA):B -> Move:H11
+GameNumber : 75 - 44ms         - Player(IA):W -> Move:J10

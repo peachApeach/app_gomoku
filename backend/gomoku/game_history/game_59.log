@@ -1,0 +1,23 @@
+GameNumber : 59 - Game Info -> Start: B
+GameNumber : 59 - Game Info -> Allowed Capture: True
+GameNumber : 59 - Game Info -> Allowed Win By Capture: True
+GameNumber : 59 - Game Info -> Allowed Double Three: False
+GameNumber : 59 - 2ms          - Player(IA):B -> Move:J10
+GameNumber : 59 - 4019ms       - Player(IA):W -> Move:I9
+GameNumber : 59 - 15ms         - Player(IA):B -> Move:I10
+GameNumber : 59 - 4016ms       - Player(IA):W -> Move:G10
+GameNumber : 59 - 44ms         - Player(IA):B -> Move:H8
+GameNumber : 59 - 4012ms       - Player(IA):W -> Move:K10
+GameNumber : 59 - 51ms         - Player(IA):B -> Move:H10
+GameNumber : 59 - 4009ms       - Player(IA):W -> Move:H7
+GameNumber : 59 - 44ms         - Player(IA):B -> Move:I8
+GameNumber : 59 - 4019ms       - Player(IA):W -> Move:F8
+GameNumber : 59 - 52ms         - Player(IA):B -> Move:H9
+GameNumber : 59 - 4027ms       - Player(IA):W -> Move:H11
+GameNumber : 59 - 101ms        - Player(IA):B -> Move:G8
+GameNumber : 59 - 4035ms       - Player(IA):W -> Move:F7
+GameNumber : 59 - 163ms        - Player(IA):B -> Move:J8
+GameNumber : 59 - 4026ms       - Player(IA):W -> Move:F5
+GameNumber : 59 - 19ms         - Player(IA):B -> Move:K8
+GameNumber : 59 - 15ms         - Player(IA):W -> Move:J7
+GameNumber : 59 - 96ms         - Player(IA):B -> Move:I8

@@ -1,0 +1,14 @@
+GameNumber : 54 - Game Info -> Start: B
+GameNumber : 54 - Game Info -> Allowed Capture: True
+GameNumber : 54 - Game Info -> Allowed Win By Capture: True
+GameNumber : 54 - Game Info -> Allowed Double Three: False
+GameNumber : 54 - 1008ms       - Player(IA):B -> Move:J10
+GameNumber : 54 - 4ms          - Player(IA):W -> Move:K11
+GameNumber : 54 - 1020ms       - Player(IA):B -> Move:I9
+GameNumber : 54 - 37ms         - Player(IA):W -> Move:H8
+GameNumber : 54 - 1024ms       - Player(IA):B -> Move:I9
+GameNumber : 54 - 14ms         - Player(IA):W -> Move:I10
+GameNumber : 54 - 1017ms       - Player(IA):B -> Move:J9
+GameNumber : 54 - 82ms         - Player(IA):W -> Move:H9
+GameNumber : 54 - 1029ms       - Player(IA):B -> Move:H10
+GameNumber : 54 - 89ms         - Player(IA):W -> Move:K9

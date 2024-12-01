@@ -1,0 +1,13 @@
+GameNumber : 67 - Game Info -> Start: B
+GameNumber : 67 - Game Info -> Allowed Capture: True
+GameNumber : 67 - Game Info -> Allowed Win By Capture: True
+GameNumber : 67 - Game Info -> Allowed Double Three: False
+GameNumber : 67 - 12ms         - Player(IA):W -> Move:K10
+GameNumber : 67 - 3009ms       - Player(IA):B -> Move:K11
+GameNumber : 67 - 63ms         - Player(IA):W -> Move:I9
+GameNumber : 67 - 3005ms       - Player(IA):B -> Move:K11
+GameNumber : 67 - 72ms         - Player(IA):W -> Move:L11
+GameNumber : 67 - 3012ms       - Player(IA):B -> Move:L10
+GameNumber : 67 - 64ms         - Player(IA):W -> Move:M12
+GameNumber : 67 - 3011ms       - Player(IA):B -> Move:J9
+GameNumber : 67 - 110ms        - Player(IA):W -> Move:N12

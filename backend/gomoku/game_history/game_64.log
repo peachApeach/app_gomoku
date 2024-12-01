@@ -1,0 +1,45 @@
+GameNumber : 64 - Game Info -> Start: B
+GameNumber : 64 - Game Info -> Allowed Capture: True
+GameNumber : 64 - Game Info -> Allowed Win By Capture: True
+GameNumber : 64 - Game Info -> Allowed Double Three: False
+GameNumber : 64 - 12ms         - Player(IA):W -> Move:J11
+GameNumber : 64 - 4043ms       - Player(IA):B -> Move:H9
+GameNumber : 64 - 50ms         - Player(IA):W -> Move:H10
+GameNumber : 64 - 4032ms       - Player(IA):B -> Move:H11
+GameNumber : 64 - 90ms         - Player(IA):W -> Move:F11
+GameNumber : 64 - 4011ms       - Player(IA):B -> Move:I11
+GameNumber : 64 - 93ms         - Player(IA):W -> Move:H12
+GameNumber : 64 - 4020ms       - Player(IA):B -> Move:K9
+GameNumber : 64 - 580ms        - Player(IA):W -> Move:L8
+GameNumber : 64 - 4024ms       - Player(IA):B -> Move:I9
+GameNumber : 64 - 86ms         - Player(IA):W -> Move:J9
+GameNumber : 64 - 4031ms       - Player(IA):B -> Move:I10
+GameNumber : 64 - 154ms        - Player(IA):W -> Move:I12
+GameNumber : 64 - 4030ms       - Player(IA):B -> Move:I8
+GameNumber : 64 - 165ms        - Player(IA):W -> Move:I7
+GameNumber : 64 - 4036ms       - Player(IA):B -> Move:J12
+GameNumber : 64 - 81ms         - Player(IA):W -> Move:K10
+GameNumber : 64 - 4059ms       - Player(IA):B -> Move:H13
+GameNumber : 64 - 136ms        - Player(IA):W -> Move:I10
+GameNumber : 64 - 4057ms       - Player(IA):B -> Move:J10
+GameNumber : 64 - 165ms        - Player(IA):W -> Move:I8
+GameNumber : 64 - 4055ms       - Player(IA):B -> Move:L11
+GameNumber : 64 - 199ms        - Player(IA):W -> Move:K8
+GameNumber : 64 - 4048ms       - Player(IA):B -> Move:J8
+GameNumber : 64 - 235ms        - Player(IA):W -> Move:I6
+GameNumber : 64 - 4068ms       - Player(IA):B -> Move:I9
+GameNumber : 64 - 182ms        - Player(IA):W -> Move:L9
+GameNumber : 64 - 4067ms       - Player(IA):B -> Move:M8
+GameNumber : 64 - 209ms        - Player(IA):W -> Move:H7
+GameNumber : 64 - 4053ms       - Player(IA):B -> Move:G6
+GameNumber : 64 - 272ms        - Player(IA):W -> Move:I5
+GameNumber : 64 - 4091ms       - Player(IA):B -> Move:I4
+GameNumber : 64 - 285ms        - Player(IA):W -> Move:K7
+GameNumber : 64 - 4092ms       - Player(IA):B -> Move:I9
+GameNumber : 64 - 265ms        - Player(IA):W -> Move:G9
+GameNumber : 64 - 4035ms       - Player(IA):B -> Move:K13
+GameNumber : 64 - 133ms        - Player(IA):W -> Move:I9
+GameNumber : 64 - 4076ms       - Player(IA):B -> Move:K8
+GameNumber : 64 - 249ms        - Player(IA):W -> Move:J7
+GameNumber : 64 - 4054ms       - Player(IA):B -> Move:J9
+GameNumber : 64 - 51ms         - Player(IA):W -> Move:J8

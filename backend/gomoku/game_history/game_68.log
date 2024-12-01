@@ -1,0 +1,9 @@
+GameNumber : 68 - Game Info -> Start: B
+GameNumber : 68 - Game Info -> Allowed Capture: True
+GameNumber : 68 - Game Info -> Allowed Win By Capture: True
+GameNumber : 68 - Game Info -> Allowed Double Three: False
+GameNumber : 68 - 21ms         - Player(IA):W -> Move:J11
+GameNumber : 68 - 3002ms       - Player(IA):B -> Move:J12
+GameNumber : 68 - 32ms         - Player(IA):W -> Move:K10
+GameNumber : 68 - 3015ms       - Player(IA):B -> Move:I12
+GameNumber : 68 - 102ms        - Player(IA):W -> Move:H12

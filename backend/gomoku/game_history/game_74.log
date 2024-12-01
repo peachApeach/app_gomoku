@@ -1,0 +1,35 @@
+GameNumber : 74 - Game Info -> Start: B
+GameNumber : 74 - Game Info -> Allowed Capture: True
+GameNumber : 74 - Game Info -> Allowed Win By Capture: True
+GameNumber : 74 - Game Info -> Allowed Double Three: False
+GameNumber : 74 - 1ms          - Player(IA):B -> Move:J10
+GameNumber : 74 - 3007ms       - Player(IA):W -> Move:I10
+GameNumber : 74 - 12ms         - Player(IA):B -> Move:I9
+GameNumber : 74 - 3011ms       - Player(IA):W -> Move:G7
+GameNumber : 74 - 36ms         - Player(IA):B -> Move:H8
+GameNumber : 74 - 3028ms       - Player(IA):W -> Move:K11
+GameNumber : 74 - 46ms         - Player(IA):B -> Move:H9
+GameNumber : 74 - 3010ms       - Player(IA):W -> Move:H6
+GameNumber : 74 - 89ms         - Player(IA):B -> Move:J9
+GameNumber : 74 - 3054ms       - Player(IA):W -> Move:G9
+GameNumber : 74 - 93ms         - Player(IA):B -> Move:H10
+GameNumber : 74 - 3003ms       - Player(IA):W -> Move:H11
+GameNumber : 74 - 102ms        - Player(IA):B -> Move:J11
+GameNumber : 74 - 3017ms       - Player(IA):W -> Move:J8
+GameNumber : 74 - 144ms        - Player(IA):B -> Move:K9
+GameNumber : 74 - 18ms         - Player(IA):W -> Move:L9
+GameNumber : 74 - 102ms        - Player(IA):B -> Move:I11
+GameNumber : 74 - 3003ms       - Player(IA):W -> Move:L8
+GameNumber : 74 - 166ms        - Player(IA):B -> Move:J12
+GameNumber : 74 - 24ms         - Player(IA):W -> Move:J13
+GameNumber : 74 - 182ms        - Player(IA):B -> Move:H12
+GameNumber : 74 - 25ms         - Player(IA):W -> Move:G13
+GameNumber : 74 - 154ms        - Player(IA):B -> Move:I12
+GameNumber : 74 - 3002ms       - Player(IA):W -> Move:G12
+GameNumber : 74 - 239ms        - Player(IA):B -> Move:K12
+GameNumber : 74 - 34ms         - Player(IA):W -> Move:G11
+GameNumber : 74 - 178ms        - Player(IA):B -> Move:L12
+GameNumber : 74 - 27ms         - Player(IA):W -> Move:I13
+GameNumber : 74 - 181ms        - Player(IA):B -> Move:I12
+GameNumber : 74 - 25ms         - Player(IA):W -> Move:I9
+GameNumber : 74 - 671ms        - Player(IA):B -> Move:L13
