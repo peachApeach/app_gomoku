@@ -216,17 +216,6 @@ def useful_alignment_placement(littleGomoku: LittleGomoku, i: int, j: int, stone
 
 
 
-
-def _prune_action(board: list[list[str]], actions: list[tuple[int]], stone: str = None):
-	new_actions = []
-	for action in actions:
-		if useful_alignment_placement(board=board, i=action[0], j=action[1]):
-			print(f"HERE : {action[0]}, {action[1]}")
-			new_actions.append(action)
-	# if len(new_actions) == 0 and len(actions) >= 1:
-	# 	new_actions.append(actions[0])
-	return new_actions
-
 def prune_action(littleGomoku: LittleGomoku, actions: list[tuple[int]]):
 	sort_new_actions = []
 	for action in actions:
@@ -260,31 +249,33 @@ if __name__ == "__main__":
 	from algorithms.gomoku_algorithm import super_minimax, minimax
 	from utils.little_gomoku_utils import convert_to_little_gomoku
 	from utils.MeasureTime import MeasureTime
-	from utils.gomoku_utils import convert_xy_to_coordinate
+	from utils.gomoku_utils import convert_xy_to_coordinate, convert_coordinate_to_xy
 
 	go_simulate = Gomoku(main_player="B", ia_against_ia=True, IA_MAX_DEPTH=2, IA_AGAINST_IA_MAX_DEPTH=4)
-	go_simulate.read_a_game(51, 5, live_visualisation=False, live_speed=0.1)
+	# go_simulate.read_a_game(61, -6, live_visualisation=False, live_speed=0.1)
+	go_simulate.read_a_game(72, 10, live_visualisation=False, live_speed=0.1, skip_error=False)
 
 	littleGomoku = convert_to_little_gomoku(gomoku=go_simulate)
 
 	if True:
 		mt = MeasureTime(True)
-		score, move = super_minimax(littleGomoku, MAX_DEPTH=10)
-		littleGomoku.board[move[0]][move[1]] = 'XX'
+		score, move = super_minimax(littleGomoku, MAX_DEPTH=4, TIMEOUT=8)
 		print(f"Score : {score} | Move {move} | Total node : {littleGomoku.minimax_node}")
+		littleGomoku.board[move[0]][move[1]] = 'XX'
 		mt.stop()
 
-
+	# j, i = convert_coordinate_to_xy("K11")
+	# littleGomoku.simulate_action()
 	# print(game_state(littleGomoku))
 	# print(littleGomoku.black_capture)
 	# print(littleGomoku.white_capture)
 	# print(useful_alignment_placement(littleGomoku, 12, 8))
 	# littleGomoku.paint_actions(prune_action(littleGomoku, littleGomoku.get_actions()), live_visualisation=True)
-	littleGomoku.paint_actions(littleGomoku.ultimate_get_actions(), live_visualisation=False)
+	# littleGomoku.paint_actions(littleGomoku.ultimate_get_actions(), live_visualisation=True)
 	# print(littleGomoku.ultimate_get_actions())
 
 	print(go_simulate)
-	print(game_state(littleGomoku))
+	# print(game_state(littleGomoku))
 	print(littleGomoku.player_turn)
 	print(littleGomoku.maximizing_player)
 	print(littleGomoku.minimizing_player)
@@ -330,24 +321,6 @@ if __name__ == "__main__2":
 
 	# littleGomoku.paint_actions(prune_action(littleGomoku, littleGomoku.get_actions()), live_visualisation=False)
 	print(littleGomoku)
-
-
-
-if __name__ == "__main__2":
-		from LittleGomoku import LittleGomoku
-		from Gomoku import Gomoku
-		from utils.little_gomoku_utils import convert_to_little_gomoku
-		gomoku = Gomoku(ia_against_ia=False)
-		gomoku.read_a_game(41, -1, live_visualisation=False, live_speed=0.1)
-		littleGomoku1 = convert_to_little_gomoku(gomoku)
-		littleGomoku2 = copy.deepcopy(littleGomoku1)
-
-		print(littleGomoku1.paint_actions(littleGomoku1.get_actions()))
-		print(littleGomoku1)
-		littleGomoku2.paint_actions(_prune_action(littleGomoku2.board, littleGomoku2.get_actions(), littleGomoku2.player_turn))
-		littleGomoku2.paint_actions(prune_action(littleGomoku2, littleGomoku2.get_actions(), littleGomoku2.player_turn))
-		print(littleGomoku2)
-		# print(gomoku)
 
 
 if __name__ == "__main__2":

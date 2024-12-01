@@ -1,6 +1,10 @@
-from srcs.Gomoku import Gomoku
-from srcs.utils.Colors import *
-from srcs.utils.little_gomoku_utils import convert_to_little_gomoku
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from Gomoku import Gomoku
+from utils.Colors import *
+from utils.little_gomoku_utils import convert_to_little_gomoku
 
 if __name__ == "__main__":
 	gomoku = Gomoku()
@@ -16,8 +20,8 @@ if __name__ == "__main__":
 
 	lg = convert_to_little_gomoku(gomoku)
 
-	for action in lg.get_actions():
+	for action in lg.ultimate_get_actions():
 		print(lg.simulate_action(action))
 
-	lg.paint_actions(lg.get_actions(), live_visualisation=True)
+	lg.paint_actions(lg.ultimate_get_actions(), live_visualisation=True)
 	# print(gomoku)

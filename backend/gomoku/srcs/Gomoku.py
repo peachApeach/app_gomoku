@@ -44,11 +44,13 @@ class Gomoku:
 			who_start: str = 'B',
 			save_game: bool = False,
 			settings: GomokuSettings = GomokuSettings(),
+			IA_TIMEOUT: int = 5,
 			IA_MAX_DEPTH: int = 2,
 			IA_AGAINST_IA_MAX_DEPTH: int = 4,
 			main_player: str = 'B',
 	):
 		self.IA = IA
+		self.IA_TIMEOUT = IA_TIMEOUT
 		self.IA_suggestion = IA_suggestion
 		self.__board_width = board_size[0]
 		self.__board_height = board_size[1]
@@ -117,7 +119,7 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLACKB}  {RESET} "
+					content += f"{BLUEB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
@@ -418,7 +420,7 @@ class Gomoku:
 		elif opening == "swap":
 			self.opening_swap()
 
-	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5):
+	def read_a_game(self, n: int, stop_read: int, live_visualisation: bool = False, live_speed: float = 1.5, skip_error: bool = False):
 		filename = os.path.join(self.game_history_path, f"game_{n}.log")
 		try:
 			with open(filename, "r") as f:
@@ -427,7 +429,7 @@ class Gomoku:
 					return
 		except Exception as e:
 			print_error(e)
-			return
+			return -1
 
 		self.player_turn = all_steps[0][-1]
 		self.maximizing_player = self.player_turn
@@ -439,6 +441,8 @@ class Gomoku:
 		self.settings = GomokuSettings(allowed_capture, allowed_win_by_capture, allowed_double_three)
 		try:
 			all_steps = all_steps[4:]
+			if stop_read > len(all_steps):
+				raise Exception("Out of step.")
 			if stop_read == 0:
 				pass
 			elif stop_read < 0:
@@ -446,19 +450,31 @@ class Gomoku:
 			else:
 				all_steps = all_steps[0:stop_read]
 		except Exception as e:
-			print_error(e)
+			# print_error(e)
+			return -1
 		for step in all_steps:
 			cut_step = step.split(":")
 			player = cut_step[-2][0]
 			if player != self.player_turn:
 				self.switch_player_turn()
 
-			self.place_stone(cut_step[-1])
+			try:
+				self.place_stone(cut_step[-1])
+			except Exception as e:
+				print(e)
+				print(f"Player {player} try to place at {cut_step[-1]}")
+				self.switch_player_turn()
+				# live_speed = 0.8
+				if skip_error == False:
+					return -1
+
 			if live_visualisation:
 				self.display_board()
 				print(f"{player} has placed in {cut_step[-1]}")
 				time.sleep(live_speed)
 			self.switch_player_turn()
+
+		return 0
 
 
 	def handle_player(self) -> list:
@@ -501,11 +517,12 @@ class Gomoku:
 			if self.ia_against_ia == True:
 				# Main player == super minimax
 				if self.get_player_turn() == self.main_player:
-					score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_AGAINST_IA_MAX_DEPTH)
+					score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_AGAINST_IA_MAX_DEPTH, TIMEOUT=self.IA_TIMEOUT)
+					# print(score, move, lg.minimax_node)
 				else:
-					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
 			else:
-				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10)
+				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=self.IA_TIMEOUT)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			last_duration = mt.stop(get_str=True, duration_only=True)
 			try:
@@ -733,8 +750,12 @@ if __name__ == "__main__":
 	SIMULATION = False
 	if SIMULATION:
 		# settings = GomokuSettings(allowed_capture=False, allowed_win_by_capture=False, allowed_double_three=True)
-		go_simulate = Gomoku(ia_against_ia=True)
-		go_simulate.read_a_game(43, 4, live_visualisation=False, live_speed=0.1)
+		settings = GomokuSettings(allowed_capture=True, allowed_win_by_capture=True, allowed_double_three=False)
+		go_simulate = Gomoku(settings=settings, ia_against_ia=True, main_player="W", save_game=False, IA_AGAINST_IA_MAX_DEPTH=10)
+		# try:
+		go_simulate.read_a_game(61, 0, live_visualisation=True, live_speed=0.2)
+		# except:
+		# 	pass
 		# print(go_simulate)
 		go_simulate.play()
 	else:
@@ -743,13 +764,14 @@ if __name__ == "__main__":
 		gomoku = Gomoku(
 			IA=False,
 			who_start="B", # Always Black
-			main_player="B",
+			main_player="W",
 			save_game=True,
 			settings=settings,
 			ia_against_ia=not AGAINST_HUMAN,
 			IA_suggestion=False,
 			IA_MAX_DEPTH=2,
-			IA_AGAINST_IA_MAX_DEPTH=10
+			IA_AGAINST_IA_MAX_DEPTH=10,
+			IA_TIMEOUT=6
 			)
 		gomoku.play(opening="standard")
 
