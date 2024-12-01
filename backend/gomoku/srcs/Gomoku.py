@@ -123,7 +123,7 @@ class Gomoku:
 			content += f"{letters} "
 			for char in line:
 				if char == 'B':
-					content += f"{BLUEB}  {RESET} "
+					content += f"{BLACKB}  {RESET} "
 				elif char == 'W':
 					content += f"{WHITEHB}  {RESET} "
 				elif char == ' ':
@@ -526,7 +526,8 @@ class Gomoku:
 				else:
 					score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=2)
 			else:
-				score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=self.IA_TIMEOUT)
+				score, move = minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=self.IA_MAX_DEPTH)
+				# score, move = super_minimax(gomoku=convert_to_little_gomoku(self), MAX_DEPTH=10, TIMEOUT=self.IA_TIMEOUT)
 			ia_placement = convert_xy_to_coordinate(move[1], move[0])
 			last_duration = mt.stop(get_str=True, duration_only=True)
 			try:

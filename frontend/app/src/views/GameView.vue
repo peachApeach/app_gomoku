@@ -190,6 +190,9 @@ let currentRoundTurn: string
 let isPausedPlayer1 = true
 let isPausedPlayer2 = true
 
+let isTimeout = false
+let isCountdown = false
+
 const player1Color = ref<string | null>("B");
 const player2Color = ref<string | null>("W");
 
@@ -371,6 +374,8 @@ const createScoreboard = () => {
 }
 
 const startGame = async () => {
+  isTimeout = false
+  isCountdown = false
   isPownHandling = false
   whoStartFirst = document.getElementById('first-player')?.value
   // const gamemode = document.querySelector('input[name="opposant"]:checked')?.value;
@@ -481,12 +486,22 @@ const addPown = async (event) => {
     console.log('Placement error')
 
   fillGridWithList(data.board);
+  // console.log(data)
   if (data.IA_response) {
     if (timePerTurn != -1) {
       clearInterval(currentRoundTimer)
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
+    currentRoundTurn = data.player_turn;
     data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    // console.log(data)
+    if (isTimeout == true) {
+      // console.log('here')
+      return ;
+    } else if (isCountdown == true) {
+      return ;
+    }
+    // console.log("HER3", data);
     if (!data) {
       isPownHandling = false;
       return ;
@@ -630,7 +645,14 @@ const handlePlayerTimeout = async () => {
       clearInterval(currentRoundTimer)
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
+    currentRoundTurn = data.player_turn
     data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    if (isTimeout == true) {
+      return ;
+    } else if (isCountdown == true) {
+      return ;
+    }
+    isTimeout = false
     if (!data) {
       isPownHandling = false;
       return ;
@@ -686,6 +708,7 @@ const handlePlayerCountdown = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
   }
+  isCountdown = true;
   const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/countdown", payload);
   if (data.status != 'playing')
     return handleEndGame()
@@ -695,7 +718,6 @@ const handlePlayerCountdown = async () => {
 
 const createCountdownForRound = (count: number, timerDivId: string) => {
   currentRoundTimer = setInterval(function() {
-      // count--;
       count -= 0.1;
       let second = Math.floor(count)
       if (second < 10)
