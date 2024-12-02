@@ -6,6 +6,8 @@
 
 Gomoku is a classic strategy board game played on a grid, where the goal is to outsmart your opponent by aligning five stones in a row. This web-based version brings Gomoku to life with sleek design, challenging AI, and dynamic gameplay.
 
+Available on this link : **[Gomoku](http://164.90.229.9:4001/)**
+
 ## 📋 Rules
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
