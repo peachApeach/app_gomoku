@@ -130,7 +130,7 @@
     </div>
 
 
-    <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
+    <!-- <div class="flex w-full flex-col items-start py-5" :class="displayModalWhoStart ? 'opacity-100' : 'opacity-0'">
       <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Algorithm Depth <span class=" font-light text-gray-600">(Response time < {{ iaDifficultyResponseTime }})</span> </label>
       <div class="flex w-full">
         <button @click="eventSwitchDifficulty('easy')" :disabled="displayModalWhoStart == false" class="input-radio-opponent me-5" :class="iaDifficulty == 'easy' ? 'highlight-radio-opponent' : ''">
@@ -143,7 +143,7 @@
           <p class=" py-3 text-sm font-bold" :class="iaDifficulty == 'hard' ? 'highlight-text-opponent' : 'text-white'">10</p>
         </button>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="mt-6 flex w-full items-center justify-center">
@@ -158,6 +158,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 const generatorModalActive = ref(false)
 const endGameModalActive = ref(false)
+
+const baseUrl = api_url;
 
 const gridIsCreated = ref(false)
 
@@ -396,7 +398,7 @@ const startGame = async () => {
   // if (whoStartFirst == 2) { currentRoundTurn = 1 }
   // else if (whoStartFirst == 0) { currentRoundTurn = Math.floor(Math.random() * 2) }
   // console.log(Math.floor(Math.random() * 2))
-  const data = await postRequest("http://127.0.0.1:4000/game/new", payload);
+  const data = await postRequest(baseUrl + "/game/new", payload);
   // console.log(iaDifficulty.value);
   // console.log(data);
   // console.log(data);
@@ -465,9 +467,10 @@ const addPown = async (event) => {
   }
   const coordinates = [pawnId.split('-')[0], pawnId.split('-')[1]]
   const payload = {
-    "player_move": {"x": coordinates[1], "y": coordinates[0]}
+    "player_move": {"x": coordinates[1], "y": coordinates[0]},
+    "game_id": gameId
   }
-  let data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/move", payload)
+  let data = await postRequest(baseUrl + "/game/move", payload)
   if (!data) {
     isPownHandling = false;
     return ;
@@ -493,7 +496,12 @@ const addPown = async (event) => {
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
     currentRoundTurn = data.player_turn;
-    data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    if (iaDifficulty.value == 'easy') {
+      await new Promise(r => setTimeout(r, 300));
+    }
+    data = await postRequest(baseUrl + "/game/IA_response", {
+      "game_id": gameId
+    });
     // console.log(data)
     if (isTimeout == true) {
       // console.log('here')
@@ -507,9 +515,6 @@ const addPown = async (event) => {
       return ;
     }
     // fillGridWithList(data.before_IA_board)
-    if (iaDifficulty.value == 'easy') {
-      await new Promise(r => setTimeout(r, 600));
-    }
     if (data.status != 'playing')
     {
       fillGridWithList(data.board)
@@ -620,8 +625,9 @@ const createCountdownPlayer2 = (count: number, timerDivId: string) => {
 const handlePlayerTimeout = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
+    "game_id": gameId
   }
-  let data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/timeout", payload);
+  let data = await postRequest(baseUrl + "/game/timeout", payload);
   // console.log("TIMEOUT DATA:");
   // console.log(data);
   // Handle response
@@ -646,7 +652,12 @@ const handlePlayerTimeout = async () => {
       createCountdownForRound(parseInt(timePerTurn), 'round-timer')
     }
     currentRoundTurn = data.player_turn
-    data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/IA_response");
+    if (iaDifficulty.value == 'easy') {
+      await new Promise(r => setTimeout(r, 200));
+    }
+    data = await postRequest(baseUrl + "/game/IA_response", {
+      "game_id": gameId
+    });
     if (isTimeout == true) {
       return ;
     } else if (isCountdown == true) {
@@ -658,9 +669,6 @@ const handlePlayerTimeout = async () => {
       return ;
     }
     // fillGridWithList(data.before_IA_board)
-    if (iaDifficulty.value == 'easy') {
-      await new Promise(r => setTimeout(r, 600));
-    }
     if (data.status != 'playing')
     {
       fillGridWithList(data.board)
@@ -707,9 +715,10 @@ const handlePlayerTimeout = async () => {
 const handlePlayerCountdown = async () => {
   const payload = {
     "who_timeout": currentRoundTurn,
+    "game_id": gameId
   }
   isCountdown = true;
-  const data = await postRequest("http://127.0.0.1:4000/game/" + gameId + "/countdown", payload);
+  const data = await postRequest(baseUrl + "/game/countdown", payload);
   if (data.status != 'playing')
     return handleEndGame()
   if (data.error != null)
