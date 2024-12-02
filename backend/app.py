@@ -201,9 +201,14 @@ class NewGameModel(BaseModel):
 
 class MoveModel(BaseModel):
 	player_move: dict[str, int]
+	game_id: str
 
 class TimeoutModel(BaseModel):
 	who_timeout: str
+	game_id: str
+
+class GameIdModel(BaseModel):
+	game_id: str
 
 
 app = FastAPI()
@@ -232,7 +237,7 @@ async def new_game(body: NewGameModel):
 	game_id = str(int(time.time()))
 	while all_games.get(game_id) != None:
 		game_id += str(random.randint(0, 9))
-	print(game_id)
+	# print(game_id)
 	IA = True if body.mode == "ia" else False
 	opts = body.options
 
@@ -327,8 +332,10 @@ async def new_game(body: NewGameModel):
 	}
 
 
-@app.post("/game/{game_id}/IA_response", status_code=status.HTTP_200_OK)
-async def IA_response(game_id: str):
+@app.post("/game/IA_response", status_code=status.HTTP_200_OK)
+async def IA_response(body: GameIdModel):
+
+	game_id = body.game_id
 	gomoku = all_games[game_id]
 	if gomoku is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
@@ -362,8 +369,9 @@ async def IA_response(game_id: str):
 	}
 
 
-@app.post("/game/{game_id}/move", status_code=status.HTTP_200_OK)
-async def play_move(game_id: str, body: MoveModel):
+@app.post("/game/move", status_code=status.HTTP_200_OK)
+async def play_move(body: MoveModel):
+	game_id = body.game_id
 	gomoku = all_games[game_id]
 	if gomoku is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
@@ -404,8 +412,9 @@ async def play_move(game_id: str, body: MoveModel):
 		"IA_response": after_move_dict['IA_response'],
 	}
 
-@app.post("/game/{game_id}/timeout")
-async def timeout(game_id: str, body: TimeoutModel):
+@app.post("/game/timeout")
+async def timeout(body: TimeoutModel):
+	game_id = body.game_id
 	gomoku = all_games[game_id]
 	if gomoku is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
@@ -440,8 +449,9 @@ async def timeout(game_id: str, body: TimeoutModel):
 		"IA_response": timeout_dict['IA_response'],
 	}
 
-@app.post("/game/{game_id}/countdown")
-async def countdown(game_id: str, body: TimeoutModel):
+@app.post("/game/countdown")
+async def countdown(body: TimeoutModel):
+	game_id = body.game_id
 	gomoku = all_games[game_id]
 	if gomoku is None:
 		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The provided game id is invalid. Please check the game_id and try again.")
