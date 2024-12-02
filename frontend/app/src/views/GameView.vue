@@ -89,6 +89,21 @@
       </div>
     </div>
 
+    <div class="flex w-full flex-col items-start py-5">
+      <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">Rules</label>
+      <div class="flex w-full">
+        <button @click="rules_capturing = !rules_capturing" class="input-radio-opponent me-5" :class="rules_capturing ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="rules_capturing ? 'highlight-text-opponent' : 'text-white'">Capturing stones</p>
+        </button>
+        <button @click="rules_win_by_capture = !rules_win_by_capture" class="input-radio-opponent me-5" :class="rules_win_by_capture ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="rules_win_by_capture ? 'highlight-text-opponent' : 'text-white'">Winning by capture</p>
+        </button>
+        <button @click="rules_double_three = !rules_double_three" class="input-radio-opponent" :class="rules_double_three ? 'highlight-radio-opponent' : ''">
+          <p class=" py-3 text-sm font-bold" :class="rules_double_three ? 'highlight-text-opponent' : 'text-white'">Creating double threes</p>
+        </button>
+      </div>
+    </div>
+
 
     <div class="flex w-full flex-col items-start py-3">
       <label id="opposant-label" class="mb-2 block text-sm font-bold text-low-contrast-text">IA suggestion?</label>
@@ -168,6 +183,10 @@ const iaSuggestion = ref(false);
 
 const iaDifficulty = ref<string>("easy");
 const iaDifficultyResponseTime = ref<string>("500ms");
+
+const rules_capturing = ref<boolean>(true);
+const rules_win_by_capture = ref<boolean>(true);
+const rules_double_three = ref<boolean>(false);
 
 const gameIsEnd = ref(false);
 
@@ -388,9 +407,9 @@ const startGame = async () => {
     "main_player": whoStartFirst == 0 ? "B" : "W",
     "IA_suggestion": iaSuggestion.value,
     "options": {
-      "allowed_capture": true,
-      "allowed_win_by_capture": true,
-      "allowed_double_three": false
+      "allowed_capture": rules_capturing.value,
+      "allowed_win_by_capture": rules_win_by_capture.value,
+      "allowed_double_three": rules_double_three.value
     },
     "opening": "standard",
     "difficulty": iaDifficulty.value
