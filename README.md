@@ -4,59 +4,74 @@
 
 ## 📄 Overview
 
-Gomoku is a classic strategy board game played on a grid, where the goal is to outsmart your opponent by aligning five stones in a row. This web-based version brings Gomoku to life with sleek design, challenging AI, and dynamic gameplay.
+Gomoku is a timeless strategy board game played on a grid, where players aim to align five stones in a row to outsmart their opponent. This web-based version offers a modern design, a challenging AI, and dynamic gameplay.
 
-Available on this link : **[Gomoku](http://164.90.229.9:4001/)**
+🎮 **Play now:** **[Gomoku](http://164.90.229.9:4001/)**
+
 
 ## 📋 Rules
 
-Le but du jeu de Gomoku est d'aligné five stones in a row. Pour rendre le jeu plus intéressant, nous avons intégré la possibilité de capturer les paires de l'adversaire. Vous pouvez gagner en capturant 5 paires de l'adversaire.
+The objective of Gomoku is to align five stones in a row before your opponent. To add complexity, this version includes the ability to capture your opponent's stones. You can also win by capturing five pairs of your opponent's stones.
 
 ### Captures
 
-Si vous placez two of your stones aux extrémités de two stones (not single stone and not more than two stones) of the opponent, that will remove them from the game. Vous pouvez donc réutiliser ces emplacements.
+Captures occur when you place two of your stones at both ends of exactly two of your opponent’s stones (neither one stone nor more than two stones). The captured stones are removed from the board, freeing those positions for reuse.
 
-#### Examples:
+#### Example:
 
+White stones can capture the black stones by placing a stone at the highlighted position.
 <img src="/gitimages/capture.png" width="45%">
-White stones can capture the black stones by placing at the highlight emplacement.
 
 
-### Double free three
+### Double Free Three
 
-Un free three est un alignement that can introduce a free four, qui est un mouvement impossible a defendre car les deux extremites permettent d'obtenir un alignement de cinq. Pour eviter de creer des opportunites trop avantageuses, les placements qui introduisent deux free three are forbidden.
+A "free three" is a line of three stones that can lead to a "free four"—a move that cannot be defended because either endpoint of the line creates a winning row of five stones. To balance gameplay, moves that create two simultaneous free threes (a "double free three") are forbidden.
 
-#### Free three:
+#### ✅ Free Three:
 
 <img src="/gitimages/free_three.png" width="45%">
 
-#### Free four:
+#### ✅ Free Four:
 
 <img src="/gitimages/free_four.png" width="45%">
 
-#### Double free three:
+#### ❌ Double Free Three:
 
 <img src="/gitimages/double_free_three.png" width="45%">
 
-## 🤖 How AI works?
 
-Used algorithm : Mini-max with Alpha Beta Pruning
+## 🤖 How the AI Works
 
-...Explain the algorithm
+The AI uses the **Mini-Max Algorithm with Alpha-Beta Pruning** to make strategic decisions.
 
-#### Visualization:
+### Algorithm Overview
+
+- **Mini-Max**: A decision-making algorithm that simulates all possible moves to minimize the opponent's advantage while maximizing the AI's chances of winning.
+- **Alpha-Beta Pruning**: An optimization technique that skips evaluating branches of the decision tree that won't affect the outcome, significantly reducing computation time.
+
+#### Mini-max Visualization with a Tic-Tac-Toe:
 
 <img src="/backend/gomoku/tree_visual.png" width="45%">
 
-### Implement Optimization
+### Optimization Techniques
 
-- ✅ Alpha-Beta Pruning.
-- ✅ Change maximum depth depending the game state.
-- ✅ Check only the action who represents a risk.
-- ✅ Sort actions by priority.
-- ✅ Save the movement and game status instead a complete deepcopy of the game to simulate a new move.
+The AI implements several optimizations for enhanced performance:
+- ✅ **Alpha-Beta Pruning**: Reduces unnecessary calculations.
+- ✅ **Dynamic Depth Adjustment**: Adjusts the search depth based on the current game state.
+- ✅ **Risk-Based Action Evaluation**: Focuses on moves that represent threats or opportunities.
+- ✅ **Priority Sorting**: Evaluates actions in order of strategic importance.
+- ✅ **Efficient Game State Simulation**: Saves only the move and game status instead of performing a complete deepcopy for simulations.
 
 <!--
+
+## 🚀 Features
+
+- 🎲 **Playable online**: Test your skills against friends or the AI.
+- 🤖 **Challenging AI**: Compete with an intelligent AI opponent.
+- 📈 **Advanced rules**: Captures and "double free three" mechanics enhance gameplay depth.
+- 🎨 **Modern design**: Enjoy a clean and intuitive user interface.
+
+
 ## 🎮 Game Design & User Experience
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis neque quis tortor scelerisque ultricies. Nunc nec feugiat eros. Sed viverra est vel sem volutpat, in faucibus mauris pharetra. Pellentesque ac massa et orci aliquam volutpat at ac metus. Duis laoreet pulvinar lectus ut viverra. Ut volutpat aliquam justo et aliquam.
