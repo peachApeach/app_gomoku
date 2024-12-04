@@ -10,10 +10,27 @@ Available on this link : **[Gomoku](http://164.90.229.9:4001/)**
 
 ## 📋 Rules
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-- ✅ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-- ✅ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-- ❌ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+Le but du jeu de Gomoku est d'aligné five stones in a row. Pour rendre le jeu plus intéressant, nous avons intégré la possibilité de capturer les paires de l'adversaire. Vous pouvez gagner en capturant 5 paires de l'adversaire.
+
+### Captures
+Si vous placez two of your stones aux extrémités de two stones (not single stone and not more than two stones) of the opponent, that will remove them from the game. Vous pouvez donc réutiliser ces emplacements.
+
+#### Examples:
+<img src="/gitimages/capture.png" width="75%">
+White stones can capture the black stones by placing at the highlight emplacement.
+
+
+### Double free three
+Un free three est un alignement that can introduce a free four, qui est un mouvement impossible a defendre car les deux extremites permettent d'obtenir un alignement de cinq. Pour eviter de creer des opportunites trop avantageuses, les placements qui introduisent deux free three are forbidden.
+
+#### Free three:
+<img src="/gitimages/free_three.png" width="75%">
+
+#### Free four:
+<img src="/gitimages/free_four.png" width="75%">
+
+#### Double free three:
+<img src="/gitimages/double_free_three.png" width="75%">
 
 ## 🤖 How AI works?
 
