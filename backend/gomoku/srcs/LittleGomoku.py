@@ -104,15 +104,31 @@ class LittleGomoku:
 			before_placement_alignment = count_all_alignment(self.board, i, j)
 			self.board[i][j] = to_place
 			if pairs_captured != []:
-				if self.board[i][j] == 'B':
-					self.black_capture += len(pairs_captured)
-				else:
-					self.white_capture += len(pairs_captured)
 				for pair in pairs_captured:
 					cd1 = pair[0]
 					cd2 = pair[1]
 					self.board[cd1[0]][cd1[1]] = ' '
 					self.board[cd2[0]][cd2[1]] = ' '
+
+				opponent_stone = switch_opponent(to_place)
+				situation = critical_situation(self.board, observed_stone=opponent_stone)
+				if situation[0] == True:
+					if situation[1] != to_place:
+						for pair in pairs_captured:
+							cd1 = pair[0]
+							cd2 = pair[1]
+							self.board[cd1[0]][cd1[1]] = opponent_stone
+							self.board[cd2[0]][cd2[1]] = opponent_stone
+
+
+						self.board[i][j] = ' '
+						raise PlacementError("You are in a critical situation. Please fix this !")
+
+				if self.board[i][j] == 'B':
+					self.black_capture += len(pairs_captured)
+				else:
+					self.white_capture += len(pairs_captured)
+
 				after_placement_alignment = count_all_alignment(self.board, i, j)
 			else:
 				if self.settings.allowed_capture:
