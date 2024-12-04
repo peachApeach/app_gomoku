@@ -16,7 +16,7 @@ Le but du jeu de Gomoku est d'aligné five stones in a row. Pour rendre le jeu p
 Si vous placez two of your stones aux extrémités de two stones (not single stone and not more than two stones) of the opponent, that will remove them from the game. Vous pouvez donc réutiliser ces emplacements.
 
 #### Examples:
-<img src="/gitimages/capture.png" width="75%">
+<img src="/gitimages/capture.png" width="45%">
 White stones can capture the black stones by placing at the highlight emplacement.
 
 
@@ -24,13 +24,13 @@ White stones can capture the black stones by placing at the highlight emplacemen
 Un free three est un alignement that can introduce a free four, qui est un mouvement impossible a defendre car les deux extremites permettent d'obtenir un alignement de cinq. Pour eviter de creer des opportunites trop avantageuses, les placements qui introduisent deux free three are forbidden.
 
 #### Free three:
-<img src="/gitimages/free_three.png" width="75%">
+<img src="/gitimages/free_three.png" width="45%">
 
 #### Free four:
-<img src="/gitimages/free_four.png" width="75%">
+<img src="/gitimages/free_four.png" width="45%">
 
 #### Double free three:
-<img src="/gitimages/double_free_three.png" width="75%">
+<img src="/gitimages/double_free_three.png" width="45%">
 
 ## 🤖 How AI works?
 
