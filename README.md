@@ -13,36 +13,48 @@ Available on this link : **[Gomoku](http://164.90.229.9:4001/)**
 Le but du jeu de Gomoku est d'aligné five stones in a row. Pour rendre le jeu plus intéressant, nous avons intégré la possibilité de capturer les paires de l'adversaire. Vous pouvez gagner en capturant 5 paires de l'adversaire.
 
 ### Captures
+
 Si vous placez two of your stones aux extrémités de two stones (not single stone and not more than two stones) of the opponent, that will remove them from the game. Vous pouvez donc réutiliser ces emplacements.
 
 #### Examples:
+
 <img src="/gitimages/capture.png" width="45%">
 White stones can capture the black stones by placing at the highlight emplacement.
 
 
 ### Double free three
+
 Un free three est un alignement that can introduce a free four, qui est un mouvement impossible a defendre car les deux extremites permettent d'obtenir un alignement de cinq. Pour eviter de creer des opportunites trop avantageuses, les placements qui introduisent deux free three are forbidden.
 
 #### Free three:
+
 <img src="/gitimages/free_three.png" width="45%">
 
 #### Free four:
+
 <img src="/gitimages/free_four.png" width="45%">
 
 #### Double free three:
+
 <img src="/gitimages/double_free_three.png" width="45%">
 
 ## 🤖 How AI works?
 
-Used algorithm : Mini-max
+Used algorithm : Mini-max with Alpha Beta Pruning
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+...Explain the algorithm
+
+#### Visualization:
+
+<img src="/backend/gomoku/tree_visual.png" width="45%">
 
 ### Implement Optimization
 
-- ✅ Alpha-Beta Pruning Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-- ✅ Depth Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-- ✅ Action Range Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+- ✅ Alpha-Beta Pruning.
+- ✅ Change maximum depth depending the game state.
+- ✅ Check only the action who represents a risk.
+- ✅ Sort actions by priority.
+- ✅ Save the movement and game status instead a complete deepcopy of the game to simulate a new move.
 
 <!--
 ## 🎮 Game Design & User Experience
