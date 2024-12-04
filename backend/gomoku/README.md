@@ -1,12 +1,13 @@
-# Project Name
+# Gomoku
 
 ![Python version](https://img.shields.io/badge/Python-3.9%2B-blue)
 <!-- ![License](https://img.shields.io/badge/License-MIT-green) -->
 
+<!--
 ## Description
 
 A brief description of the project goes here. Explain the purpose, goals, and key features of the project in a concise manner. This could be a tool, a script, or an application, and this section should provide enough context to understand its utility.
-
+-->
 ## Installation
 
 ### Prerequisites
@@ -48,21 +49,21 @@ You can run the script in one of the following ways:
 1. **Make the script executable:**
 
    ```bash
-    chmod +x main.py
+    chmod +x game.py
     ```
 
     Then execute it directly:
 
     ```bash
-    ./main.py
+    ./game.py
     ```
 
 2. **Using the Python command:**
 
     ```bash
-    python3 main.py
+    python3 game.py
     ```
-
+<!--
 ### Expected Output
 
 Once the script is run successfully, you should see the following output:
@@ -73,9 +74,6 @@ It's work !
 
 ### Use Case
 
-<!-- Provide examples or scenarios where your project could be used. For instance: -->
-
-<!--# Example -->
 ```bash
 ./main.py
 ```
@@ -85,6 +83,8 @@ It's work !
 Below is a visual representation of the project’s functionality:
 
 <img src="./gitimages/overview.png" width="100%">
+
+-->
 
 <!--
 ### Contributing
