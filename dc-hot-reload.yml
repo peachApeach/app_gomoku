@@ -26,7 +26,7 @@ services:
       - /app/node_modules
 
     ports:
-      - 4001:4000
+      - 443:4000
 
     depends_on:
       - backend
@@ -35,6 +35,6 @@ services:
     build:
       context: ./signature
       args:
-        - PORT=4001
+        - PORT=443
     depends_on:
       - frontend
