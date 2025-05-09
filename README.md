@@ -6,7 +6,7 @@
 
 Gomoku is a timeless strategy board game played on a grid, where players aim to align five stones in a row to outsmart their opponent. This web-based version offers a modern design, a challenging AI, and dynamic gameplay.
 
-🎮 **Play now:** **[Gomoku](http://164.90.229.9:4001/)**
+<!-- 🎮 **Play now:** **[Gomoku](...)** -->
 
 
 ## 📋 Rules
