@@ -11,6 +11,9 @@ ARG PORT
 ENV HOST=$HOST
 ENV PORT=$PORT
 
+ARG VITE_API_URL=http://127.0.0.1:4000
+ENV VITE_API_URL=$VITE_API_URL
+
 EXPOSE $PORT
 
 # CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "4000" ]
