@@ -174,7 +174,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 const generatorModalActive = ref(false)
 const endGameModalActive = ref(false)
 
-const baseUrl = api_url;
+const baseUrl = import.meta.env.VITE_API_URL;;
 
 const gridIsCreated = ref(false)
 
